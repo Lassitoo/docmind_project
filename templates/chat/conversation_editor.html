@@ -758,6 +758,7 @@
 
     // URLs
     const URL_EXTRACT = '{% url "chat:extract_document_content" document.id %}';
+    const URL_EXTRACT_CONTENT = URL_EXTRACT; // alias compatibilité
     const URL_SAVE = '{% url "chat:save_document_changes" document.id %}';
     const URL_AUTOSAVE = '{% url "chat:auto_save_document" document.id %}';
     const URL_EXPORT = '{% url "chat:export_document" document.id %}';
@@ -829,6 +830,16 @@ $(document).ready(function() {
 
     function hideSaveIndicator() {
         $('#saveIndicator').removeClass('show');
+    }
+
+    function showError(message) {
+        try {
+            console.error(message);
+            showSaveIndicator(message, 'error');
+            setTimeout(() => hideSaveIndicator(), 4000);
+        } catch (e) {
+            alert(message);
+        }
     }
 
     function escapeHtml(text) {
@@ -933,6 +944,38 @@ $(document).ready(function() {
     // CHARGEMENT DU CONTENU
     // ============================================
 
+    function createBlankCanvas() {
+        try {
+            if (!fabricCanvas) {
+                initFabricCanvas();
+            }
+            fabricCanvas.clear();
+            // Default size and background
+            fabricCanvas.setHeight(1000);
+            fabricCanvas.setWidth(695);
+            fabricCanvas.setBackgroundColor('#ffffff', fabricCanvas.renderAll.bind(fabricCanvas));
+
+            // Optionally add a hint text
+            const hint = new fabric.Textbox('Canvas vide — utilisez les outils à droite pour ajouter du texte, des formes ou des images.', {
+                left: 50,
+                top: 60,
+                width: 560,
+                fontSize: 14,
+                fill: '#6b7280',
+                fontFamily: 'Arial',
+                editable: false,
+                selectable: false
+            });
+            fabricCanvas.add(hint);
+            fabricCanvas.renderAll();
+            showSaveIndicator('Canvas prêt', 'saved');
+            setTimeout(() => hideSaveIndicator(), 2000);
+            updateCanvasStats();
+        } catch (e) {
+            console.error('Failed to create blank canvas:', e);
+        }
+    }
+
     function loadDocumentContent() {
         showSaveIndicator('Chargement du document...', 'saving');
 
@@ -1017,92 +1060,270 @@ $(document).ready(function() {
                         fabricCanvas.add(pageHeader);
                         currentY += 30;
                         
-                        // Convert text to Fabric text objects
-                        if (page.text && page.text.trim()) {
-                            const lines = page.text.split('\n');
-                            
-                            lines.forEach((line) => {
-                                if (line.trim()) {
-                                    const textObj = new fabric.IText(line, {
-                                        left: 50,
-                                        top: currentY,
-                                        fontSize: 12,
-                                        fontFamily: 'Arial',
-                                        fill: '#000000',
-                                        selectable: true,
-                                        editable: true,
-                                        width: 500
-                                    });
-                                    fabricCanvas.add(textObj);
-                                    currentY += 20;
-                                    totalObjects++;
+                        // Prefer structured blocks when available (align with Chat view)
+                        if (Array.isArray(page.blocks) && page.blocks.length > 0) {
+                            page.blocks.forEach((block, bIndex) => {
+                                const type = (block.type || '').toLowerCase();
+                                // Headings
+                                if (type === 'heading' || type === 'title' || type === 'h1' || type === 'h2' || type === 'h3') {
+                                    const level = block.level || (type === 'h1' ? 1 : type === 'h2' ? 2 : type === 'h3' ? 3 : 2);
+                                    const fontSize = level === 1 ? 22 : level === 2 ? 18 : 16;
+                                    const text = (block.text || block.content || '').trim();
+                                    if (text) {
+                                        const hText = new fabric.Textbox(text, {
+                                            left: 50,
+                                            top: currentY,
+                                            fontSize: fontSize,
+                                            fontFamily: 'Arial',
+                                            fontWeight: 'bold',
+                                            fill: '#111827',
+                                            width: 500,
+                                            selectable: true
+                                        });
+                                        fabricCanvas.add(hText);
+                                        currentY += hText.height + 10;
+                                        totalObjects++;
+                                    }
                                 }
-                            });
-                        }
-                        
-                        // Convert tables
-                        if (page.tables && page.tables.length > 0) {
-                            console.log(`  📊 ${page.tables.length} table(s)`);
-                            
-                            page.tables.forEach((table, tableIndex) => {
-                                currentY += 20;
-                                
-                                const tableTitle = new fabric.Text(`Table ${tableIndex + 1}`, {
-                                    left: 50,
-                                    top: currentY,
-                                    fontSize: 11,
-                                    fill: '#3b82f6',
-                                    fontFamily: 'Arial',
-                                    fontWeight: 'bold',
-                                    selectable: false
-                                });
-                                fabricCanvas.add(tableTitle);
-                                currentY += 25;
-                                
-                                if (table.data && Array.isArray(table.data)) {
-                                    const cellWidth = 120;
-                                    const cellHeight = 25;
-                                    const startX = 50;
-                                    
-                                    table.data.forEach((row, rowIndex) => {
-                                        const rowY = currentY + (rowIndex * cellHeight);
-                                        
-                                        row.forEach((cell, colIndex) => {
-                                            const cellX = startX + (colIndex * cellWidth);
-                                            
-                                            const cellRect = new fabric.Rect({
-                                                left: cellX,
-                                                top: rowY,
-                                                width: cellWidth,
-                                                height: cellHeight,
-                                                fill: rowIndex === 0 ? '#f0f7ff' : '#ffffff',
-                                                stroke: '#d1d5db',
-                                                strokeWidth: 1,
-                                                selectable: false
-                                            });
-                                            fabricCanvas.add(cellRect);
-                                            
-                                            if (cell && cell.trim()) {
-                                                const cellText = new fabric.Text(cell, {
-                                                    left: cellX + 5,
-                                                    top: rowY + 5,
-                                                    fontSize: 10,
-                                                    fontFamily: 'Arial',
-                                                    fill: '#000000',
-                                                    width: cellWidth - 10,
-                                                    fontWeight: rowIndex === 0 ? 'bold' : 'normal',
+                                // Paragraphs
+                                else if (type === 'paragraph' || type === 'text' || type === 'block') {
+                                    const text = (block.text || block.content || '').trim();
+                                    if (text) {
+                                        const pText = new fabric.Textbox(text, {
+                                            left: 50,
+                                            top: currentY,
+                                            fontSize: 12,
+                                            fontFamily: 'Arial',
+                                            fill: '#000000',
+                                            width: 500,
+                                            editable: true
+                                        });
+                                        fabricCanvas.add(pText);
+                                        currentY += pText.height + 8;
+                                        totalObjects++;
+                                    }
+                                }
+                                // Subtitle (mapped close to heading level 3)
+                                else if (type === 'subtitle' || type === 'subheading') {
+                                    const text = (block.text || block.content || '').trim();
+                                    if (text) {
+                                        const sText = new fabric.Textbox(text, {
+                                            left: 50,
+                                            top: currentY,
+                                            fontSize: 16,
+                                            fontFamily: 'Arial',
+                                            fontWeight: '600',
+                                            fill: '#1f2937',
+                                            width: 500,
+                                            selectable: true
+                                        });
+                                        fabricCanvas.add(sText);
+                                        currentY += sText.height + 8;
+                                        totalObjects++;
+                                    }
+                                }
+                                // Lists (bullet/numbered) aligned with Chat view
+                                else if (type === 'list' || type === 'bullet' || type === 'unordered_list' || type === 'ordered' || type === 'numbered' || type === 'list_item') {
+                                    let items = [];
+                                    if (Array.isArray(block.items)) {
+                                        items = block.items;
+                                    } else if (Array.isArray(block.children)) {
+                                        items = block.children.map(it => (typeof it === 'string') ? it : (it && (it.text || it.content) || ''));
+                                    } else if (Array.isArray(block.lines)) {
+                                        items = block.lines;
+                                    } else if (typeof block.text === 'string' && block.text.includes('\n')) {
+                                        items = block.text.split('\n');
+                                    } else if (typeof block.text === 'string') {
+                                        items = [block.text];
+                                    }
+
+                                    const isOrdered = type === 'ordered' || type === 'numbered' || !!block.ordered;
+                                    items.forEach((rawItem, liIndex) => {
+                                        const itemText = (typeof rawItem === 'string') ? rawItem : (rawItem && (rawItem.text || rawItem.content) || '');
+                                        const clean = String(itemText).trim();
+                                        if (!clean) return;
+                                        const prefix = isOrdered ? `${liIndex + 1}. ` : '• ';
+                                        const li = new fabric.Textbox(prefix + clean, {
+                                            left: 70, // indent for list
+                                            top: currentY,
+                                            fontSize: 12,
+                                            fontFamily: 'Arial',
+                                            fill: '#111827',
+                                            width: 480,
+                                            editable: true
+                                        });
+                                        fabricCanvas.add(li);
+                                        currentY += li.height + 6;
+                                        totalObjects++;
+                                    });
+                                }
+                                // Tables in blocks
+                                else if (type === 'table' || (block.data && Array.isArray(block.data))) {
+                                    const data = Array.isArray(block.data) ? block.data : (Array.isArray(block.rows) ? block.rows : []);
+                                    if (data.length > 0) {
+                                        currentY += 10;
+                                        const title = new fabric.Text(`Table ${bIndex + 1}` , {
+                                            left: 50,
+                                            top: currentY,
+                                            fontSize: 11,
+                                            fill: '#3b82f6',
+                                            fontFamily: 'Arial',
+                                            fontWeight: 'bold',
+                                            selectable: false
+                                        });
+                                        fabricCanvas.add(title);
+                                        currentY += 20;
+
+                                        const cellWidth = 120;
+                                        const cellHeight = 25;
+                                        const startX = 50;
+                                        data.forEach((row, rowIndex) => {
+                                            const rowY = currentY + (rowIndex * cellHeight);
+                                            (row || []).forEach((cell, colIndex) => {
+                                                const cellX = startX + (colIndex * cellWidth);
+                                                const cellRect = new fabric.Rect({
+                                                    left: cellX,
+                                                    top: rowY,
+                                                    width: cellWidth,
+                                                    height: cellHeight,
+                                                    fill: rowIndex === 0 ? '#f0f7ff' : '#ffffff',
+                                                    stroke: '#d1d5db',
+                                                    strokeWidth: 1,
                                                     selectable: false
                                                 });
-                                                fabricCanvas.add(cellText);
-                                            }
-                                            
-                                            totalObjects += 2;
+                                                fabricCanvas.add(cellRect);
+                                                const cellVal = (typeof cell === 'string') ? cell : (cell && (cell.text || cell.value)) || '';
+                                                if (String(cellVal).trim()) {
+                                                    const cellText = new fabric.Text(String(cellVal), {
+                                                        left: cellX + 5,
+                                                        top: rowY + 5,
+                                                        fontSize: 10,
+                                                        fontFamily: 'Arial',
+                                                        fill: '#000000',
+                                                        width: cellWidth - 10,
+                                                        fontWeight: rowIndex === 0 ? 'bold' : 'normal',
+                                                        selectable: false
+                                                    });
+                                                    fabricCanvas.add(cellText);
+                                                }
+                                                totalObjects += 2;
+                                            });
                                         });
-                                    });
-                                    
-                                    currentY += (table.data.length * cellHeight) + 20;
+                                        currentY += (data.length * cellHeight) + 20;
+                                    }
+                                }
+                                // Images in blocks
+                                else if (type === 'image' || block.image || block.image_data || block.src) {
+                                    const src = block.image_data || block.src || (block.image && block.image.data);
+                                    if (src) {
+                                        // Ensure data URL prefix
+                                        const url = src.startsWith('data:') ? src : `data:image/png;base64,${src}`;
+                                        fabric.Image.fromURL(url, function(img) {
+                                            img.set({ left: 50, top: currentY, scaleX: 0.5, scaleY: 0.5, selectable: true });
+                                            fabricCanvas.add(img);
+                                            fabricCanvas.requestRenderAll();
+                                        });
+                                        currentY += 180; // approximate spacing after image
+                                        totalObjects++;
+                                    }
                                 }
                             });
+                        } else {
+                            // Fallback: Convert simple page.text to Fabric text objects
+                            if (page.text && page.text.trim()) {
+                                const lines = page.text.split('\n');
+                                lines.forEach((line) => {
+                                    if (line.trim()) {
+                                        const textObj = new fabric.IText(line, {
+                                            left: 50,
+                                            top: currentY,
+                                            fontSize: 12,
+                                            fontFamily: 'Arial',
+                                            fill: '#000000',
+                                            selectable: true,
+                                            editable: true,
+                                            width: 500
+                                        });
+                                        fabricCanvas.add(textObj);
+                                        currentY += 20;
+                                        totalObjects++;
+                                    }
+                                });
+                            }
+
+                            // Fallback tables at page level
+                            if (page.tables && page.tables.length > 0) {
+                                console.log(`  📊 ${page.tables.length} table(s)`);
+                                page.tables.forEach((table, tableIndex) => {
+                                    currentY += 20;
+                                    const tableTitle = new fabric.Text(`Table ${tableIndex + 1}`, {
+                                        left: 50,
+                                        top: currentY,
+                                        fontSize: 11,
+                                        fill: '#3b82f6',
+                                        fontFamily: 'Arial',
+                                        fontWeight: 'bold',
+                                        selectable: false
+                                    });
+                                    fabricCanvas.add(tableTitle);
+                                    currentY += 25;
+                                    if (table.data && Array.isArray(table.data)) {
+                                        const cellWidth = 120;
+                                        const cellHeight = 25;
+                                        const startX = 50;
+                                        table.data.forEach((row, rowIndex) => {
+                                            const rowY = currentY + (rowIndex * cellHeight);
+                                            row.forEach((cell, colIndex) => {
+                                                const cellX = startX + (colIndex * cellWidth);
+                                                const cellRect = new fabric.Rect({
+                                                    left: cellX,
+                                                    top: rowY,
+                                                    width: cellWidth,
+                                                    height: cellHeight,
+                                                    fill: rowIndex === 0 ? '#f0f7ff' : '#ffffff',
+                                                    stroke: '#d1d5db',
+                                                    strokeWidth: 1,
+                                                    selectable: false
+                                                });
+                                                fabricCanvas.add(cellRect);
+                                                if (cell && (typeof cell !== 'object' ? String(cell).trim() : (cell.text||'').trim())) {
+                                                    const txt = typeof cell === 'object' ? (cell.text||'') : String(cell);
+                                                    const cellText = new fabric.Text(txt, {
+                                                        left: cellX + 5,
+                                                        top: rowY + 5,
+                                                        fontSize: 10,
+                                                        fontFamily: 'Arial',
+                                                        fill: '#000000',
+                                                        width: cellWidth - 10,
+                                                        fontWeight: rowIndex === 0 ? 'bold' : 'normal',
+                                                        selectable: false
+                                                    });
+                                                    fabricCanvas.add(cellText);
+                                                }
+                                                totalObjects += 2;
+                                            });
+                                        });
+                                        currentY += (table.data.length * cellHeight) + 20;
+                                    }
+                                });
+                            }
+
+                            // Page-level images if provided
+                            if (Array.isArray(page.images) && page.images.length > 0) {
+                                page.images.forEach((imgObj) => {
+                                    const src = imgObj.data || imgObj.base64 || imgObj.src;
+                                    if (src) {
+                                        const url = (src.startsWith && src.startsWith('data:')) ? src : `data:image/png;base64,${src}`;
+                                        fabric.Image.fromURL(url, function(img) {
+                                            img.set({ left: 50, top: currentY, scaleX: 0.5, scaleY: 0.5, selectable: true });
+                                            fabricCanvas.add(img);
+                                            fabricCanvas.requestRenderAll();
+                                        });
+                                        currentY += 180;
+                                        totalObjects++;
+                                    }
+                                });
+                            }
                         }
                         
                         // Page separator
@@ -1126,16 +1347,17 @@ $(document).ready(function() {
                     updateCanvasStats();
                 }
                 else {
-                    console.error('❌ Unknown content structure:', content);
-                    showSaveIndicator('Structure inconnue', 'error');
+                    console.warn('⚠️ Unknown or empty content structure, creating blank canvas.');
+                    createBlankCanvas();
                 }
             } else {
-                showSaveIndicator('Erreur: ' + response.error, 'error');
+                console.warn('⚠️ Server returned error, creating blank canvas. Error:', response.error);
+                createBlankCanvas();
             }
         },
         error: function(xhr) {
-            showSaveIndicator('Erreur de chargement', 'error');
             console.error('AJAX Error:', xhr);
+            createBlankCanvas();
         }
     });
 }

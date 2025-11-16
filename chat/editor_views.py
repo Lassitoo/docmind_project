@@ -133,15 +133,100 @@ def extract_document_content(request, document_id):
                         'content': pdf_structure
                     })
                 else:
-                    # No valid structure
+                    # Gracefully synthesize a pages-based structure for the visual editor
+                    try:
+                        synthesized = {'pages': []}
+                        # Case 1: array of page texts
+                        pages_content = pdf_structure.get('pages_content')
+                        if isinstance(pages_content, list) and pages_content:
+                            for idx, txt in enumerate(pages_content, start=1):
+                                synthesized['pages'].append({
+                                    'page_number': idx,
+                                    'text': txt if isinstance(txt, str) else ''
+                                })
+                        # Case 2: single large text or blocks → merge into one page
+                        text_parts = []
+                        if isinstance(pdf_structure.get('text'), str):
+                            text_parts.append(pdf_structure.get('text'))
+                        blocks = pdf_structure.get('blocks') or pdf_structure.get('paragraphs')
+                        if isinstance(blocks, list):
+                            for b in blocks:
+                                t = None
+                                if isinstance(b, dict):
+                                    t = b.get('text') or b.get('content')
+                                elif isinstance(b, str):
+                                    t = b
+                                if isinstance(t, str) and t.strip():
+                                    text_parts.append(t)
+                        merged_text = '\n'.join(text_parts).strip()
+
+                        # Normalize tables if present
+                        tables_norm = []
+                        tables = pdf_structure.get('tables')
+                        if isinstance(tables, list):
+                            for tb in tables:
+                                data = None
+                                if isinstance(tb, dict):
+                                    if isinstance(tb.get('data'), list):
+                                        data = tb.get('data')
+                                    elif isinstance(tb.get('rows'), list):
+                                        data = tb.get('rows')
+                                    elif isinstance(tb.get('cells'), list):
+                                        # flatten simple cells into one row
+                                        row = []
+                                        for cell in tb.get('cells'):
+                                            if isinstance(cell, dict):
+                                                row.append(str(cell.get('text', '')))
+                                            else:
+                                                row.append(str(cell))
+                                        data = [row]
+                                elif isinstance(tb, list):
+                                    data = tb
+                                if isinstance(data, list) and data:
+                                    tables_norm.append({'data': data})
+
+                        # Build pages if needed
+                        if not synthesized['pages']:
+                            if merged_text or tables_norm:
+                                synthesized['pages'].append({
+                                    'page_number': 1,
+                                    'text': merged_text,
+                                    'tables': tables_norm if tables_norm else []
+                                })
+
+                        if synthesized['pages']:
+                            return JsonResponse({
+                                'success': True,
+                                'content': synthesized
+                            })
+                    except Exception as _e:
+                        # Fall through to text-based fallback below
+                        pass
+
+                    # Final fallback: use raw/processed text to build a simple single page
+                    fallback_text = (doc_content.raw_text or doc_content.processed_text or '').strip()
                     return JsonResponse({
-                        'success': False,
-                        'error': 'No valid PDF structure available'
+                        'success': True,
+                        'content': {
+                            'pages': [{
+                                'page_number': 1,
+                                'text': fallback_text,
+                                'tables': []
+                            }]
+                        }
                     })
             else:
+                # No PDF structure at all — build from text as a simple single page
+                fallback_text = (doc_content.raw_text or doc_content.processed_text or '').strip()
                 return JsonResponse({
-                    'success': False,
-                    'error': 'No PDF structure available'
+                    'success': True,
+                    'content': {
+                        'pages': [{
+                            'page_number': 1,
+                            'text': fallback_text,
+                            'tables': []
+                        }]
+                    }
                 })
         
         else:  # quill format
