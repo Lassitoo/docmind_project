@@ -1,0 +1,680 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ conversation.title }} - Prismate.Ai{% endblock %}
+
+{% block extra_css %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f5f5f5;
+    }
+    
+    /* LAYOUT - 3 Column Grid */
+    .conversation-workspace {
+        display: grid;
+        grid-template-columns: 280px 1fr 320px;
+        height: calc(100vh - 49px);
+        background: #ffffff;
+        gap: 0;
+    }
+    
+    /* LEFT SIDEBAR - Tree Structure */
+    .left-sidebar {
+        background: #fafafa;
+        border-right: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .sidebar-header {
+        padding: 16px 16px 12px 16px;
+        font-size: 0.8rem;
+        color: #6b7280;
+        font-weight: 600;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .tree-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px 12px;
+    }
+    
+    /* Tree Items */
+    .tree-item {
+        padding: 6px 8px;
+        margin: 2px 0;
+        font-size: 0.85rem;
+        color: #374151;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 4px;
+        transition: background 0.15s;
+        user-select: none;
+    }
+    
+    .tree-item:hover {
+        background: #f3f4f6;
+    }
+    
+    .tree-item.active {
+        background: #3b82f6;
+        color: white;
+        font-weight: 500;
+    }
+    
+    .tree-toggle {
+        width: 14px;
+        height: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        color: #6b7280;
+        transition: transform 0.2s;
+    }
+    
+    .tree-item.expanded > .tree-toggle {
+        transform: rotate(90deg);
+    }
+    
+    .tree-icon {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+    
+    .tree-label {
+        flex: 1;
+        font-size: 0.82rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .tree-children {
+        margin-left: 16px;
+        display: none;
+    }
+    
+    .tree-item.expanded + .tree-children {
+        display: block;
+    }
+    
+    /* CENTER PANEL */
+    .center-panel {
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-right: 1px solid #e5e7eb;
+    }
+    
+    .doc-header {
+        padding: 16px 24px;
+        border-bottom: 1px solid #e5e7eb;
+        background: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .doc-title-area {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .doc-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .doc-subtitle {
+        font-size: 0.8rem;
+        color: #6b7280;
+    }
+    
+    .doc-actions {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .btn-action {
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    
+    .btn-download {
+        background: white;
+        color: #374151;
+        border: 1px solid #d1d5db;
+    }
+    
+    .btn-download:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+        color: #111827;
+    }
+    
+    .btn-editor {
+        background: #3b82f6;
+        color: white;
+        border: 1px solid #3b82f6;
+    }
+    
+    .btn-editor:hover {
+        background: #2563eb;
+        color: white;
+    }
+    
+    .doc-body {
+        flex: 1;
+        overflow-y: auto;
+        background: #f9fafb;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .pdf-controls {
+        padding: 12px 20px;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .pdf-btn {
+        background: white;
+        border: 1px solid #d1d5db;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #374151;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+    }
+    
+    .pdf-btn:hover:not(:disabled) {
+        background: #f9fafb;
+        border-color: #9ca3af;
+    }
+    
+    .pdf-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+    
+    .page-info {
+        font-size: 0.85rem;
+        color: #374151;
+        min-width: 100px;
+        text-align: center;
+    }
+    
+    .pdf-viewer {
+        flex: 1;
+        padding: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: auto;
+    }
+    
+    #pdfCanvas {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border-radius: 4px;
+        max-width: 100%;
+    }
+    
+    /* RIGHT SIDEBAR - Assistant */
+    .right-sidebar {
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 49px);
+    }
+    
+    .chat-header {
+        padding: 16px 18px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+    }
+    
+    .chat-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #111827;
+    }
+    
+    .chat-add {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: white;
+        border: 1px solid #d1d5db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 1.3rem;
+        line-height: 1;
+        transition: all 0.2s;
+    }
+    
+    .chat-add:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+    }
+    
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        background: #fafafa;
+        min-height: 0;
+    }
+    
+    .chat-msg {
+        margin-bottom: 14px;
+        display: flex;
+        flex-direction: column;
+        animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .msg-bubble {
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        max-width: 90%;
+        word-wrap: break-word;
+    }
+    
+    .chat-msg.user {
+        align-items: flex-end;
+    }
+    
+    .chat-msg.user .msg-bubble {
+        background: #1e3a5f;
+        color: white;
+        border-radius: 8px 8px 2px 8px;
+    }
+    
+    .chat-msg.assistant {
+        align-items: flex-start;
+    }
+    
+    .chat-msg.assistant .msg-bubble {
+        background: white;
+        color: #111827;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px 8px 8px 2px;
+    }
+    
+    .msg-time {
+        font-size: 0.7rem;
+        color: #9ca3af;
+        margin-top: 4px;
+        padding: 0 4px;
+    }
+    
+    .empty-state {
+        padding: 50px 20px;
+        text-align: center;
+        color: #6b7280;
+    }
+    
+    .empty-state p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+    
+    .chat-input-area {
+        padding: 14px;
+        border-top: 1px solid #e5e7eb;
+        background: white;
+        flex-shrink: 0;
+    }
+    
+    .chat-form {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+    }
+    
+    .input-wrapper {
+        flex: 1;
+    }
+    
+    .chat-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        resize: none;
+        font-family: inherit;
+        transition: all 0.2s;
+        line-height: 1.4;
+    }
+    
+    .chat-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .chat-input::placeholder {
+        color: #9ca3af;
+    }
+    
+    .send-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        font-size: 1rem;
+    }
+    
+    .send-btn:hover:not(:disabled) {
+        background: #2563eb;
+    }
+    
+    .send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    .typing {
+        display: flex;
+        gap: 5px;
+        padding: 6px 0;
+    }
+    
+    .typing-dot {
+        width: 6px;
+        height: 6px;
+        background: #3b82f6;
+        border-radius: 50%;
+        animation: bounce 1.4s infinite;
+    }
+    
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    
+    @keyframes bounce {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-6px); }
+    }
+    
+    /* Scrollbar */
+    .tree-container::-webkit-scrollbar,
+    .doc-body::-webkit-scrollbar,
+    .chat-messages::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .tree-container::-webkit-scrollbar-thumb,
+    .doc-body::-webkit-scrollbar-thumb,
+    .chat-messages::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 10px;
+    }
+    
+    .no-doc {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #9ca3af;
+    }
+    
+    .no-doc i {
+        font-size: 4rem;
+        opacity: 0.2;
+        margin-bottom: 16px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="conversation-workspace">
+    <!-- LEFT SIDEBAR - Tree Structure -->
+    <!-- LEFT SIDEBAR - Tree Structure -->
+    <aside class="left-sidebar">
+        <div class="sidebar-header">Documents ({{ all_documents|length }})</div>
+        <div class="tree-container">
+            {% if all_documents %}
+                {% for doc in all_documents %}
+                    <div class="tree-item {% if forloop.first %}active{% endif %}" 
+                        onclick="selectDoc(this, {{ doc.id }})" 
+                        data-doc-id="{{ doc.id }}">
+                        <span class="tree-toggle" style="opacity: 0;">▸</span>
+                        <span class="tree-icon">📄</span>
+                        <span class="tree-label" title="{{ doc.title }}">{{ doc.title|truncatechars:35 }}</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-doc">
+                    <i class="bi bi-inbox"></i>
+                    <p>Aucun document</p>
+                </div>
+            {% endif %}
+        </div>
+    </aside>
+    
+    <!-- CENTER PANEL -->
+    <main class="center-panel">
+        {% if primary_document %}
+            <div class="doc-header">
+                <div class="doc-title-area">
+                    <div class="doc-title" title="{{ primary_document.title }}">{{ primary_document.title }}</div>
+                    <div class="doc-subtitle">.PDF • {{ primary_document.file_size|filesizeformat }}</div>
+                </div>
+                <div class="doc-actions">
+                    <a href="{% url 'documents:download' primary_document.pk %}" class="btn-action btn-download">
+                        <i class="bi bi-download"></i>
+                        Télécharger
+                    </a>
+                    <a href="{% url 'chat:conversation_editor' conversation.pk %}" class="btn-action btn-editor">
+                        <i class="bi bi-pencil-square"></i>
+                        Éditeur
+                    </a>
+                </div>
+            </div>
+            <div class="doc-body">
+                <div class="pdf-controls">
+                    <button class="pdf-btn" id="prevPage"><i class="bi bi-chevron-left"></i></button>
+                    <span class="page-info">Page <span id="pageNum">1</span> / <span id="pageCount">-</span></span>
+                    <button class="pdf-btn" id="nextPage"><i class="bi bi-chevron-right"></i></button>
+                    <button class="pdf-btn" onclick="zoomIn()"><i class="bi bi-zoom-in"></i></button>
+                    <button class="pdf-btn" onclick="zoomOut()"><i class="bi bi-zoom-out"></i></button>
+                </div>
+                <div class="pdf-viewer">
+                    <canvas id="pdfCanvas"></canvas>
+                </div>
+            </div>
+        {% else %}
+            <div class="no-doc">
+                <i class="bi bi-file-earmark"></i>
+                <h4>Aucun document</h4>
+            </div>
+        {% endif %}
+    </main>
+    
+    <!-- RIGHT SIDEBAR - Assistant -->
+    <aside class="right-sidebar">
+        <div class="chat-header">
+            <div class="chat-title">Assistant IA</div>
+            <div class="chat-add">+</div>
+        </div>
+        <div class="chat-messages" id="chatBox">
+            {% for msg in messages_list %}
+                <div class="chat-msg {{ msg.role }}">
+                    <div class="msg-bubble">{{ msg.content }}</div>
+                    <div class="msg-time">{{ msg.created_at|date:"H:i" }}{% if msg.role == 'assistant' and msg.response_time %} • {{ msg.response_time|floatformat:2 }}s{% endif %}</div>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <p>Bonjour ! Comment puis-je vous aider<br>avec vos données ?</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="chat-input-area">
+            <form class="chat-form" id="chatForm" method="post" action="{% url 'chat:send_message' conversation.pk %}">
+                {% csrf_token %}
+                <div class="input-wrapper">
+                    <textarea name="content" class="chat-input" rows="2" placeholder="Posez votre question..." id="msgInput" required></textarea>
+                </div>
+                <button type="submit" class="send-btn" id="sendBtn">
+                    <i class="bi bi-send-fill"></i>
+                </button>
+            </form>
+        </div>
+    </aside>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let pdfDoc = null, pageNum = 1, pageRendering = false, pageNumPending = null, scale = 1.4;
+const canvas = document.getElementById('pdfCanvas');
+const ctx = canvas ? canvas.getContext('2d') : null;
+
+{% if primary_document %}
+pdfjsLib.getDocument('{{ primary_document.file.url }}').promise.then(pdf => {
+    pdfDoc = pdf;
+    document.getElementById('pageCount').textContent = pdf.numPages;
+    renderPage(pageNum);
+});
+{% endif %}
+
+function renderPage(num) {
+    if (!pdfDoc || !canvas) return;
+    pageRendering = true;
+    pdfDoc.getPage(num).then(page => {
+        const viewport = page.getViewport({scale: scale});
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        page.render({canvasContext: ctx, viewport: viewport}).promise.then(() => {
+            pageRendering = false;
+            if (pageNumPending !== null) { renderPage(pageNumPending); pageNumPending = null; }
+        });
+    });
+    document.getElementById('pageNum').textContent = num;
+}
+
+function queueRenderPage(num) { pageRendering ? pageNumPending = num : renderPage(num); }
+document.getElementById('prevPage')?.addEventListener('click', () => { if (pageNum > 1) queueRenderPage(--pageNum); });
+document.getElementById('nextPage')?.addEventListener('click', () => { if (pdfDoc && pageNum < pdfDoc.numPages) queueRenderPage(++pageNum); });
+function zoomIn() { scale += 0.2; renderPage(pageNum); }
+function zoomOut() { if (scale > 0.5) { scale -= 0.2; renderPage(pageNum); } }
+
+function toggleTree(el) {
+    el.classList.toggle('expanded');
+    const children = el.nextElementSibling;
+    if (children && children.classList.contains('tree-children')) {
+        children.style.display = children.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+function selectDoc(el) {
+    document.querySelectorAll('.tree-item').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function scrollChat() { const chat = document.getElementById('chatBox'); chat.scrollTop = chat.scrollHeight; }
+scrollChat();
+
+document.getElementById('chatForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const input = document.getElementById('msgInput');
+    const btn = document.getElementById('sendBtn');
+    const msg = input.value.trim();
+    if (!msg) return;
+    
+    input.disabled = btn.disabled = true;
+    const chatBox = document.getElementById('chatBox');
+    chatBox.querySelector('.empty-state')?.remove();
+    
+    chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg user"><div class="msg-bubble">${escapeHtml(msg)}</div><div class="msg-time">${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</div></div>`);
+    scrollChat();
+    input.value = '';
+    
+    chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg assistant" id="typing"><div class="msg-bubble"><div class="typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div></div>`);
+    scrollChat();
+    
+    fetch(this.action, { method: 'POST', body: formData, headers: {'X-Requested-With': 'XMLHttpRequest'} })
+    .then(r => r.json())
+    .then(data => {
+        document.getElementById('typing')?.remove();
+        if (data.success === true) {
+            chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg assistant"><div class="msg-bubble">${escapeHtml(data.assistant_message.content)}</div><div class="msg-time">${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})} • ${data.assistant_message.response_time.toFixed(2)}s</div></div>`);
+            scrollChat();
+        }
+    })
+    .catch(() => document.getElementById('typing')?.remove())
+    .finally(() => { input.disabled = btn.disabled = false; input.focus(); });
+});
+
+function escapeHtml(text) {
+    const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+</script>
+{% endblock %}

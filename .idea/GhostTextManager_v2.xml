@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GhostTextManager">
+    <option name="inputs">
+      <map>
+        <entry key="(.venv) PS C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project&gt; cd C:/Users/yayab/PycharmProjects/Pharmacie/docmind_project; python test_server_response.py; echo __SWEEP_TERMINAL_COMMAND_FINISHED_1762473715587_388&#10;================================================================================&#10;TEST DE REQUÊTE HTTP AU SERVEUR DJANGO&#10;================================================================================&#10;&#10; URL testée: http://127.0.0.1:8000/chat/compare/result/?doc1=58&amp;doc2=57&#10;&#10;⏳ Envoi de la requête HTTP...&#10;&#10;⚠️ REGARDEZ LE TERMINAL DJANGO - une ligne DOIT apparaître !&#10;&#10;&#10;================================================================================&#10;RÉSULTAT DE LA REQUÊTE&#10;================================================================================&#10;&#10;✓ Code HTTP: 200&#10;✓ Taille de la réponse: 4944 caractères&#10;&#10; Extrait du HTML (200 premiers caractères après &lt;body&gt;):&#10;--------------------------------------------------------------------------------&#10;&lt;body&gt;&#10;    &lt;!-- Navigation --&gt;&#10;    &lt;nav class=&quot;navbar navbar-expand-lg navbar-dark bg-primary&quot;&gt;&#10;        &lt;div class=&quot;container-fluid&quot;&gt;&#10;            &lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;&#10;                &lt;i c...&#10;&#10;================================================================================&#10;VÉRIFICATION DU TERMINAL DJANGO&#10;================================================================================&#10;&#10;Dans le terminal Django, vous DEVEZ voir une ligne comme:&#10;[07/Nov/2025 XX:XX:XX] &quot;GET /chat/compare/result/?doc1=58&amp;doc2=57 HTTP/1.1&quot; 200 XXXX&#10;&#10;ET vous devez voir les logs de debug:&#10;[DEBUG] GROQ_AVAILABLE: ...&#10;[DEBUG] hasattr(settings, 'GROQ_API_KEY'): ...&#10;&#10;⚠️ Si vous ne voyez RIEN dans le terminal → le serveur n'a pas été redémarré&#10;&#10;================================================================================&#10;__SWEEP_TERMINAL_COMMAND_FINISHED_1762473715587_388&#10;(.venv) PS C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project&gt;">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762473775590" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="Au lieu de développer les fonctionnalités séparément, nous souhaitons concevoir un système complet, similaire à l’interface de ChatGPT, intégrant toutes les options possibles. L’ensemble des questions sera adressé à notre LLM, agissant comme un agent intelligent capable de générer des réponses à partir des documents importés et aussi generer des documents typique telechargeable en pdf&#10;&#10;Lorsqu’un utilisateur téléverse plusieurs documents (par exemple deux ou plus), il pourra demander à l’agent d’identifier les différences entre ces documents. L’agent sera également en mesure de générer automatiquement une version mise à jour ou fusionnée du document.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762538479090" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 1006, in _find_and_load_unlocked&#10;  File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 688, in _load_unlocked&#10;  File &quot;&lt;frozen importlib._bootstrap_external&gt;&quot;, line 883, in exec_module&#10;  File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 241, in _call_with_frames_removed&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\urls.py&quot;, line 7, in &lt;module&gt;&#10;    from . import editor_views as editor&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\editor_views.py&quot;, line 14, in &lt;module&gt;&#10;    from .advanced_pdf_service import AdvancedPDFExtractor, PDFToEditableConverter&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\advanced_pdf_service.py&quot;, line 7, in &lt;module&gt;&#10;    import fitz  # PyMuPDF&#10;ModuleNotFoundError: No module named 'fitz'">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762650920292" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="Uncaught ReferenceError: loadDocument is not defined&#10;    at HTMLDivElement.onclick (editor/:660:57)Understand this error&#10;1000The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.Understand this warning&#10;2editor/:1379 Auto-sauvegarde effectuée&#10;1675 log entries are not shown.Understand this warning&#10;Vous&#10;supprime le gras sur le texte S 20098&#10;&#10; Agent DocMind&#10;Désolé, mais il semble que la commande pour supprimer le gras sur le texte &quot;S 20098&quot; n'a pas abouti. Le formatage du contenu est invalide. Veuillez vérifier si le texte &quot;S 20098&quot; est bien présent dans le document et si le formatage gras est appliqué à ce texte. Si vous avez besoin d'aide supplémentaire, n'hésitez pas à me demander.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762656106918" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="Uncaught ReferenceError: updateCanvasStats is not defined&#10;    at i.&lt;anonymous&gt; (editor/:928:13)&#10;    at i.fire (fabric.min.js:1:3732)&#10;    at i._onObjectAdded (fabric.min.js:1:85929)&#10;    at i.add (fabric.min.js:1:4577)&#10;    at convertQuillToFabric (editor/:1128:22)&#10;    at switchEditorMode (editor/:1113:13)&#10;    at HTMLButtonElement.&lt;anonymous&gt; (editor/:1018:13)&#10;    at HTMLButtonElement.dispatch (jquery-3.7.1.min.js:2:40035)&#10;    at v.handle (jquery-3.7.1.min.js:2:38006)Understand this error">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762652825945" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="Vous&#10;enlève le gras sur S 20098&#10;&#10; Agent DocMind&#10;Désolé, mais il semble que la commande pour supprimer le gras sur le texte &quot;S 20098&quot; n'a pas abouti. Le formatage du contenu est invalide. Veuillez vérifier si le texte &quot;S 20098&quot; est bien présent dans le document et si le formatage gras est appliqué à ce texte. Si vous avez besoin d'aide supplémentaire, n'hésitez pas à me demander.&#10;voila les logs:[09/Nov/2025 12:40:27] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 12:40:27] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 12:40:33] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[AGENT] Traitement du message: 'enlève le gras sur S 20098...'&#10;[AGENT] Contexte: 1 documents attachés&#10;[AGENT] Appel du LLM avec 7 messages et 6 outils&#10;[AGENT] Le modèle veut appeler 1 outil(s)&#10;[AGENT] Exécution de l'outil: format_text&#10;[AGENT] Arguments: {'document_id': 78, 'formatting_action': 'remove_bold', 'text_to_format': 'S 20098'}&#10;[TOOL] format_text: doc_id=78, text='S 20098', action=remove_bold&#10;[AGENT] Deuxième appel au LLM avec les résultats des outils&#10;[AGENT] Réponse générée en 1.55s&#10;[AGENT] Outils utilisés: ['format_text']&#10;[AGENT] Fichiers générés: 0&#10;[09/Nov/2025 12:40:58] &quot;POST /chat/32/send/ HTTP/1.1&quot; 200 592&#10;[09/Nov/2025 12:41:02] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 12:41:27] &quot;POST /chat/editor/77/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 12:41:27] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 12:41:27] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 12:41:27] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 12:41:33] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762688521879" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.&#10;For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/&#10;[07/Nov/2025 01:15:20] &quot;GET / HTTP/1.1&quot; 302 0&#10;[07/Nov/2025 01:15:20] &quot;GET /dashboard/ HTTP/1.1&quot; 200 6218&#10;[07/Nov/2025 01:15:37] &quot;GET /documents/upload/ HTTP/1.1&quot; 200 7287&#10;[07/Nov/2025 01:15:48] &quot;POST /documents/upload/ HTTP/1.1&quot; 302 0&#10;[07/Nov/2025 01:15:48] &quot;GET /documents/61/analyze/ HTTP/1.1&quot; 200 6568&#10;[INFO] PDF extrait avec pdfplumber: 2 pages, 2 tableau(x)&#10;[INFO] Structure PDF stockée: 2 tableau(x)&#10;[07/Nov/2025 01:15:50] &quot;POST /documents/61/analyze/ HTTP/1.1&quot; 302 0&#10;[07/Nov/2025 01:15:50] &quot;GET /documents/61/ HTTP/1.1&quot; 200 9882&#10;[07/Nov/2025 01:15:52] &quot;GET /documents/61/analysis/ HTTP/1.1&quot; 200 7632&#10;[07/Nov/2025 01:16:00] &quot;GET /documents/ HTTP/1.1&quot; 200 28754&#10;[07/Nov/2025 01:16:04] &quot;GET /documents/upload/ HTTP/1.1&quot; 200 7287&#10;[07/Nov/2025 01:16:14] &quot;POST /documents/upload/ HTTP/1.1&quot; 302 0&#10;[07/Nov/2025 01:16:14] &quot;GET /documents/62/analyze/ HTTP/1.1&quot; 200 6571&#10;[INFO] PDF extrait avec pdfplumber: 3 pages, 4 tableau(x)&#10;[INFO] Structure PDF stockée: 4 tableau(x)&#10;[07/Nov/2025 01:16:15] &quot;POST /documents/62/analyze/ HTTP/1.1&quot; 302 0&#10;[07/Nov/2025 01:16:15] &quot;GET /documents/62/ HTTP/1.1&quot; 200 9885&#10;[07/Nov/2025 01:16:20] &quot;GET /chat/compare/ HTTP/1.1&quot; 200 32893&#10;[DEBUG] GROQ_AVAILABLE: True&#10;[DEBUG] hasattr(settings, 'GROQ_API_KEY'): True&#10;[DEBUG] settings.GROQ_API_KEY: gsk_WVkylxIrmpywVQqb...&#10;[INFO] Toutes les vérifications passées, appel du LLM...&#10;[INFO] Initialisation du client Groq...&#10;[INFO] Client Groq initialisé avec succès&#10;[INFO] Longueurs des contenus: Doc1=2701 chars (tronqué à 2701), Doc2=2762 chars (tronqué à 2762)&#10;[INFO] Envoi de la requête au LLM (modèle: llama-3.3-70b-versatile)...&#10;[SUCCESS] Réponse LLM reçue: 2414 caractères, 2669 tokens utilisés&#10;[07/Nov/2025 01:16:32] &quot;GET /chat/compare/result/?doc1=61&amp;doc2=62 HTTP/1.1&quot; 200 35130&#10;[INFO] Fichier original trouvé: C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\media\documents\2025\11\07\DTC_S020098_PF_N_SPE_50520_EN_3_nvatSLl.0_1.pdf&#10;[INFO] Structure PDF récupérée de la DB: 2 tableau(x)&#10;[INFO] Appel de DocumentModifierService.apply_changes_to_file()...&#10;[INFO] Utilisation de la structure PDF stockée (2 tableau(x)) voila encore ::&#10;[INFO] Résultat de apply_changes_to_file: success=True, message=PDF généré avec structure préservée (2 tableau(x) recréé(s)), buffer=présent&#10;[INFO] PDF extrait avec pdfplumber: 2 pages, 3 tableau(x)&#10;[07/Nov/2025 01:16:44] &quot;POST /chat/update/apply/ HTTP/1.1&quot; 200 325&#10;[07/Nov/2025 01:16:49] &quot;GET /chat/download-updated/61/original/ HTTP/1.1&quot; 200 4833">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762475261964" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="[06/Nov/2025 22:20:26] &quot;GET /chat/compare/ HTTP/1.1&quot; 200 37691&#10;[06/Nov/2025 22:20:34] &quot;GET /chat/compare/result/?doc1=35&amp;doc2=36 HTTP/1.1&quot; 200 35273&#10;[ERROR] apply_changes_to_document: 'DocumentProcessorService' object has no attribute 'extract_text'&#10;Internal Server Error: /chat/update/apply/&#10;[06/Nov/2025 22:20:42] &quot;POST /chat/update/apply/ HTTP/1.1&quot; 500 142&#10;[06/Nov/2025 22:21:03] &quot;POST /chat/update/apply/ HTTP/1.1&quot; 200 284&#10;[06/Nov/2025 22:21:10] &quot;GET /chat/download-updated/35/pdf/ HTTP/1.1&quot; 200 4886">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762464108713" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="[09/Nov/2025 01:08:09] &quot;GET /media/documents/2025/11/09/DTC_S020098_PF_N_SPE_50520_EN_3_Q2JupZh.0_1.pdf HTTP/1.1&quot; 200 97131&#10;[AGENT] Traitement du message: 'dans le document remplace 127.8 en 45...'&#10;[AGENT] Contexte: 1 documents attachés&#10;[AGENT ERROR] FieldError: Cannot resolve keyword 'created_at' into field. Choices are: conversation, conversation_id, description, downloaded_count, file, file_size, file_type, generated_at, generation_params, id, message, message_id, source_documents, title, tool_used&#10;Traceback (most recent call last):&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\agent_service.py&quot;, line 187, in process_message&#10;    response_data = AgentService._call_llm_with_tools(&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\agent_service.py&quot;, line 289, in _call_llm_with_tools&#10;    messages = AgentService._build_messages(user_message, context, conversation)&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\agent_service.py&quot;, line 415, in _build_messages&#10;    ).order_by('-created_at')[:3]&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\db\models\query.py&quot;, line 1722, in order_by&#10;    obj.query.add_ordering(*field_names)&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\db\models\sql\query.py&quot;, line 2305, in add_ordering&#10;    self.names_to_path(item.split(LOOKUP_SEP), self.model._meta)&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\db\models\sql\query.py&quot;, line 1806, in names_to_path&#10;    raise FieldError(&#10;django.core.exceptions.FieldError: Cannot resolve keyword 'created_at' into field. Choices are: conversation, conversation_id, description, downloaded_count, file, file_size, file_type, generated_at, generation_params, id, message, message_id, source_documents, title, tool_used&#10;Internal Server Error: /chat/29/send/&#10;[09/Nov/2025 01:08:48] &quot;POST /chat/29/send/ HTTP/1.1&quot; 500 274">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762646980053" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="[09/Nov/2025 02:40:28] &quot;GET /chat/create/?document=77 HTTP/1.1&quot; 200 10493&#10;[09/Nov/2025 02:40:37] &quot;POST /chat/create/?document=77 HTTP/1.1&quot; 302 0&#10;[09/Nov/2025 02:40:37] &quot;GET /chat/31/ HTTP/1.1&quot; 200 44024&#10;[09/Nov/2025 02:40:37] &quot;GET /media/documents/2025/11/09/DTC_S020098_PF_N_SPE_50520_EN_3.0_1_-_Copie.pdf HTTP/1.1&quot; 200 97131&#10;[09/Nov/2025 02:40:46] &quot;GET /chat/conversation/31/editor/ HTTP/1.1&quot; 200 47877&#10;[09/Nov/2025 02:40:46] &quot;POST /chat/editor/77/extract/ HTTP/1.1&quot; 200 13330&#10;Internal Server Error: /chat/editor/77/autosave/&#10;[09/Nov/2025 02:41:16] &quot;POST /chat/editor/77/autosave/ HTTP/1.1&quot; 500 125&#10;Internal Server Error: /chat/editor/76/autosave/&#10;[09/Nov/2025 02:41:27] &quot;POST /chat/editor/76/autosave/ HTTP/1.1&quot; 500 125&#10;Internal Server Error: /chat/editor/77/autosave/&#10;[09/Nov/2025 02:41:46] &quot;POST /chat/editor/77/autosave/ HTTP/1.1&quot; 500 125&#10;[09/Nov/2025 02:42:07] &quot;GET /chat/conversation/31/editor/ HTTP/1.1&quot; 200 47877&#10;[09/Nov/2025 02:42:07] &quot;POST /chat/editor/77/extract/ HTTP/1.1&quot; 200 13330&#10;Internal Server Error: /chat/editor/76/autosave/&#10;[09/Nov/2025 02:42:27] &quot;POST /chat/editor/76/autosave/ HTTP/1.1&quot; 500 125&#10;Internal Server Error: /chat/editor/76/autosave/&#10;[09/Nov/2025 02:42:42] &quot;POST /chat/editor/76/autosave/ HTTP/1.1&quot; 500 125">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762652583600" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="[12/Nov/2025 20:22:04] &quot;POST /chat/editor/92/extract/ HTTP/1.1&quot; 200 80240&#10;[AGENT] Traitement du message: 'Change la couleur de &quot;Tests&quot; en rouge...'&#10;[AGENT] Contexte: 1 documents attachés&#10;[AGENT] Appel du LLM avec 7 messages et 6 outils&#10;[AGENT] Le modèle veut appeler 1 outil(s)&#10;[AGENT] Exécution de l'outil: format_text&#10;[AGENT] Arguments: {'document_id': 92, 'formatting_action': 'set_color', 'formatting_value': '#FF0000', 'text_to_format': 'Tests'}&#10;[TOOL] format_text: doc_id=92, text='Tests', action=set_color&#10;[DEBUG] pdf_structure exists: True&#10;[DEBUG] pdf_structure type: &lt;class 'dict'&gt;&#10;[DEBUG] editor_draft keys: dict_keys(['content', 'content_type', 'saved_at'])&#10;[DEBUG] content_data type: &lt;class 'dict'&gt;&#10;[DEBUG] content_type: fabric&#10;[DEBUG] content_data: {'version': '5.1.0', 'objects': [{'type': 'rect', 'version': '5.1.0', 'originX': 'left', 'originY': 'top', 'left': 0, 'top': 0, 'width': 1262.83, 'height': 892.91, 'fill'&#10;: '#ffffff', 'stroke': '#cbd5e0', 'strokeWidth': 1, 'strokeDashArray': None, 'strokeLineCap': 'butt', 'strokeDashOffset': 0, 'strokeLineJoin': 'miter', 'strokeUniform': False, 'strokeMiterLimit': 4, 'scaleX': 1, 'scaleY': 1, 'angle': 0, 'flipX': False, 'flipY': False, 'opacity': 1, 'shadow': {'color': 'rgba(0,0,0,0.1)', 'blur':&#10;[DEBUG] Nombre d'objets texte dans Fabric: 0&#10;[DEBUG] Recherche de: 'Tests'&#10;[AGENT] Deuxième appel au LLM avec les résultats des outils&#10;[AGENT] Réponse générée en 1.20s&#10;[AGENT] Outils utilisés: ['format_text']&#10;[AGENT] Fichiers générés: 0&#10;[12/Nov/2025 20:22:13] &quot;POST /chat/50/send/ HTTP/1.1&quot; 200 372&#10;Not Found: /chat/editor/79/autosave/&#10;[12/Nov/2025 20:22:24] &quot;POST /chat/editor/79/autosave/ HTTP/1.1&quot; 404 11504&#10;[12/Nov/2025 20:22:24] &quot;POST /chat/editor/82/autosave/ HTTP/1.1&quot; 200 117&#10;[12/Nov/2025 20:22:24] &quot;POST /chat/editor/91/autosave/ HTTP/1.1&quot; 200 117&#10;Not Found: /chat/editor/80/autosave/&#10;[12/Nov/2025 20:22:24] &quot;POST /chat/editor/80/autosave/ HTTP/1.1&quot; 404 11504&#10;[12/Nov/2025 20:22:24] &quot;POST /chat/editor/82/autosave/ HTTP/1.1&quot; 200 117">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762975354665" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="ajoute le faite que notre llm puisse faire la comparaison de deux document et montre les difference pour les parties qui ont changées et fais aussi l'interface">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762455150201" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="ameliore maintenant l'interface de conversation">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762542759151" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="aucun tableau ni structure dans edition visuel">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762959790317" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="augmente la largeur des pages pour qu'on voit tout le contenu et la section de edition visuelle est tres courte fais une interface reel avec un affichage complet">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762967007132" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="c'est bien ça fonctionne maiq quand deux documents sont uploadé on voit qu'un seul s'afficher sur l'interface">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762548623879" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="c'est dans la partie comparaison que ça ne fonctionne pas:&#10;Analyse Comparative&#10;Analyse basique&#10;**Analyse de Similarité Basique**&#10;&#10;**Similarité globale**: 84.3%&#10;&#10;**Statistiques**:&#10;- Mots communs: 145&#10;- Mots uniques au Document 1: 27&#10;- Mots uniques au Document 2: 27&#10;&#10;**Note**: Cette analyse est basique. Pour une comparaison détaillée, veuillez configurer l'API Groq.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762472317020" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="cela ne fonctionne pas :voici des code que tu peux utiliser pour ajuster :">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762963639929" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="commence l'implementation">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762642259937" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="commence l'option A  et apres tu finalise   le problème de structure PDF actuel">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762539618502" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="continues">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="12.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762972723551" />
+                  <option value="1762970531772" />
+                  <option value="1762965402542" />
+                  <option value="1762650345304" />
+                  <option value="1762650133314" />
+                  <option value="1762649068781" />
+                  <option value="1762545111457" />
+                  <option value="1762544713534" />
+                  <option value="1762474247954" />
+                  <option value="1762459444449" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="corrige ça:">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762553191186" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="d'autres pages ne s'affiche pas, on arrive pas à voir la totalité des pages">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762966596666" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="dans le document modifié rien ne change :">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762644629208" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="hello">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762641661617" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="il doit pouvoir repondre aux question sur le document :[AGENT] Réponse générée en 1.14s&#10;[AGENT] Outils utilisés: []&#10;[AGENT] Fichiers générés: 0&#10;[07/Nov/2025 19:43:23] &quot;POST /chat/20/send/ HTTP/1.1&quot; 200 1460&#10;[AGENT] Traitement du message: 'fais la comparaison de ces deux document...'&#10;[AGENT] Contexte: 2 documents attachés&#10;[AGENT] Appel du LLM avec 4 messages et 3 outils&#10;[AGENT] Le modèle veut appeler 1 outil(s)&#10;[AGENT] Exécution de l'outil: compare_documents&#10;[AGENT] Arguments: {'comparison_type': 'full', 'document_ids': [67, 68]}&#10;[TOOL] compare_documents: [67, 68], type=full&#10;[DEBUG] GROQ_AVAILABLE: True&#10;[DEBUG] hasattr(settings, 'GROQ_API_KEY'): True&#10;[DEBUG] settings.GROQ_API_KEY: gsk_WVkylxIrmpywVQqb...&#10;[INFO] Toutes les vérifications passées, appel du LLM...&#10;[INFO] Initialisation du client Groq...&#10;[INFO] Client Groq initialisé avec succès&#10;[INFO] Longueurs des contenus: Doc1=2762 chars (tronqué à 2762), Doc2=2450 chars (tronqué à 2450)&#10;[INFO] Envoi de la requête au LLM (modèle: llama-3.3-70b-versatile)...&#10;[SUCCESS] Réponse LLM reçue: 2498 caractères, 2626 tokens utilisés&#10;[TOOL] Rapport de comparaison PDF généré: Comparaison_68_67_20251107_184434.pdf&#10;[AGENT ERROR] TypeError: Object of type GeneratedFile is not JSON serializable&#10;Traceback (most recent call last):&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\agent_service.py&quot;, line 136, in process_message&#10;    response_data = AgentService._call_llm_with_tools(&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\agent_service.py&quot;, line 293, in _call_llm_with_tools&#10;    &quot;content&quot;: json.dumps(tool_result, ensure_ascii=False)&#10;  File &quot;C:\Users\yayab\AppData\Local\Programs\Python\Python310\lib\json\__init__.py&quot;, line 238, in dumps&#10;    **kw).encode(obj)&#10;  File &quot;C:\Users\yayab\AppData\Local\Programs\Python\Python310\lib\json\encoder.py&quot;, line 199, in encode&#10;    chunks = self.iterencode(o, _one_shot=True)&#10;  File &quot;C:\Users\yayab\AppData\Local\Programs\Python\Python310\lib\json\encoder.py&quot;, line 257, in iterencode&#10;    return _iterencode(o, 0)&#10;  File &quot;C:\Users\yayab\AppData\Local\Programs\Python\Python310\lib\json\encoder.py&quot;, line 179, in default&#10;    raise TypeError(f'Object of type {o.__class__.__name__} '&#10;TypeError: Object of type GeneratedFile is not JSON serializable&#10;Internal Server Error: /chat/20/send/&#10;[07/Nov/2025 19:44:35] &quot;POST /chat/20/send/ HTTP/1.1&quot; 500 84">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762541118216" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="il n'y a pas de marge dans l'interface et aussi on ne veut pas la couleur violet tu peux utiliser un melange de couleur et aussi augmente la hauteur pour qu'on puisse voir tout le contenu par page sans scroller">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1761991512256" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="il ya des parties du tableau qui sont detectés mais ne repectent pas la structure original, les texte sont mal positionné et aussi le document original ne contient pas de couleur pourtant la mise contient donc corrige tout ça :">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762474850982" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="il ya une erreur :[AGENT] Appel du LLM avec 2 messages et 5 outils&#10;[AGENT] Le modèle veut appeler 1 outil(s)&#10;[AGENT] Exécution de l'outil: edit_document&#10;[AGENT] Arguments: {'context': 'dans le tableau', 'document_id': 72, 'find_text': '142.2', 'replace_with': '150.2'}&#10;[TOOL] edit_document: doc_id=72, find='142.2', replace='150.2'&#10;[TOOL] Modification à appliquer: 1. AVANT : 142.2&#10;   APRÈS : 150.2&#10;   CONTEXTE : dans le tableau&#10;[TOOL ERROR] edit_document: type object 'DocumentUpdateService' has no attribute 'update_document'&#10;Traceback (most recent call last):&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\document_tools_service.py&quot;, line 520, in edit_document&#10;    result = DocumentUpdateService.update_document(&#10;AttributeError: type object 'DocumentUpdateService' has no attribute 'update_document'&#10;[AGENT] Deuxième appel au LLM avec les résultats des outils&#10;[AGENT] Réponse générée en 0.96s&#10;[AGENT] Outils utilisés: ['edit_document']&#10;[AGENT] Fichiers générés: 0&#10;[09/Nov/2025 00:09:30] &quot;POST /chat/26/send/ HTTP/1.1&quot; 200 508">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762643426062" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="implemente le mode visuel">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762652024178" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="j'ai demarré le server mais sur l'interface on a toujours les meme choses:&#10;Analyse Comparative&#10;Analyse basique&#10;**Analyse de Similarité Basique**&#10;&#10;**Similarité globale**: 84.3%&#10;&#10;**Statistiques**:&#10;- Mots communs: 145&#10;- Mots uniques au Document 1: 27&#10;- Mots uniques au Document 2: 27&#10;&#10;**Note**: Cette analyse est basique. Pour une comparaison détaillée, veuillez configurer l'API Groq.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762472707943" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="l'agent doit  egalement comprendre les documents et  repondre aux question comme avant">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762544267964" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="l'agent n'arrive pas à donner la reponse :[07/Nov/2025 21:01:01] &quot;GET /chat/21/ HTTP/1.1&quot; 200 35764&#10;[07/Nov/2025 21:01:02] &quot;GET /media/documents/2025/11/07/DTC_S020098_PF_N_SPE_50520_EN_3_gDZNPyB.0_1.pdf HTTP/1.1&quot; 200 97131&#10;[AGENT] Traitement du message: 'que parle ce document...'&#10;[AGENT] Contexte: 1 documents attachés&#10;[AGENT] Appel du LLM avec 2 messages et 4 outils&#10;[AGENT] Le modèle veut appeler 1 outil(s)&#10;[AGENT] Exécution de l'outil: answer_question&#10;[AGENT] Arguments: {'document_ids': [69], 'question': 'Que parle ce document?'}&#10;[TOOL] answer_question: 'Que parle ce document?', docs=[69]&#10;[TOOL] Appel du LLM pour répondre à la question...&#10;[TOOL] Réponse générée: 715 caractères&#10;[AGENT] Deuxième appel au LLM avec les résultats des outils&#10;[AGENT] Réponse générée en 2.44s&#10;[AGENT] Outils utilisés: ['answer_question']&#10;[AGENT] Fichiers générés: 0&#10;[07/Nov/2025 21:01:36] &quot;POST /chat/21/send/ HTTP/1.1&quot; 200 1068&#10;[AGENT] Traitement du message: 'donne le critere d'acceptation de S1...'&#10;[AGENT] Contexte: 1 documents attachés&#10;[AGENT] Appel du LLM avec 4 messages et 4 outils&#10;[AGENT] Le modèle veut appeler 1 outil(s)&#10;[AGENT] Exécution de l'outil: answer_question&#10;[AGENT] Arguments: {'document_ids': [69], 'question': &quot;Quels sont les critères d'acceptation de S1?&quot;}&#10;[TOOL] answer_question: 'Quels sont les critères d'acceptation de S1?', docs=[69]&#10;[TOOL] Appel du LLM pour répondre à la question...&#10;[TOOL] Réponse générée: 858 caractères&#10;[AGENT] Deuxième appel au LLM avec les résultats des outils&#10;[AGENT] Réponse générée en 5.25s&#10;[AGENT] Outils utilisés: ['answer_question']&#10;[AGENT] Fichiers générés: 0&#10;[07/Nov/2025 21:02:53] &quot;POST /chat/21/send/ HTTP/1.1&quot; 200 1222&#10;Not Found: /.well-known/appspecific/com.chrome.devtools.json&#10;[07/Nov/2025 21:03:08] &quot;GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1&quot; 404 4910">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762545848641" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="l'agent n'arrive pas à interragir avec l'edition visuelle : Agent DocMind&#10;Désolé, mais la commande que vous avez entrée n'est pas valide. Pour changer tous les champs &quot;Tests&quot; en &quot;test1&quot; dans l'édition visuelle, vous pouvez utiliser la fonction `edit_document` suivante : &lt;function&gt;edit_document{&quot;document_id&quot;:91,&quot;action&quot;:&quot;replace&quot;,&quot;old_text&quot;:&quot;Tests&quot;,&quot;new_text&quot;:&quot;test1&quot;}&lt;/function&gt;&#10;Not Found: /chat/editor/80/autosave/&#10;[12/Nov/2025 20:01:24] &quot;POST /chat/editor/80/autosave/ HTTP/1.1&quot; 404 11504&#10;Not Found: /chat/editor/79/autosave/&#10;[12/Nov/2025 20:02:24] &quot;POST /chat/editor/79/autosave/ HTTP/1.1&quot; 404 11504&#10;[12/Nov/2025 20:02:24] &quot;POST /chat/editor/82/autosave/ HTTP/1.1&quot; 200 117&#10;Not Found: /chat/editor/80/autosave/&#10;[12/Nov/2025 20:02:24] &quot;POST /chat/editor/80/autosave/ HTTP/1.1&quot; 404 11504&#10;[12/Nov/2025 20:02:24] &quot;POST /chat/editor/82/autosave/ HTTP/1.1&quot; 200 117&#10;[AGENT] Traitement du message: 'change tous les champs Tests en test1 dans edition...'&#10;[AGENT] Contexte: 1 documents attachés&#10;[AGENT] Appel du LLM avec 6 messages et 6 outils&#10;[AGENT] Le modèle veut appeler 1 outil(s)&#10;[AGENT] Exécution de l'outil: format_text&#10;[AGENT] Arguments: {'document_id': 91, 'formatting_action': 'remove_all_formatting', 'replace_with': 'test1', 'text_to_format': 'Tests'}&#10;[TOOL] format_text: doc_id=91, text='Tests', action=remove_all_formatting&#10;[DEBUG] pdf_structure exists: True&#10;[DEBUG] pdf_structure type: &lt;class 'dict'&gt;&#10;[DEBUG] editor_draft keys: dict_keys(['content', 'content_type', 'saved_at'])&#10;[DEBUG] content_data type: &lt;class 'dict'&gt;&#10;[DEBUG] content_data: {'version': '5.1.0', 'objects': [{'type': 'rect', 'version': '5.1.0', 'originX': 'left', 'originY': 'top', 'left': 0, 'top': 0, 'width': 1262.83, 'height': 892.91, 'fill'&#10;: '#ffffff', 'stroke': '#cbd5e0', 'strokeWidth': 1, 'strokeDashArray': None, 'strokeLineCap': 'butt', 'strokeDashOffset': 0, 'strokeLineJoin': 'miter', 'strokeUniform': False, 'strokeMiterLimit': 4, 'scaleX': 1, 'scaleY': 1, 'angle': 0, 'flipX': False, 'flipY': False, 'opacity': 1, 'shadow': {'color': 'rgba(0,0,0,0.1)', 'blur':&#10;[AGENT] Deuxième appel au LLM avec les résultats des outils&#10;[AGENT] Réponse générée en 3.79s&#10;[AGENT] Outils utilisés: ['format_text']&#10;[AGENT] Fichiers générés: 0&#10;[12/Nov/2025 20:03:22] &quot;POST /chat/49/send/ HTTP/1.1&quot; 200 585&#10;Not Found: /chat/editor/79/autosave/&#10;[12/Nov/2025 20:03:24] &quot;POST /chat/editor/79/autosave/ HTTP/1.1&quot; 404 11504&#10;[12/Nov/2025 20:03:24] &quot;POST /chat/editor/82/autosave/ HTTP/1.1&quot; 200 117&#10;Not Found: /chat/editor/80/autosave/&#10;[12/Nov/2025 20:03:24] &quot;POST /chat/editor/80/autosave/ HTTP/1.1&quot; 404 11504&#10;[12/Nov/2025 20:03:24] &quot;POST /chat/editor/82/autosave/ HTTP/1.1&quot; 200 117">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762974307969" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="l'agent ne comprend pas le document du word ou conva :[09/Nov/2025 02:58:00] &quot;GET /media/documents/2025/11/09/DTC_S020098_PF_N_SPE_50520_EN_3_Ar87oPl.0_1_-_Copie.pdf HTTP/1.1&quot; 304 0&#10;[09/Nov/2025 02:58:06] &quot;GET /chat/conversation/32/editor/ HTTP/1.1&quot; 200 53698&#10;[09/Nov/2025 02:58:06] &quot;POST /chat/editor/78/extract/ HTTP/1.1&quot; 200 13332&#10;[09/Nov/2025 02:58:23] &quot;POST /chat/editor/77/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 02:58:27] &quot;POST /chat/editor/76/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 02:58:27] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 02:58:36] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 02:59:06] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[AGENT] Traitement du message: 'enleve le gras sur S 20098...'&#10;[AGENT] Contexte: 1 documents attachés&#10;[AGENT] Appel du LLM avec 4 messages et 5 outils&#10;[AGENT] Le modèle veut appeler 1 outil(s)&#10;[AGENT] Exécution de l'outil: edit_document&#10;[AGENT] Arguments: {'context': 'dans le texte du document you1', 'document_id': 78, 'find_text': 'S 20098', 'replace_with': 'S20098'}&#10;[TOOL] edit_document: doc_id=78, find='S 20098', replace='S20098'&#10;[TOOL] Texte trouvé et remplacé&#10;[INFO] Structure PDF récupérée: 2 tableau(x)&#10;[INFO] Application du remplacement: 'S 20098' → 'S20098'&#10;[TOOL] Document modifié sauvegardé: you1_edited_20251109_025919.pdf&#10;[AGENT] Deuxième appel au LLM avec les résultats des outils&#10;[AGENT] Réponse générée en 1.42s&#10;[AGENT] Outils utilisés: ['edit_document']&#10;[AGENT] Fichiers générés: 1&#10;[09/Nov/2025 02:59:20] &quot;POST /chat/32/send/ HTTP/1.1&quot; 200 574&#10;[09/Nov/2025 02:59:20] &quot;POST /chat/editor/78/extract/ HTTP/1.1&quot; 200 13332&#10;[09/Nov/2025 02:59:24] &quot;POST /chat/editor/77/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 02:59:27] &quot;POST /chat/editor/76/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 02:59:27] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 02:59:36] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 03:00:06] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 03:00:25] &quot;POST /chat/editor/77/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 03:00:27] &quot;POST /chat/editor/76/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 03:00:27] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117&#10;[09/Nov/2025 03:00:37] &quot;POST /chat/editor/78/autosave/ HTTP/1.1&quot; 200 117">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762653681531" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="l'agent ne fonctionne pas et le document extrait ne s'affiche pas :Uncaught SyntaxError: Unexpected token '{'Understand this error">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762651652508" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="l'appele du modele ne fonctionne plus, meme probleme que avant :**Analyse de Similarité Basique**&#10;&#10;**Similarité globale**: 84.3%&#10;&#10;**Statistiques**:&#10;- Mots communs: 145&#10;- Mots uniques au Document 1: 27&#10;- Mots uniques au Document 2: 27&#10;&#10;**Note**: Cette analyse est basique. Pour une comparaison détaillée, veuillez configurer l'API Groq.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762472106422" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="l'edition visuel doit etre l'extraction fidele du docuement avec la structure fidele y compris les tableaux, images, meme position des texte etc..:1000The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.Understand this warning&#10;editor/:1379 Auto-sauvegarde effectuée&#10;1111 log entries are not shown.Understand this warning">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762959452668" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="l'exportation en pdf ne fonctionne pas on arrive pas à voir le contenu du document">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762970028669" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="la mise à jour fonctionne bien mais la mise en  forme original du document n'est pas respecté:on a pas des tableau et des meme position des elements par rapport à l'original :on a juste des texte">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762463136316" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="la structure du document mis à jour affiche toujours l'ancien format pourtant tui avais ameliorer : Succès&#10;Les changements ont été appliqués au contenu texte (fichier original non modifié)&#10;&#10;Document mis à jour: az&#10;Nombre de mots: 435&#10;Temps de traitement: 3.78s&#10; Que s'est-il passé ?&#10;✅ Le contenu texte a été mis à jour dans la base de données&#10;✅ Les changements ont été appliqués directement sans marqueurs&#10;⚠️ La structure originale du fichier n'a pas pu être préservée (format non supporté ou fichier absent)&#10;✅ Le document est maintenant disponible dans votre liste de documents&#10; Télécharger le Document Mis à Jour&#10;Télécharger PDF&#10;Télécharger TXT&#10;Voir Mes Documents&#10;Nouvelle Comparaison&#10;Fermer">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762474074736" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="la structure du document pdf n'est toujours pas respectée">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762465730344" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="le document ne s'affiche pas, ensuite lorsqu'on fais une conversation avec le chat l'interfacte augmente corrige tout ça:Refused to display 'http://127.0.0.1:8000/' in a frame because it set 'X-Frame-Options' to 'deny'.Understand this error">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1761986416850" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="le llm n'est pas appelé pour faire la compraisons oubien c'est l'api qui est terminé:**Analyse de Similarité Basique**&#10;&#10;**Similarité globale**: 84.3%&#10;&#10;**Statistiques**:&#10;- Mots communs: 145&#10;- Mots uniques au Document 1: 27&#10;- Mots uniques au Document 2: 27&#10;&#10;**Note**: Cette analyse est basique. Pour une comparaison détaillée, veuillez configurer l'API Groq.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762470941918" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="les resultat des extraction dans l'editeur visuel sont comme des images :">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762964564219" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="les tableau ne sont pas fideles au document :meme les texte du haut ne s'affiches pas">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762968240878" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="les trait du tableau ne sont pas affichés et la mies en forme n'est pas respecté:">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762965729934" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="notre agent n'a pas accès au document modifié :dans le document tre modifié rempla S5 par s6&#10;00:59&#10;Le texte &quot;S5&quot; n'a pas été trouvé dans le document &quot;tre&quot; modifié. La modification n'a donc pas pu être effectuée.&#10;00:59 ·&#10;0.75s&#10;edit_document">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762646470503" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="notre extraction fidele au document dans editeur ne fonctionne plus alors implemente cette partie correectement et bien fait">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="2.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762959066043" />
+                  <option value="1762958941725" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="notre llm n'est plus appelé:**Analyse de Similarité Basique**&#10;&#10;**Similarité globale**: 84.3%&#10;&#10;**Statistiques**:&#10;- Mots communs: 145&#10;- Mots uniques au Document 1: 27&#10;- Mots uniques au Document 2: 27&#10;&#10;**Note**: Cette analyse est basique. Pour une comparaison détaillée, veuillez configurer l'API Groq.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762470338056" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="on aimerait ameliorer le design de l'interface  chat de  conversation :conversation_detail.html , on aimerait avoir l'affichage du pdf  au centre et à droite le conversation avec un bon style excitant">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1761985420585" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="on ne voit pas sont effet dans l'edition visuelle: Agent DocMind&#10;Bonjour ! Je peux vous aider à éditer ce document. Que souhaitez-vous faire ?&#10;&#10;Vous&#10;Change la couleur de &quot;Tests&quot; en rouge&#10;&#10; Agent DocMind&#10;La couleur de &quot;Tests&quot; a été changée en rouge dans le document ID 92. Vous pouvez visualiser les modifications dans l'éditeur. Si nécessaire, actualisez la page pour voir les changements.&#10;&#10;Vous&#10;souligne la champ &quot;Tests&quot; en rouge&#10;&#10; Agent DocMind&#10;La couleur de &quot;Tests&quot; a été changée en rouge dans le document ID 92. Vous pouvez visualiser les modifications dans l'éditeur. Si nécessaire, actualisez la page pour voir les changements.&#10;&#10;Vous&#10;Change la couleur de &quot;Tests&quot; en italic&#10;&#10; Agent DocMind&#10;Le texte &quot;Tests&quot; a été mis en italique dans le document ID 92. Vous pouvez visualiser les modifications dans l'éditeur. Si nécessaire, actualisez la page pour voir les changements.::::::">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762975957431" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="on veut  manitent ajouter le fait qu'on puisse interragir avec les document en temps reel avec notre agent , on peut demander à l'agent de remplacer ou changer un element dans le document et on voit qu'il change en temps reel,">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762642093302" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="on veut garder la meme mise en forme du document mise à jours avec telechargeable en pdf">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762458430335" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="on veut que l'interface de conversation soit comme un canva ou comme word complet avec toutes les option necessaire avec une extraction fidele du document ou l'utilisateur va uploader ses document et utiliser notre agent pour ses besoin rapide">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762647404597" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="on veut que le document mise à jours respecte sa meme mise en forme original, une fois la mise à jours terminée et lorsqu'on le telecharge on voit le meme document avec les meme style et mise en forme avec les nouvelle partie ajouté sans changer sa forme initiale:">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762475817063" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="on veut que une fois la difference trouvée il fasse une mise à jour directement dans le document">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762457466861" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="oui">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="2.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762466046487" />
+                  <option value="1762463335402" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="pourtant ça existe bien:Vous&#10;Change la couleur de &quot;Tests&quot; en rouge&#10;&#10; Agent DocMind&#10;Désolé, mais le texte &quot;Tests&quot; n'a pas été trouvé dans le document ID 92. Il est donc impossible de changer sa couleur en rouge.&#10;&#10;Vous&#10;Change la couleur de Tests en rouge&#10;&#10; Agent DocMind&#10;Désolé, mais le texte &quot;Tests&quot; n'a pas été trouvé dans le document ID 92. Il est donc impossible de changer sa couleur en rouge.&#10;&#10;Vous&#10;Change la couleur de Appearance en rouge&#10;&#10; Agent DocMind&#10;Désolé, mais le texte &quot;Appearance&quot; n'a pas été trouvé dans le document ID 92. Il est donc impossible de changer sa couleur en rouge.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762975021146" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="regles la partie export:[12/Nov/2025 18:43:55] &quot;POST /chat/editor/91/autosave/ HTTP/1.1&quot; 200 117&#10;Forbidden (CSRF token from POST has incorrect length.): /chat/editor/91/export/&#10;[12/Nov/2025 18:44:04] &quot;POST /chat/editor/91/export/ HTTP/1.1&quot; 403 2537">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762969471845" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="result = block.nodelist.render(context)&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\template\base.py&quot;, line 1016, in render&#10;    return SafeString(&quot;&quot;.join([node.render_annotated(context) for node in self]))&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\template\base.py&quot;, line 1016, in &lt;listcomp&gt;&#10;    return SafeString(&quot;&quot;.join([node.render_annotated(context) for node in self]))&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\template\base.py&quot;, line 977, in render_annotated&#10;    return self.render(context)&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\template\defaulttags.py&quot;, line 480, in render&#10;    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\urls\base.py&quot;, line 98, in reverse&#10;    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\.venv\lib\site-packages\django\urls\resolvers.py&quot;, line 831, in _reverse_with_prefix&#10;    raise NoReverseMatch(msg)&#10;django.urls.exceptions.NoReverseMatch: Reverse for 'document_list' not found. 'document_list' is not a valid view function or pattern name.&#10;[06/Nov/2025 21:30:42] &quot;GET /chat/compare/result/?doc1=25&amp;doc2=26 HTTP/1.1&quot; 500 247402">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762461078406" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="rien ne se passe :Page not found (404)&#10;Request Method:&#9;GET&#10;Request URL:&#9;http://127.0.0.1:8000/chat/documents/compare/result/?doc1=58&amp;doc2=57&#10;Using the URLconf defined in docmind_project.urls, Django tried these URL patterns, in this order:&#10;&#10;admin/&#10;[name='home']&#10;dashboard/ [name='dashboard']&#10;register/ [name='register']&#10;login/ [name='login']&#10;logout/ [name='logout']&#10;profile/ [name='profile']&#10;settings/ [name='settings']&#10;documents/&#10;chat/ [name='conversation_list']&#10;chat/ create/ [name='conversation_create']&#10;chat/ &lt;int:pk&gt;/ [name='conversation_detail']&#10;chat/ &lt;int:pk&gt;/send/ [name='send_message']&#10;chat/ &lt;int:pk&gt;/delete/ [name='conversation_delete']&#10;chat/ message/&lt;int:message_id&gt;/feedback/ [name='message_feedback']&#10;chat/ compare/ [name='documents_compare_select']&#10;chat/ compare/result/ [name='documents_compare_result']&#10;chat/ compare/api/ [name='documents_compare_api']&#10;chat/ update/generate/ [name='documents_update_generate']&#10;chat/ update/download/ [name='documents_update_download']&#10;chat/ update/download-pdf/ [name='documents_update_download_pdf']&#10;chat/ update/apply/ [name='documents_apply_changes']&#10;chat/ download-updated/&lt;int:doc_id&gt;/txt/ [name='documents_download_updated']&#10;chat/ download-updated/&lt;int:doc_id&gt;/pdf/ [name='documents_download_updated_pdf']&#10;chat/ download-updated/&lt;int:doc_id&gt;/original/ [name='documents_download_original_file']&#10;chat/ compare/download-pdf/ [name='documents_comparison_download_pdf']&#10;database/&#10;^media/(?P&lt;path&gt;.*)$&#10;^static/(?P&lt;path&gt;.*)$&#10;The current path, chat/documents/compare/result/, didn’t match any of these.&#10;&#10;You’re seeing this error because you have DEBUG = True in your Django settings file. Change that to False, and Django will display a standard 404 page.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762473402431" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="toujours aucun effet dans edition visuelle mais quand on recharge">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762990615893" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="toujours pareil :que parle ce document&#10;21:12&#10;Le document &quot;der&quot; ne contient pas d'informations spécifiques ou détaillées sur un sujet particulier. Il semble être vide ou ne pas contenir de texte significatif. Par conséquent, je ne peux pas fournir de réponse précise à la question &quot;Que parle ce document ?&quot; car il n'y a pas d'informations disponibles dans le document pour répondre à cette question. Si vous pouviez fournir plus de contexte ou des informations supplémentaires sur le document, je serais ravi de tenter de vous aider à comprendre son contenu. Cependant, sur la base des informations actuellement disponibles, je ne peux pas fournir de réponse détaillée. Référence : Document &quot;der&quot; (aucune information spécifique disponible)&#10;21:12 ·&#10;2.32s&#10;answer_question&#10;Donne le critère d'acceptation de S1&#10;21:12&#10;Je suis désolé, mais après avoir analysé attentivement le contenu du document &quot;der&quot; fourni, je n'ai pas trouvé d'information spécifique concernant le critère d'acceptation de S1. Il est possible que le document ne contienne pas les informations nécessaires pour répondre à cette question ou que le terme &quot;S1&quot; ne soit pas explicitement défini dans le contexte du document fourni. Pour fournir une réponse précise, j'aurais besoin d'informations supplémentaires ou d'un contexte plus clair sur ce que représente &quot;S1&quot; dans ce cas. Si vous avez d'autres documents ou des précisions à apporter, je serais ravi de tenter de nouveau de répondre à votre question. En l'absence d'informations spécifiques dans le document &quot;der&quot;, je ne peux pas citer de sources ou de références précises pour étayer ma réponse. Je m'excuse pour cette limitation et reste à votre disposition pour toute autre question ou pour tenter de fournir plus d'informations si vous pouvez fournir plus de contexte ou de documents pertinents.&#10;21:12 ·&#10;2.40s&#10;answer_question">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762546430928" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="toujours pareil rien ne se passe aussi dans le terminal:&#10;Analyse Comparative&#10;Analyse basique&#10;**Analyse de Similarité Basique**&#10;&#10;**Similarité globale**: 84.3%&#10;&#10;**Statistiques**:&#10;- Mots communs: 145&#10;- Mots uniques au Document 1: 27&#10;- Mots uniques au Document 2: 27&#10;&#10;**Note**: Cette analyse est basique. Pour une comparaison détaillée, veuillez configurer l'API Groq.&#10;voila le terminal:(.venv) PS C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project&gt; python manage.py runserver                                                                                                &#10;Watching for file changes with StatReloader                                 &#10;Performing system checks...&#10;&#10;System check identified no issues (0 silenced).&#10;November 07, 2025 - 00:50:39&#10;Django version 5.2.7, using settings 'docmind_project.settings'&#10;Starting development server at http://127.0.0.1:8000/&#10;Quit the server with CTRL-BREAK.&#10;&#10;WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.&#10;For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762473224044" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="toujours rien:1000The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.Understand this warning&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alphabetical' is not a valid enum value of type CanvasTextBaseline.&#10;_setTextStyles @&lt;file_name&gt;&#10;fabric.min.js:1 The provided value 'alp::">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762964123799" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="toute les pages ne s'affichent pas et dans edition visuel les texte ne sont pas modifiables et tres mal organisé">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762967437749" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="toutes les options alors commence par ce qui est bon pour toi">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762647741932" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="une fois la comparaison effectuée et que le llm connait la difference des deux document quand l'utilisateur clique clique sur mise à jour direct du document, les changement doit etre ajouté au document comparé en gardant sa meme mise en forme et remplacer uniquement la partie à changer">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762460594007" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="une fois la modification appliqué on doit pouvoir telecharger directement le document mis à jour">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762462498969" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="voici le contenu mis à jaour aucun tableau detecté ni structure:ss&#10;Document mis à jour - Généré le 06/11/2025 à 23:01&#10;DTC_S020098_PF_N_SPE_50520_EN _3.0 1/2&#10;SPECIFICATIONS OF THE DRUG PRODUCT&#10;S 20098&#10;Film-coated tablets containing 25 mg of drug substance&#10;Tests Release specifications Shelf-life specifications&#10;Appearance Orange-yellow, oblong, film-coated tablets Orange-yellow, oblong,&#10;film-coated tablets&#10;Identification of drug substance:&#10;.Liquid chromatography The ratio of the retention times of the drug substance peak&#10;from the test solution and from the reference solution&#10;must be between 0.97 and 1.03.The ratio of the retention times of the drug substance&#10;peak&#10;from the test solution and from the reference solution&#10;must be between 0.97 and 1.03.&#10;.Thin-layer chromatography Main spot identical in position, colour and size for test&#10;and referenceMain spot identical in position, colour and size for test&#10;and reference&#10;Average mass (mg) 127.8 to 150.2 (95 % to 105 % of theoretical mass of&#10;134.5 mg) 127.8 to 141.2 (95 % to 105 % of theoretical mass of&#10;134.5 mg)&#10;Microbiological quality (skip testing)&#10;European Pharmacopoeia (5.1.4., non-aqueous&#10;preparations for oral use).Total aerobic microbial count (TAMC): ≤1000 CFU/g&#10;.Total combined yeasts/moulds count (TYMC):&#10;≤100CFU/g&#10;.Escherichia Coli : absence/1 g.Total aerobic microbial count (TAMC): ≤1000 CFU/g&#10;.Total combined yeasts/moulds count (TYMC):&#10;≤100CFU/g&#10;.Escherichia Coli : absence/1 g&#10;(following next page) .../...&#10;DTC_S020098_PF_N_SPE_50520_EN _3.0 2/2&#10;Tests (cont'd) Release specifications (cont'd) Shelf-life specifications (cont'd)&#10;Drug substance content (LC) (mg/tablet) 23.75 to 26.25 (95 % to 105% of the theoretical&#10;content) 23.75 to 26.25 (95 % to 105 % of the theoretical content)&#10;Degradation products (LC) (% m/m):&#10;.individual content of any degradation product ≤0.2% ≤0.2%&#10;.total content of degradation products ≤0.5% ≤0.5%&#10;Uniformity of content (LC)&#10;(%/label claim) Stage Number&#10;tested Acceptance criteria Stage Number&#10;tested Acceptance criteria&#10;S1 10 AV ≤15.0 % S1 10 AV ≤15.0 %&#10;S2 1+ 20 (30) AV ≤15.0 %&#10;0.75 M ≤each unit ≤1.25 M S2 1+ 20 (30) AV ≤15.0 %&#10;0.75 M ≤each unit ≤1.25 M&#10;Kinetics of dissolution (UV) (%) Q = 80 % at 45 min Q = 80 % at 45 min&#10;Stage Number&#10;tested Acceptance criteria Stage Number&#10;tested Acceptance criteria&#10;S1 6 Each unit is not less than 85 %. S1 6 Each unit is not less than 85 %.&#10;S2 2+ 6 (12) Average of 12 units (S1+S2) is&#10;equal to or greater than 80 % and&#10;no unit is less than 65 %.S2 2+ 6 (12) Average of 12 units (S1+S2 ) is&#10;equal to or greater than 80 % and&#10;no unit is less than 65 %.&#10;AV: Acceptance value&#10;M: Reference value&#10;1: S2 doit être effectué si la valeur d'acceptation pour les dix tablettes testées dans S1 est&#10;supérieure à 15,0 %.&#10;2: S2 doit être effectué dès que l'une des six tablettes testées dans S1 est inférieure à 85&#10;%">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762467037582" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="voila">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762473828264" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="voila ce qui apparait:(.venv) PS C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project&gt; python manage.py runserver                                                                                                &#10;Watching for file changes with StatReloader                                 &#10;Performing system checks...&#10;&#10;System check identified no issues (0 silenced).&#10;November 07, 2025 - 00:43:12&#10;Django version 5.2.7, using settings 'docmind_project.settings'&#10;Starting development server at http://127.0.0.1:8000/&#10;Quit the server with CTRL-BREAK.&#10;&#10;WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.&#10;For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762473640351" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="voila les resultat canva :">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762964343617" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="vu que la strucure n'arrive pas à etre detecté, tu peux automatiser une extraction fidele du document lors de l'upload pour voir">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762468432017" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="ça avance un peu mais les textes simple sui ne sont pas dans les tableau ne s'affichent pas pourtant ya pas eu de difference et aussi il ya des texte qui se chevauchent dans le tableau et le nombre ne page n'est pas respecté:">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762476252232" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="ça fonctionne">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762473986805" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="ça fonctionne bien maintenant mais lla partie structure du document mise à jour  n'est pas fidele au docuùment original">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762471309013" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="ça passe mais ya toujours probeleme de groq qui n'est pas utilisé:**Analyse de Similarité Basique**&#10;&#10;**Similarité globale**: 84.3%&#10;&#10;**Statistiques**:&#10;- Mots communs: 145&#10;- Mots uniques au Document 1: 27&#10;- Mots uniques au Document 2: 27&#10;&#10;**Note**: Cette analyse est basique. Pour une comparaison détaillée, veuillez configurer l'API Groq.">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762473493442" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+        <entry key="﻿&#10;:8000/chat/editor/82/extract/:1 &#10; Failed to load resource: the server responded with a status of 500 (Internal Server Error)&#10;editor/:1048 Erreur: &#10;Object&#10;error&#9;@&#9;editor/:1048&#10;﻿&#10;&#10;Press ctrl i to turn on code suggestions. Press ctrl x to disable code suggestions.&#10;ctrl&#10;i&#10; to turn on code suggestions. Don't show again">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1762960161763" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

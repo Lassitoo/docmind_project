@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prismate.AI - Modélisez vos données</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'core:landing' %}">
+                <i class="fas fa-project-diagram me-2"></i>
+                <span class="brand-text">Prismate.AI</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:landing' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'documents:list' %}">Documents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:dashboard' %}">Dashboards</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'core:document_actions' %}">Document Actions</a>
+                    </li>
+                </ul>
+                <form class="d-flex me-3">
+                    <input class="form-control search-input" type="search" placeholder="Search All Documents" aria-label="Search">
+                </form>
+                <div class="navbar-icons">
+                    <a href="#" class="nav-icon"><i class="fas fa-shopping-cart"></i></a>
+                    <a href="#" class="nav-icon"><i class="fas fa-bell"></i></a>
+                    <a href="{% url 'core:profile' %}" class="nav-icon"><i class="fas fa-user"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <div class="hero-content">
+                        <div class="logo-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h1 class="hero-title">Prismate.AI</h1>
+                        <p class="hero-subtitle">
+                            Modélisez vos données et Orchestrez l'analyses et la planification de<br>
+                            vos projets pour garantir cohérence et efficacité.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="action-buttons">
+                        <a href="#" class="btn btn-action btn-analyst">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Analyst
+                        </a>
+                        <a href="{% url 'core:document_actions' %}" class="btn btn-action btn-modeler">
+                            <i class="fas fa-cubes me-2"></i>
+                            Modeler
+                        </a>
+                        <a href="#" class="btn btn-action btn-planner">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Planner
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Cards -->
+    <section class="features-section">
+        <div class="container">
+            <div class="row g-4">
+                <!-- L'Analyste -->
+                <div class="col-lg-4">
+                    <div class="feature-card card-analyst">
+                        <div class="card-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3 class="card-title">L'Analyste</h3>
+                        <div class="card-tags">
+                            <span class="tag"><i class="fas fa-chart-bar me-1"></i> Analyse de données</span>
+                            <span class="tag"><i class="fas fa-book me-1"></i> Storytelling</span>
+                            <span class="tag"><i class="fas fa-sync me-1"></i> Contrôle continu</span>
+                        </div>
+                        <p class="card-description">
+                            Analyse proactivement les données, automatise les reportings et identifie risques et opportunités.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Le Planificateur -->
+                <div class="col-lg-4">
+                    <div class="feature-card card-planner">
+                        <div class="card-icon">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                        <h3 class="card-title">Le Planificateur</h3>
+                        <div class="card-tags">
+                            <span class="tag"><i class="fas fa-user-tie me-1"></i> Expert métier</span>
+                            <span class="tag"><i class="fas fa-eye me-1"></i> Prévisions</span>
+                            <span class="tag"><i class="fas fa-project-diagram me-1"></i> Planification par scénario</span>
+                        </div>
+                        <p class="card-description">
+                            Simule vos scénarios sans limite et fournit des recommandations actionnables.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Le Modélisateur -->
+                <div class="col-lg-4">
+                    <div class="feature-card card-modeler">
+                        <div class="card-icon">
+                            <i class="fas fa-wave-square"></i>
+                        </div>
+                        <h3 class="card-title">Le Modélisateur</h3>
+                        <div class="card-tags">
+                            <span class="tag"><i class="fas fa-database me-1"></i> Modélisation</span>
+                            <span class="tag"><i class="fas fa-cogs me-1"></i> Workflows</span>
+                            <span class="tag"><i class="fas fa-rocket me-1"></i> Optimisation</span>
+                        </div>
+                        <p class="card-description">
+                            Gère le nettoyage, le mapping et la transformation des données, et génère des formules pour construire vos modèles.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

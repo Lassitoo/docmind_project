@@ -1,0 +1,36 @@
+{#template_name: editor_error.html#}
+{% extends 'base.html' %}
+
+{% block title %}Erreur - Éditeur DocMind{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0" style="border-radius: 20px;">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-exclamation-triangle-fill" style="font-size: 5rem; color: #f14668;"></i>
+                    <h2 class="mt-4 mb-3" style="color: #667eea; font-weight: 700;">Erreur</h2>
+                    <p class="lead mb-4" style="color: #666;">{{ error }}</p>
+
+                    <div class="d-flex gap-3 justify-content-center">
+                        {% if conversation %}
+                        <a href="{% url 'chat:conversation_detail' conversation.id %}" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 15px;">
+                            <i class="bi bi-arrow-left"></i> Retour à la conversation
+                        </a>
+                        {% endif %}
+                        {% if document %}
+                        <a href="{% url 'documents:document_detail' document.id %}" class="btn btn-outline-primary btn-lg" style="border-radius: 15px;">
+                            <i class="bi bi-file-earmark-pdf"></i> Voir le document
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'chat:conversation_list' %}" class="btn btn-outline-secondary btn-lg" style="border-radius: 15px;">
+                            <i class="bi bi-house"></i> Accueil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

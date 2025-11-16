@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Paramètres - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4"><i class="bi bi-gear"></i> Paramètres</h1>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="#account" class="list-group-item list-group-item-action active" data-bs-toggle="list">
+                    <i class="bi bi-person"></i> Compte
+                </a>
+                <a href="#security" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-shield-lock"></i> Sécurité
+                </a>
+                <a href="#notifications" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-bell"></i> Notifications
+                </a>
+                <a href="#preferences" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                    <i class="bi bi-sliders"></i> Préférences
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="tab-content">
+                <!-- Compte -->
+                <div class="tab-pane fade show active" id="account">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-person"></i> Informations du Compte</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">Nom d'utilisateur:</dt>
+                                <dd class="col-sm-8">{{ user.username }}</dd>
+
+                                <dt class="col-sm-4">Email:</dt>
+                                <dd class="col-sm-8">{{ user.email }}</dd>
+
+                                <dt class="col-sm-4">Date d'inscription:</dt>
+                                <dd class="col-sm-8">{{ user.date_joined|date:"d/m/Y" }}</dd>
+
+                                <dt class="col-sm-4">Dernière connexion:</dt>
+                                <dd class="col-sm-8">{{ user.last_login|date:"d/m/Y H:i" }}</dd>
+                            </dl>
+                            <a href="{% url 'core:profile' %}" class="btn btn-primary">
+                                <i class="bi bi-pencil"></i> Modifier le profil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sécurité -->
+                <div class="tab-pane fade" id="security">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-shield-lock"></i> Sécurité</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Mot de passe</h6>
+                            <p class="text-muted">Modifiez votre mot de passe pour sécuriser votre compte.</p>
+                            <a href="{% url 'admin:password_change' %}" class="btn btn-warning mb-4">
+                                <i class="bi bi-key"></i> Changer le mot de passe
+                            </a>
+
+                            <hr>
+
+                            <h6>Sessions actives</h6>
+                            <p class="text-muted">Gérez les appareils connectés à votre compte.</p>
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> Actuellement connecté depuis cet appareil
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="tab-pane fade" id="notifications">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-bell"></i> Notifications</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                        <label class="form-check-label" for="emailNotifications">
+                                            Notifications par email
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">Recevez des emails pour les événements importants</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="documentAnalysis" checked>
+                                        <label class="form-check-label" for="documentAnalysis">
+                                            Analyse de documents terminée
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="schemaGeneration" checked>
+                                        <label class="form-check-label" for="schemaGeneration">
+                                            Génération de schéma terminée
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="weeklyReport">
+                                        <label class="form-check-label" for="weeklyReport">
+                                            Rapport hebdomadaire d'activité
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i> Enregistrer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Préférences -->
+                <div class="tab-pane fade" id="preferences">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-sliders"></i> Préférences</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Langue</label>
+                                    <select class="form-select">
+                                        <option value="fr" selected>Français</option>
+                                        <option value="en">English</option>
+                                        <option value="es">Español</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Fuseau horaire</label>
+                                    <select class="form-select">
+                                        <option value="Europe/Paris" selected>Europe/Paris (UTC+1)</option>
+                                        <option value="America/New_York">America/New_York (UTC-5)</option>
+                                        <option value="Asia/Tokyo">Asia/Tokyo (UTC+9)</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Format de date</label>
+                                    <select class="form-select">
+                                        <option value="DD/MM/YYYY" selected>DD/MM/YYYY</option>
+                                        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="darkMode">
+                                        <label class="form-check-label" for="darkMode">
+                                            Mode sombre
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i> Enregistrer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

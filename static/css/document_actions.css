@@ -1,0 +1,120 @@
+/* Document Actions Page Styles */
+
+:root {
+    --primary-color: #2C5AA0;
+    --secondary-color: #4ECDC4;
+    --warning-color: #FF9F1C;
+    --success-color: #2ECC71;
+    --dark-bg: #0A1128;
+}
+
+body {
+    background: #F5F7FA;
+}
+
+/* Navbar - same as landing */
+.navbar-dark.bg-dark-custom {
+    background: var(--dark-bg) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #4ECDC4, #E84A5F);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.search-input {
+    border-radius: 20px;
+    border: none;
+    padding: 8px 20px;
+    width: 300px;
+}
+
+.navbar-icons .nav-icon {
+    color: white;
+    margin-left: 20px;
+    font-size: 1.2rem;
+}
+
+/* Action Cards */
+.action-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    padding: 30px;
+    height: 100%;
+    transition: all 0.3s;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.card-header-custom {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.card-icon-header {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.card-header-custom h4 {
+    margin: 0;
+    font-weight: 700;
+    color: #2C3E50;
+}
+
+/* Upload Modal */
+.upload-zone {
+    border: 3px dashed #CBD5E0;
+    border-radius: 15px;
+    padding: 50px 20px;
+    text-align: center;
+    background: #F7FAFC;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.upload-zone:hover {
+    border-color: var(--primary-color);
+    background: #EDF2F7;
+}
+
+.upload-zone.dragover {
+    border-color: var(--secondary-color);
+    background: #E6FFFA;
+}
+
+.upload-icon {
+    font-size: 4rem;
+    color: #A0AEC0;
+    margin-bottom: 20px;
+}
+
+#selectedFiles .file-item {
+    background: #EDF2F7;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-item .remove-file {
+    color: #E53E3E;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.file-item .remove-file:hover {
+    color: #C53030;
+}

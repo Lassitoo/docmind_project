@@ -1,0 +1,53 @@
+{# templates/database_manager/data_extraction_validate.html #}
+{% extends 'base.html' %}
+
+{% block title %}Valider l'Extraction - DocMind{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="bi bi-check-circle"></i> Valider l'Extraction de Données</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <strong><i class="bi bi-info-circle"></i> Confirmation requise</strong><br>
+                        Vous êtes sur le point de valider cette extraction de données.
+                        Une fois validée, elle pourra être utilisée pour importer les données dans une base de données.
+                    </div>
+
+                    <h5>Informations de l'extraction</h5>
+                    <ul>
+                        <li><strong>Document source:</strong> {{ extraction.document.title }}</li>
+                        <li><strong>Schéma cible:</strong> {{ extraction.schema.name }}</li>
+                        <li><strong>Score de confiance:</strong> {{ extraction.confidence_score|floatformat:2 }}</li>
+                        <li><strong>Date d'extraction:</strong> {{ extraction.created_at|date:"d/m/Y à H:i" }}</li>
+                    </ul>
+
+                    {% if extraction.extraction_notes %}
+                    <div class="alert alert-secondary">
+                        <strong>Notes:</strong><br>
+                        {{ extraction.extraction_notes }}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'database_manager:data_extraction_detail' extraction.pk %}"
+                               class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Confirmer la Validation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

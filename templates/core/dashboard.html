@@ -1,0 +1,46 @@
+<!-- ============================================
+     FICHIER: templates/core/dashboard.html
+     ============================================ -->
+{% extends 'base.html' %}
+{% block title %}Dashboard - DocMind{% endblock %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col"><h1 class="h2 fw-bold"><i class="bi bi-speedometer2 text-primary"></i> Dashboard</h1></div>
+    <div class="col-auto"><a href="{% url 'documents:upload' %}" class="btn btn-primary"><i class="bi bi-cloud-upload"></i> Uploader un document</a></div>
+</div>
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">Total Documents</h6>
+                <h2 class="fw-bold mb-0">{{ total_documents }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">Analysés</h6>
+                <h2 class="fw-bold mb-0 text-success">{{ completed_documents }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">Conversations</h6>
+                <h2 class="fw-bold mb-0">{{ total_conversations }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-muted mb-1">Stockage</h6>
+                <p>{{ storage_used }} / {{ storage_limit }} MB</p>
+                <div class="progress"><div class="progress-bar bg-success" style="width: {{ storage_percentage }}%"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

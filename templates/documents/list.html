@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes Documents - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1><i class="bi bi-file-earmark-text"></i> Mes Documents</h1>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'documents:upload' %}" class="btn btn-primary">
+                <i class="bi bi-cloud-upload"></i> Nouveau document
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <input type="search" name="q" class="form-control" placeholder="Rechercher un document..." value="{{ request.GET.q }}">
+                </div>
+                <div class="col-md-4">
+                    <select name="status" class="form-select">
+                        <option value="">Tous les statuts</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>En attente</option>
+                        <option value="processing" {% if status_filter == 'processing' %}selected{% endif %}>En cours</option>
+                        <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Complété</option>
+                        <option value="error" {% if status_filter == 'error' %}selected{% endif %}>Erreur</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des documents -->
+    {% if documents %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for document in documents %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-file-earmark-{{ document.file_type|slice:'1:' }}"></i>
+                                {{ document.title }}
+                            </h5>
+                            <p class="card-text text-muted small">
+                                {{ document.description|truncatewords:20 }}
+                            </p>
+                            <div class="mb-2">
+                                <span class="badge bg-{{ document.status }}">
+                                    {{ document.get_status_display }}
+                                </span>
+                                <small class="text-muted ms-2">
+                                    {{ document.file_size|filesizeformat }}
+                                </small>
+                            </div>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar"></i> {{ document.uploaded_at|date:"d/m/Y" }}
+                            </small>
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-flex justify-content-between gap-1">
+                                <a href="{% url 'documents:detail' document.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> Voir
+                                </a>
+                                {% if document.status == 'completed' %}
+                                    <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-sm btn-outline-info" title="Générer un schéma">
+                                        <i class="bi bi-diagram-3"></i>
+                                    </a>
+                                {% endif %}
+                                <a href="{% url 'documents:download' document.pk %}" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Aucun document trouvé.
+            <a href="{% url 'documents:upload' %}" class="alert-link">Commencez par uploader votre premier document</a>.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

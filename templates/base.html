@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Prismate.Ai{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .navbar-prismate {
+            background: #1a2332 !important;  /* ← Add !important */
+            padding: 0 !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .navbar-prismate .container-fluid {
+            padding: 0;
+            background: #1a2332 !important;  /* ← Add this */
+        }
+
+        /* Brand */
+        .navbar-brand {
+            color: #ff6b35 !important;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 14px 24px;
+            margin: 0;
+            background: transparent !important;
+        }
+        
+        /* Navigation Links */
+        .navbar-nav {
+            flex-direction: row;
+            gap: 0;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.7) !important;
+            font-weight: 500;
+            padding: 14px 20px !important;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .nav-link.active {
+            color: white !important;
+            background: rgba(255,255,255,0.08);
+        }
+        
+        /* Right Side - Search & User */
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 0 20px;
+        }
+        
+        .navbar-search {
+            position: relative;
+        }
+        
+        .navbar-search input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 7px 15px 7px 35px;
+            color: white;
+            font-size: 0.85rem;
+            width: 250px;
+            transition: all 0.2s;
+        }
+        
+        .navbar-search input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .navbar-search input:focus {
+            outline: none;
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .navbar-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .navbar-icon {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .navbar-icon:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Dropdown */
+        .dropdown-menu {
+            background: white;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 8px;
+            margin-top: 8px;
+        }
+        
+        .dropdown-item {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-item:hover {
+            background: #f0f7ff;
+            color: #3b82f6;
+        }
+        
+        .dropdown-item i {
+            width: 18px;
+        }
+        
+        /* Main Content */
+        main {
+            min-height: calc(100vh - 49px);
+        }
+        
+        /* Messages */
+        .alert {
+            border: none;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-danger,
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        /* Mobile */
+        @media (max-width: 991px) {
+            .navbar-search {
+                display: none;
+            }
+            
+            .nav-link {
+                padding: 12px 15px !important;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- NAVBAR - Prismate.AI Style -->
+    <nav class="navbar navbar-expand-lg navbar-prismate">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'core:home' %}">Prismate.Ai</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: rgba(255,255,255,0.2);">
+                <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
+                               href="{% url 'core:home' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'documents' in request.path and 'compare' not in request.path %}active{% endif %}" 
+                               href="{% url 'documents:list' %}">Documents</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Reports</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Dashboards</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'chat' in request.path %}active{% endif %}" 
+                               href="{% url 'chat:conversation_list' %}">Conversations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'document_actions' in request.resolver_match.url_name %}active{% endif %}" 
+                               href="{% url 'core:document_actions' %}">Document Actions</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                
+                <div class="navbar-right">
+                    {% if user.is_authenticated %}
+                        <!-- Search -->
+                        <div class="navbar-search">
+                            <i class="bi bi-search"></i>
+                            <input type="text" placeholder="Search All Documents">
+                        </div>
+                        
+                        <!-- Icons -->
+                        <i class="bi bi-cart3 navbar-icon"></i>
+                        <i class="bi bi-bell navbar-icon"></i>
+                        
+                        <!-- User Dropdown -->
+                        <div class="dropdown">
+                            <div class="user-avatar dropdown-toggle" data-bs-toggle="dropdown">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item disabled">
+                                        <i class="bi bi-person-circle"></i>
+                                        <strong>{{ user.username }}</strong>
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'core:dashboard' %}">
+                                        <i class="bi bi-speedometer2"></i>
+                                        Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'core:profile' %}">
+                                        <i class="bi bi-person"></i>
+                                        Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'core:settings' %}">
+                                        <i class="bi bi-gear"></i>
+                                        Settings
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'core:logout' %}">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'core:login' %}" class="nav-link">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

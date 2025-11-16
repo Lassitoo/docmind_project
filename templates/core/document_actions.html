@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Actions - Prismate.AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/document_actions.css' %}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'core:landing' %}">
+                <i class="fas fa-project-diagram me-2"></i>
+                <span class="brand-text">Prismate.AI</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:landing' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'documents:list' %}">Documents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:dashboard' %}">Dashboards</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'core:document_actions' %}">Document Actions</a>
+                    </li>
+                </ul>
+                <form class="d-flex me-3">
+                    <input class="form-control search-input" type="search" placeholder="Search All Documents">
+                </form>
+                <div class="navbar-icons">
+                    <a href="#" class="nav-icon"><i class="fas fa-shopping-cart"></i></a>
+                    <a href="#" class="nav-icon"><i class="fas fa-bell"></i></a>
+                    <a href="{% url 'core:profile' %}" class="nav-icon"><i class="fas fa-user"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-5">
+        <div class="row g-4">
+            <!-- Sources de données -->
+            <div class="col-lg-4">
+                <div class="action-card">
+                    <div class="card-header-custom">
+                        <i class="fas fa-database card-icon-header"></i>
+                        <h4>Sources de données</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Connectez vos bases de données, fichiers CSV, API</p>
+                        <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                            <i class="fas fa-plus me-2"></i>
+                            Ajouter une source
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transformation -->
+            <div class="col-lg-4">
+                <div class="action-card">
+                    <div class="card-header-custom">
+                        <i class="fas fa-random card-icon-header"></i>
+                        <h4>Transformation</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Nettoyez et transformez vos données</p>
+                        <button class="btn btn-warning w-100">
+                            <i class="fas fa-cog me-2"></i>
+                            Configurer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export -->
+            <div class="col-lg-4">
+                <div class="action-card">
+                    <div class="card-header-custom">
+                        <i class="fas fa-file-export card-icon-header"></i>
+                        <h4>Export</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Exportez vos données applaties</p>
+                        <button class="btn btn-success w-100">
+                            <i class="fas fa-download me-2"></i>
+                            Exporter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Ajouter une source de données</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{% url 'core:upload_source' %}" enctype="multipart/form-data" class="p-3">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="fileInput" class="form-label">Choisir des fichiers</label>
+                        <input type="file" class="form-control" name="files" id="fileInput" multiple accept=".pdf,.zip" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="agentSelect" class="form-label">Sélectionner un agent</label>
+                        <select class="form-select" name="agent_type" id="agentSelect" required>
+                            <option value="modeler">Modeler</option>
+                            <option value="validation">Validation</option>
+                            <option value="transformation">Transformation</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-upload me-2"></i>Importer</button>
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/upload_handler.js' %}"></script>
+</body>
+</html>

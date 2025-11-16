@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mon Profil - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4"><i class="bi bi-person-circle"></i> Mon Profil</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-person"></i> Informations du Compte</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <h6 class="mb-3">Informations personnelles</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Prénom</label>
+                                {{ user_form.first_name }}
+                                {% if user_form.first_name.errors %}
+                                    <div class="text-danger">{{ user_form.first_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nom</label>
+                                {{ user_form.last_name }}
+                                {% if user_form.last_name.errors %}
+                                    <div class="text-danger">{{ user_form.last_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nom d'utilisateur</label>
+                            {{ user_form.username }}
+                            {% if user_form.username.errors %}
+                                <div class="text-danger">{{ user_form.username.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            {{ user_form.email }}
+                            {% if user_form.email.errors %}
+                                <div class="text-danger">{{ user_form.email.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <hr>
+
+                        <h6 class="mb-3">Profil additionnel</h6>
+
+                        <div class="mb-3">
+                            <label class="form-label">Bio</label>
+                            {{ profile_form.bio }}
+                            {% if profile_form.bio.errors %}
+                                <div class="text-danger">{{ profile_form.bio.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Organisation</label>
+                            {{ profile_form.organization }}
+                            {% if profile_form.organization.errors %}
+                                <div class="text-danger">{{ profile_form.organization.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Téléphone</label>
+                            {{ profile_form.phone_number }}
+                            {% if profile_form.phone_number.errors %}
+                                <div class="text-danger">{{ profile_form.phone_number.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Photo de profil</label>
+                            {{ profile_form.avatar }}
+                            {% if profile_form.avatar.errors %}
+                                <div class="text-danger">{{ profile_form.avatar.errors }}</div>
+                            {% endif %}
+                            {% if user.profile.avatar %}
+                                <div class="mt-2">
+                                    <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="img-thumbnail" style="max-width: 150px;">
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Enregistrer les modifications
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-bar-chart"></i> Statistiques</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-8">Documents uploadés:</dt>
+                        <dd class="col-sm-4 text-end">{{ user.profile.total_documents_uploaded }}</dd>
+
+                        <dt class="col-sm-8">Conversations:</dt>
+                        <dd class="col-sm-4 text-end">{{ user.profile.total_conversations }}</dd>
+
+                        <dt class="col-sm-8">Schémas générés:</dt>
+                        <dd class="col-sm-4 text-end">{{ user.profile.total_schemas_generated }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-shield-check"></i> Quotas</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-8">Plan:</dt>
+                        <dd class="col-sm-4 text-end">
+                            <span class="badge bg-primary">{{ user.profile.subscription_tier|default:"Free" }}</span>
+                        </dd>
+
+                        <dt class="col-sm-8">Documents max:</dt>
+                        <dd class="col-sm-4 text-end">{{ user.profile.max_documents }}</dd>
+
+                        <dt class="col-sm-8">Stockage:</dt>
+                        <dd class="col-sm-4 text-end">{{ user.profile.max_storage_mb }} MB</dd>
+
+                        <dt class="col-sm-8">Conversations:</dt>
+                        <dd class="col-sm-4 text-end">{{ user.profile.max_conversations }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

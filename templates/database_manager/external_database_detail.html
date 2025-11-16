@@ -1,0 +1,61 @@
+{# templates/database_manager/external_database_detail.html #}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ database.name }} - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-database"></i> {{ database.name }}</h1>
+        <a href="{% url 'database_manager:external_database_test' database.pk %}" class="btn btn-success">
+            <i class="bi bi-check-circle"></i> Tester la Connexion
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5><i class="bi bi-info-circle"></i> Informations de Connexion</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Type:</dt>
+                <dd class="col-sm-9"><span class="badge bg-info">{{ database.db_type }}</span></dd>
+
+                <dt class="col-sm-3">Statut:</dt>
+                <dd class="col-sm-9">
+                    {% if database.status == 'connected' %}
+                        <span class="badge bg-success">Connecté</span>
+                    {% elif database.status == 'error' %}
+                        <span class="badge bg-danger">Erreur</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Non testé</span>
+                    {% endif %}
+                </dd>
+
+                <dt class="col-sm-3">Hôte:</dt>
+                <dd class="col-sm-9">{{ database.host }}:{{ database.port }}</dd>
+
+                <dt class="col-sm-3">Base de données:</dt>
+                <dd class="col-sm-9">{{ database.database_name }}</dd>
+
+                <dt class="col-sm-3">Utilisateur:</dt>
+                <dd class="col-sm-9">{{ database.username }}</dd>
+
+                <dt class="col-sm-3">Créée le:</dt>
+                <dd class="col-sm-9">{{ database.created_at|date:"d/m/Y H:i" }}</dd>
+
+                {% if database.last_connection_test %}
+                    <dt class="col-sm-3">Dernier test:</dt>
+                    <dd class="col-sm-9">{{ database.last_connection_test|date:"d/m/Y H:i" }}</dd>
+                {% endif %}
+
+                {% if database.description %}
+                    <dt class="col-sm-3">Description:</dt>
+                    <dd class="col-sm-9">{{ database.description }}</dd>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock %}

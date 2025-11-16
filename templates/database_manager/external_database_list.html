@@ -1,0 +1,57 @@
+{# templates/database_manager/external_database_list.html #}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bases de données externes - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-database"></i> Mes Bases de Données</h1>
+        <a href="{% url 'database_manager:external_database_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nouvelle Connexion
+        </a>
+    </div>
+
+    {% if databases %}
+        <div class="row">
+            {% for database in databases %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ database.name }}</h5>
+                            <p class="card-text">
+                                <span class="badge bg-info">{{ database.db_type }}</span>
+                                {% if database.status == 'connected' %}
+                                    <span class="badge bg-success">Connecté</span>
+                                {% elif database.status == 'error' %}
+                                    <span class="badge bg-danger">Erreur</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Non testé</span>
+                                {% endif %}
+                            </p>
+                            <p class="card-text"><small class="text-muted">
+                                <i class="bi bi-server"></i> {{ database.host }}:{{ database.port }}<br>
+                                <i class="bi bi-calendar"></i> {{ database.created_at|date:"d/m/Y" }}
+                            </small></p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'database_manager:external_database_detail' database.pk %}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Détails
+                            </a>
+                            <a href="{% url 'database_manager:external_database_test' database.pk %}" class="btn btn-sm btn-success">
+                                <i class="bi bi-check-circle"></i> Tester
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Vous n'avez pas encore de connexions à des bases externes.
+            <a href="{% url 'database_manager:external_database_create' %}" class="alert-link">Créez-en une maintenant !</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

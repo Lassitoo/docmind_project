@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ document.title }} - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-file-earmark-text"></i> {{ document.title }}</h1>
+        <div>
+            <a href="{% url 'documents:download' document.pk %}" class="btn btn-success">
+                <i class="bi bi-download"></i> Télécharger
+            </a>
+            <a href="{% url 'documents:delete' document.pk %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Supprimer
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-info-circle"></i> Informations</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Type de fichier:</dt>
+                        <dd class="col-sm-9">{{ document.file_type|default:"Non détecté" }}</dd>
+
+                        <dt class="col-sm-3">Taille:</dt>
+                        <dd class="col-sm-9">{{ document.file_size|filesizeformat }}</dd>
+
+                        <dt class="col-sm-3">Uploadé le:</dt>
+                        <dd class="col-sm-9">{{ document.uploaded_at|date:"d/m/Y H:i" }}</dd>
+
+                        <dt class="col-sm-3">Statut:</dt>
+                        <dd class="col-sm-9">
+                            {% if document.status == 'completed' %}
+                                <span class="badge bg-success">Analysé</span>
+                            {% elif document.status == 'processing' %}
+                                <span class="badge bg-warning">En cours</span>
+                            {% elif document.status == 'pending' %}
+                                <span class="badge bg-secondary">En attente</span>
+                            {% else %}
+                                <span class="badge bg-danger">Erreur</span>
+                            {% endif %}
+                        </dd>
+
+                        {% if document.description %}
+                            <dt class="col-sm-3">Description:</dt>
+                            <dd class="col-sm-9">{{ document.description }}</dd>
+                        {% endif %}
+                    </dl>
+
+                    {% if document.status == 'pending' %}
+                        <a href="{% url 'documents:analyze' document.pk %}" class="btn btn-primary">
+                            <i class="bi bi-gear"></i> Analyser le document
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if content %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-file-text"></i> Contenu extrait</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Pages:</strong> {{ content.page_count }}</p>
+                        <p><strong>Mots:</strong> {{ content.word_count }}</p>
+                        <hr>
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            <pre class="bg-light p-3">{{ content.extracted_text|truncatewords:500 }}</pre>
+                        </div>
+                        <a href="{% url 'documents:content' document.pk %}" class="btn btn-sm btn-outline-primary mt-2">
+                            Voir le contenu complet
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if analysis %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-graph-up"></i> Analyse</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Type de document:</strong> {{ analysis.detected_document_type|default:"Non détecté" }}</p>
+                        <p><strong>Langue:</strong> {{ analysis.language|default:"Non détectée" }}</p>
+
+                        {% if analysis.summary %}
+                            <hr>
+                            <h6>Résumé:</h6>
+                            <p>{{ analysis.summary }}</p>
+                        {% endif %}
+
+                        {% if analysis.key_entities %}
+                            <hr>
+                            <h6>Entités clés:</h6>
+                            <div>{{ analysis.key_entities|safe }}</div>
+                        {% endif %}
+
+                        <a href="{% url 'documents:analysis' document.pk %}" class="btn btn-sm btn-outline-primary mt-2">
+                            Voir l'analyse complète
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-lightning"></i> Actions rapides</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'chat:conversation_create' %}?document={{ document.pk }}" class="btn btn-primary">
+                            <i class="bi bi-chat-dots"></i> Démarrer une conversation
+                        </a>
+                        {% if document.status == 'completed' %}
+                            <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-info">
+                                <i class="bi bi-diagram-3"></i> Générer un schéma BD
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary" disabled>
+                                <i class="bi bi-diagram-3"></i> Générer un schéma (analyser d'abord)
+                            </button>
+                        {% endif %}
+                        {% if content %}
+                            <a href="{% url 'documents:content' document.pk %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-file-text"></i> Contenu complet
+                            </a>
+                        {% endif %}
+                        {% if analysis %}
+                            <a href="{% url 'documents:analysis' document.pk %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-graph-up"></i> Analyse complète
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

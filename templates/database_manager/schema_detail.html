@@ -1,0 +1,1259 @@
+{# templates/database_manager/schema_detail.html #}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ schema.name }} - DocMind{% endblock %}
+
+{% block extra_css %}
+<style>
+    .view-toggle {
+        margin-bottom: 20px;
+    }
+    
+    .diagram-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 80px 60px;
+        min-height: 900px;
+        overflow: auto;
+        position: relative;
+        width: 100%;
+    }
+
+    .tables-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 200px;
+        justify-content: center;
+        align-items: flex-start;
+        position: relative;
+        padding: 60px;
+        min-height: 800px;
+    }
+    
+    .table-card {
+        background: white;
+        border: 3px solid #0d6efd;
+        border-radius: 8px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);
+        min-width: 320px;
+        max-width: 400px;
+        position: relative;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    
+    .table-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.12);
+    }
+    
+    .table-card-header {
+        background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+        color: white;
+        padding: 18px;
+        border-radius: 5px 5px 0 0;
+        font-weight: bold;
+        font-size: 1.2em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .table-card-body {
+        padding: 18px;
+        background: #ffffff;
+    }
+    
+    .field-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .field-item {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 0.95em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.2s;
+    }
+    
+    .field-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .field-item:last-child {
+        border-bottom: none;
+    }
+    
+    .field-name {
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+        color: #212529;
+        flex: 1;
+    }
+    
+    .field-type {
+        background: #6c757d;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75em;
+        font-weight: 500;
+    }
+    
+    .field-pk {
+        color: #ffc107;
+        font-size: 1.1em;
+    }
+    
+    .field-fk {
+        color: #17a2b8;
+        font-size: 1.1em;
+    }
+    
+    .field-required {
+        color: #dc3545;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    
+    .table-description {
+        background: #e7f3ff;
+        padding: 10px;
+        border-left: 3px solid #0d6efd;
+        margin-top: 10px;
+        font-size: 0.85em;
+        color: #495057;
+        border-radius: 4px;
+    }
+    
+    .legend {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .legend-item {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 25px;
+        margin-bottom: 8px;
+    }
+    
+    .legend-icon {
+        margin-right: 8px;
+        font-size: 1.2em;
+    }
+    
+    .zoom-controls {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 5px;
+        display: inline-flex;
+        gap: 5px;
+    }
+    
+    .empty-diagram {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+    
+    .empty-diagram i {
+        font-size: 4rem;
+        opacity: 0.3;
+    }
+
+    /* Animation de chargement */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .table-card {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Styles pour les relations SVG */
+    .relation-line {
+        stroke: #2c5aa0;
+        stroke-width: 3;
+        fill: none;
+        opacity: 0.8;
+    }
+
+    .relation-arrow {
+        fill: #2c5aa0;
+    }
+
+    .cardinality-text {
+        font-size: 18px;
+        font-weight: 900;
+        fill: #dc3545;
+        font-family: 'Arial Black', sans-serif;
+        paint-order: stroke fill;
+        stroke: white;
+        stroke-width: 4px;
+    }
+
+    .cardinality-bg {
+        fill: white;
+        stroke: #dc3545;
+        stroke-width: 2.5;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    .relation-label-bg {
+        fill: #fff3cd;
+        stroke: #2c5aa0;
+        stroke-width: 2;
+        opacity: 0.98;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+    }
+
+    .relation-label-text {
+        font-size: 14px;
+        fill: #212529;
+        font-family: system-ui;
+        font-weight: 600;
+    }
+
+    /* Debug info */
+    .debug-info {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 11px;
+        font-family: monospace;
+        max-width: 300px;
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="max-width: 98%;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-diagram-3"></i> {{ schema.name }}</h1>
+        <div>
+            <a href="{% url 'database_manager:schema_edit' schema.pk %}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+            {% if schema.status != 'validated' %}
+                <a href="{% url 'database_manager:schema_validate' schema.pk %}" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Valider
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-info-circle"></i> Informations</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Document source:</dt>
+                        <dd class="col-sm-9">
+                            <a href="{% url 'documents:detail' schema.document.pk %}">{{ schema.document.title }}</a>
+                        </dd>
+
+                        <dt class="col-sm-3">Statut:</dt>
+                        <dd class="col-sm-9">
+                            {% if schema.status == 'validated' %}
+                                <span class="badge bg-success">Validé</span>
+                            {% elif schema.status == 'modified' %}
+                                <span class="badge bg-warning">Modifié</span>
+                            {% else %}
+                                <span class="badge bg-info">Généré</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-3">Tables:</dt>
+                        <dd class="col-sm-9">{{ tables.count }}</dd>
+
+                        <dt class="col-sm-3">Créé le:</dt>
+                        <dd class="col-sm-9">{{ schema.created_at|date:"d/m/Y H:i" }}</dd>
+
+                        {% if schema.validated_at %}
+                            <dt class="col-sm-3">Validé le:</dt>
+                            <dd class="col-sm-9">{{ schema.validated_at|date:"d/m/Y H:i" }} par {{ schema.validated_by.username }}</dd>
+                        {% endif %}
+
+                        {% if schema.description %}
+                            <dt class="col-sm-3">Description:</dt>
+                            <dd class="col-sm-9">{{ schema.description }}</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Sélecteur de vue -->
+            <div class="view-toggle mb-3">
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" name="viewOptions" id="diagramView" checked>
+                    <label class="btn btn-outline-primary" for="diagramView">
+                        <i class="bi bi-diagram-3"></i> Vue Diagramme
+                    </label>
+
+                    <input type="radio" class="btn-check" name="viewOptions" id="listView">
+                    <label class="btn btn-outline-primary" for="listView">
+                        <i class="bi bi-list-ul"></i> Vue Liste
+                    </label>
+                </div>
+            </div>
+
+            <!-- Légende -->
+            <div class="legend" id="diagramLegend">
+                <h6 class="mb-3"><i class="bi bi-info-circle"></i> Légende</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Symboles des Champs:</strong>
+                        <div class="legend-item">
+                            <i class="bi bi-key-fill text-warning legend-icon"></i>
+                            <span>Clé Primaire (PK)</span>
+                        </div>
+                        <div class="legend-item">
+                            <i class="bi bi-link-45deg text-info legend-icon"></i>
+                            <span>Clé Étrangère (FK)</span>
+                        </div>
+                        <div class="legend-item">
+                            <i class="bi bi-asterisk text-danger legend-icon"></i>
+                            <span>Champ Obligatoire</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Cardinalités:</strong>
+                        <div class="legend-item">
+                            <span style="color: #dc3545; font-weight: bold;">1</span>
+                            <span style="margin-left: 5px;">Un (exactement)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span style="color: #dc3545; font-weight: bold;">0..1</span>
+                            <span style="margin-left: 5px;">Zéro ou Un</span>
+                        </div>
+                        <div class="legend-item">
+                            <span style="color: #dc3545; font-weight: bold;">1..*</span>
+                            <span style="margin-left: 5px;">Un ou Plusieurs</span>
+                        </div>
+                        <div class="legend-item">
+                            <span style="color: #dc3545; font-weight: bold;">0..*</span>
+                            <span style="margin-left: 5px;">Zéro ou Plusieurs</span>
+                        </div>
+                    </div>
+                </div>
+                {% if relations %}
+                <div class="mt-3">
+                    <strong><i class="bi bi-diagram-3"></i> Relations Détectées par IA:</strong>
+                    <small class="text-muted d-block">{{ relations.count }} relation(s) automatiquement identifiée(s)</small>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Vue Diagramme UML -->
+            <div class="card mb-4" id="diagramCard">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="bi bi-diagram-3"></i> Diagramme de Classes</h5>
+                    <div class="zoom-controls">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="zoomIn()" title="Zoom avant">
+                            <i class="bi bi-zoom-in"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="zoomOut()" title="Zoom arrière">
+                            <i class="bi bi-zoom-out"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="resetZoom()" title="Réinitialiser">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="diagram-container" id="diagramContainer">
+                        {% if tables %}
+                            <!-- Container pour les lignes de relation -->
+                            <svg id="relationsSvg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;">
+                            </svg>
+                            
+                            <div class="tables-grid" id="tablesGrid" style="position: relative; z-index: 1;">
+                                {% for table in tables %}
+                                    <div class="table-card" data-table-id="{{ table.id }}" data-table-name="{{ table.name }}">
+                                        <div class="table-card-header">
+                                            <i class="bi bi-table"></i>
+                                            <span>{{ table.name }}</span>
+                                        </div>
+                                        <div class="table-card-body">
+                                            <ul class="field-list">
+                                                {% for field in table.fields.all %}
+                                                    <li class="field-item" 
+                                                        data-field-id="{{ field.id }}"
+                                                        data-field-type="{{ field.field_type }}"
+                                                        data-field-name="{{ field.name }}"
+                                                        data-is-nullable="{{ field.is_nullable|yesno:'true,false' }}"
+                                                        data-is-primary="{{ field.is_primary_key|yesno:'true,false' }}"
+                                                        data-is-fk="{% if field.field_type == 'foreign_key' or field.name|slice:'-3:' == '_id' %}true{% else %}false{% endif %}">
+                                                        
+                                                        {% if field.is_primary_key %}
+                                                            <i class="bi bi-key-fill field-pk" title="Clé primaire"></i>
+                                                        {% elif field.field_type == 'foreign_key' or field.name|slice:'-3:' == '_id' %}
+                                                            <i class="bi bi-link-45deg field-fk" title="Clé étrangère"></i>
+                                                        {% elif not field.is_nullable %}
+                                                            <i class="bi bi-asterisk field-required" title="Obligatoire"></i>
+                                                        {% else %}
+                                                            <i class="bi bi-circle" style="font-size: 0.5em; opacity: 0.3;"></i>
+                                                        {% endif %}
+                                                        
+                                                        <span class="field-name">{{ field.name }}</span>
+                                                        <span class="field-type">{{ field.field_type }}</span>
+                                                    </li>
+                                                {% empty %}
+                                                    <li class="field-item text-muted">
+                                                        <small>Aucun champ</small>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                            
+                                            {% if table.description %}
+                                                <div class="table-description">
+                                                    <small><i class="bi bi-info-circle"></i> {{ table.description }}</small>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="empty-diagram">
+                                <i class="bi bi-inbox"></i>
+                                <p class="mt-3 mb-0">Aucune table à afficher.</p>
+                                <p class="text-muted">Commencez par ajouter des tables à votre schéma.</p>
+                                <a href="{% url 'database_manager:table_add' schema.pk %}" class="btn btn-primary mt-3">
+                                    <i class="bi bi-plus-circle"></i> Ajouter une table
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vue Liste (cachée par défaut) -->
+            <div class="card mb-4" id="listCard" style="display: none;">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="bi bi-table"></i> Tables</h5>
+                    <a href="{% url 'database_manager:table_add' schema.pk %}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus"></i> Ajouter une table
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if tables %}
+                        {% for table in tables %}
+                            <div class="mb-4">
+                                <h6>
+                                    <i class="bi bi-table"></i> {{ table.name }}
+                                    {% if table.description %}
+                                        <small class="text-muted">- {{ table.description }}</small>
+                                    {% endif %}
+                                </h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Champ</th>
+                                                <th>Type</th>
+                                                <th>Nullable</th>
+                                                <th>PK</th>
+                                                <th>FK</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for field in table.fields.all %}
+                                                <tr>
+                                                    <td><code>{{ field.name }}</code></td>
+                                                    <td><span class="badge bg-secondary">{{ field.field_type }}</span></td>
+                                                    <td>
+                                                        {% if field.is_nullable %}
+                                                            <i class="bi bi-check text-success"></i>
+                                                        {% else %}
+                                                            <i class="bi bi-x text-danger"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if field.is_primary_key %}
+                                                            <i class="bi bi-key-fill text-warning"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if field.field_type == 'foreign_key' %}
+                                                            <i class="bi bi-link-45deg text-info"></i>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td><small>{{ field.description|default:"-" }}</small></td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td colspan="6" class="text-center text-muted">Aucun champ défini</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <a href="{% url 'database_manager:field_add' table.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-plus"></i> Ajouter un champ
+                                </a>
+                            </div>
+                            {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">Aucune table définie.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5><i class="bi bi-lightning"></i> Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'database_manager:schema_download_sql' schema.pk %}" class="btn btn-primary">
+                            <i class="bi bi-download"></i> Télécharger SQL
+                        </a>
+                        <a href="{% url 'database_manager:table_add' schema.pk %}" class="btn btn-outline-primary">
+                            <i class="bi bi-plus-circle"></i> Ajouter une table
+                        </a>
+                        <a href="{% url 'database_manager:schema_edit' schema.pk %}" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Modifier
+                        </a>
+                        {% if schema.status != 'validated' %}
+                            <a href="{% url 'database_manager:schema_validate' schema.pk %}" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Valider
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if schema.status == 'validated' %}
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-database-fill-down"></i> Extraction de Données</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Ce schéma est validé. Vous pouvez maintenant extraire les données d'un document pour remplir ce schéma.
+                    </p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'database_manager:data_extraction_create' schema.pk schema.document.pk %}"
+                           class="btn btn-success">
+                            <i class="bi bi-play-circle"></i> Extraire depuis ce document
+                        </a>
+                        <a href="{% url 'database_manager:data_extraction_list' %}"
+                           class="btn btn-outline-primary">
+                            <i class="bi bi-list"></i> Voir toutes les extractions
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste des extractions existantes pour ce schéma -->
+            {% if schema.data_extractions.all %}
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="bi bi-clock-history"></i> Extractions Récentes</h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for extraction in schema.data_extractions.all|slice:":5" %}
+                    <a href="{% url 'database_manager:data_extraction_detail' extraction.pk %}"
+                       class="list-group-item list-group-item-action">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">{{ extraction.created_at|date:"d/m/Y H:i" }}</small>
+                                <br>
+                                <strong>{{ extraction.document.title|truncatewords:3 }}</strong>
+                            </div>
+                            <div>
+                                {% if extraction.status == 'extracted' %}
+                                    <span class="badge bg-info">Extrait</span>
+                                {% elif extraction.status == 'validated' %}
+                                    <span class="badge bg-success">Validé</span>
+                                {% elif extraction.status == 'rejected' %}
+                                    <span class="badge bg-danger">Rejeté</span>
+                                {% endif %}
+                                <br>
+                                <small class="text-muted">{{ extraction.confidence_score|floatformat:0 }}%</small>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Debug Info -->
+<div id="debugInfo" class="debug-info" style="display: none;"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentZoom = 1;
+    const minZoom = 0.5;
+    const maxZoom = 2;
+    const zoomStep = 0.1;
+    let debugMode = false; // Désactivé par défaut maintenant
+
+    // Relations provenant de la base de données (générées par le LLM)
+    const dbRelations = [
+        {% for relation in relations %}
+        {
+            fromTable: "{{ relation.from_table.name }}",
+            toTable: "{{ relation.to_table.name }}",
+            fromField: "{{ relation.from_field.name|default:'' }}",
+            toField: "{{ relation.to_field.name|default:'id' }}",
+            relationType: "{{ relation.relation_type }}",
+            description: "{{ relation.description|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    console.log(`📊 Relations stockées en base: ${dbRelations.length}`);
+
+    function updateDebugInfo(message) {
+        if (!debugMode) return;
+        const debugDiv = document.getElementById('debugInfo');
+        debugDiv.style.display = 'block';
+        debugDiv.innerHTML += message + '<br>';
+        console.log(message);
+    }
+
+    // Basculer entre les vues
+    document.getElementById('diagramView').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('diagramCard').style.display = 'block';
+            document.getElementById('diagramLegend').style.display = 'block';
+            document.getElementById('listCard').style.display = 'none';
+            setTimeout(drawRelations, 100);
+        }
+    });
+
+    document.getElementById('listView').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('diagramCard').style.display = 'none';
+            document.getElementById('diagramLegend').style.display = 'none';
+            document.getElementById('listCard').style.display = 'block';
+        }
+    });
+
+    // Fonctions de zoom
+    function zoomIn() {
+        if (currentZoom < maxZoom) {
+            currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
+            applyZoom();
+        }
+    }
+
+    function zoomOut() {
+        if (currentZoom > minZoom) {
+            currentZoom = Math.max(currentZoom - zoomStep, minZoom);
+            applyZoom();
+        }
+    }
+
+    function resetZoom() {
+        currentZoom = 1;
+        applyZoom();
+    }
+
+    function applyZoom() {
+        const grid = document.getElementById('tablesGrid');
+        if (grid) {
+            grid.style.transform = `scale(${currentZoom})`;
+            grid.style.transformOrigin = 'center top';
+            grid.style.transition = 'transform 0.3s ease';
+            setTimeout(drawRelations, 350);
+        }
+    }
+
+    function findTargetTable(fieldName, allTableCards) {
+        // Extraire le nom de base du champ (retirer _id, Id, etc.)
+        let baseName = fieldName
+            .replace(/_id$/i, '')
+            .replace(/Id$/i, '')
+            .replace(/_/g, '')
+            .toLowerCase();
+
+        // Essayer de trouver une correspondance avec les noms de tables
+        for (let card of allTableCards) {
+            const tableName = card.getAttribute('data-table-name').toLowerCase().replace(/_/g, '');
+
+            // Correspondances possibles :
+            // 1. Nom exact
+            if (tableName === baseName) return card;
+
+            // 2. Table au pluriel (ex: user_id -> users)
+            if (tableName === baseName + 's') return card;
+
+            // 3. Table au singulier (ex: users_id -> users)
+            if (tableName.endsWith('s') && tableName.slice(0, -1) === baseName) return card;
+
+            // 4. Inclusion partielle (ex: product_category_id -> product_categories)
+            if (tableName.includes(baseName) && baseName.length >= 4) return card;
+            if (baseName.includes(tableName) && tableName.length >= 4) return card;
+        }
+
+        return null;
+    }
+
+    function getCardinalityFromRelationType(relationType, isNullable) {
+        // Détermine les cardinalités UML en fonction du type de relation
+        switch(relationType) {
+            case 'one_to_one':
+                // Relation 1:1 ou 0..1:1
+                return {
+                    source: isNullable ? '0..1' : '1',
+                    target: '1'
+                };
+            case 'one_to_many':
+                // Relation 1:N (la plus courante)
+                // La table source (avec FK) a 1 référence, la table cible peut avoir plusieurs
+                return {
+                    source: isNullable ? '0..1' : '1',
+                    target: '1..*'
+                };
+            case 'many_to_many':
+                // Relation N:N (via table de jonction)
+                return {
+                    source: '0..*',
+                    target: '0..*'
+                };
+            default:
+                // Par défaut, supposer one_to_many
+                return {
+                    source: isNullable ? '0..1' : '1',
+                    target: '1..*'
+                };
+        }
+    }
+
+    function getCardinality(fkField, relationType = null) {
+        const isNullable = fkField.getAttribute('data-is-nullable') === 'true';
+        const isPrimary = fkField.getAttribute('data-is-primary') === 'true';
+
+        // Si on a un type de relation défini (depuis la BDD), l'utiliser
+        if (relationType) {
+            return getCardinalityFromRelationType(relationType, isNullable);
+        }
+
+        // Sinon, utiliser la logique de détection automatique
+        // - Source (table avec FK) : 0..1 si nullable, 1 si obligatoire
+        // - Target (table référencée) : 1 si clé primaire, 1..* sinon
+        return {
+            source: isNullable ? '0..1' : '1',
+            target: isPrimary ? '1' : '1..*'
+        };
+    }
+
+    function drawRelations() {
+        const svg = document.getElementById('relationsSvg');
+        if (!svg) return;
+
+        // Nettoyer le SVG avant de redessiner
+        svg.innerHTML = '';
+
+        const container = document.getElementById('diagramContainer');
+        const containerRect = container.getBoundingClientRect();
+
+        // Ajuster la taille du SVG pour couvrir tout le container
+        const svgWidth = Math.max(container.scrollWidth, container.clientWidth);
+        const svgHeight = Math.max(container.scrollHeight, container.clientHeight);
+        svg.setAttribute('width', svgWidth);
+        svg.setAttribute('height', svgHeight);
+        svg.setAttribute('viewBox', `0 0 ${svgWidth} ${svgHeight}`);
+
+        const allTableCards = Array.from(document.querySelectorAll('.table-card'));
+        const tablesMap = {};
+        allTableCards.forEach(card => {
+            tablesMap[card.getAttribute('data-table-name')] = card;
+        });
+
+        let relationsCount = 0;
+        const drawnRelations = new Set(); // Pour éviter les doublons
+
+        console.log(`🔍 Détection des relations: ${dbRelations.length} relations en BDD, ${allTableCards.length} tables`);
+
+        // PRIORITÉ 1: Dessiner les relations stockées en base de données (générées par le LLM)
+        if (dbRelations.length > 0) {
+            console.log('📊 Utilisation des relations générées par le LLM:');
+
+            dbRelations.forEach((relation) => {
+                const sourceCard = tablesMap[relation.fromTable];
+                const targetCard = tablesMap[relation.toTable];
+
+                if (sourceCard && targetCard && sourceCard !== targetCard) {
+                    // Trouver le champ FK pour déterminer si nullable
+                    const fkField = sourceCard.querySelector(`[data-field-name="${relation.fromField}"]`);
+                    const isNullable = fkField ? fkField.getAttribute('data-is-nullable') === 'true' : true;
+
+                    // Utiliser le type de relation de la BDD pour les cardinalités
+                    const cardinality = getCardinalityFromRelationType(relation.relationType, isNullable);
+
+                    const label = relation.fromField || `${relation.fromTable} → ${relation.toTable}`;
+
+                    console.log(`✅ [BDD] Relation: ${relation.fromTable}.${relation.fromField} → ${relation.toTable} (${relation.relationType}) [${cardinality.source} → ${cardinality.target}]`);
+
+                    drawConnectionLine(sourceCard, targetCard, label, svg, containerRect, cardinality);
+                    relationsCount++;
+
+                    // Marquer comme dessinée
+                    drawnRelations.add(`${relation.fromTable}.${relation.fromField}`);
+                } else {
+                    console.log(`⚠️ Table non trouvée pour relation BDD: ${relation.fromTable} → ${relation.toTable}`);
+                }
+            });
+        }
+
+        // PRIORITÉ 2: Compléter avec la détection automatique des FK non couvertes
+        const foreignKeys = document.querySelectorAll('[data-is-fk="true"]');
+
+        console.log(`🔍 Détection automatique complémentaire: ${foreignKeys.length} FK trouvées`);
+
+        foreignKeys.forEach((fkField) => {
+            const fieldName = fkField.getAttribute('data-field-name');
+            const sourceCard = fkField.closest('.table-card');
+            const sourceTableName = sourceCard.getAttribute('data-table-name');
+            const relationKey = `${sourceTableName}.${fieldName}`;
+
+            // Ignorer si déjà dessinée depuis la BDD
+            if (drawnRelations.has(relationKey)) {
+                return;
+            }
+
+            // Trouver la table cible
+            const targetCard = findTargetTable(fieldName, allTableCards);
+
+            if (targetCard && sourceCard !== targetCard) {
+                const targetTableName = targetCard.getAttribute('data-table-name');
+                const cardinality = getCardinality(fkField);
+
+                console.log(`✅ [AUTO] Relation: ${sourceTableName}.${fieldName} → ${targetTableName} [${cardinality.source} → ${cardinality.target}]`);
+
+                drawConnectionLine(sourceCard, targetCard, fieldName, svg, containerRect, cardinality);
+                relationsCount++;
+                drawnRelations.add(relationKey);
+            } else if (!targetCard) {
+                console.log(`⚠️ Table cible non trouvée pour ${sourceTableName}.${fieldName}`);
+            }
+        });
+
+        console.log(`📊 Total: ${relationsCount} relation(s) dessinée(s) (${dbRelations.length} depuis BDD, ${relationsCount - dbRelations.length} auto-détectées)`);
+    }
+
+    function drawConnectionLine(sourceCard, targetCard, label, svg, containerRect, cardinality) {
+        const sourceRect = sourceCard.getBoundingClientRect();
+        const targetRect = targetCard.getBoundingClientRect();
+
+        // Calculer les points de connexion au centre droit/gauche des cartes
+        const startX = sourceRect.right - containerRect.left + container.scrollLeft;
+        const startY = sourceRect.top + (sourceRect.height / 2) - containerRect.top + container.scrollTop;
+
+        const endX = targetRect.left - containerRect.left + container.scrollLeft;
+        const endY = targetRect.top + (targetRect.height / 2) - containerRect.top + container.scrollTop;
+
+        // Calculer l'angle et la distance
+        const angle = Math.atan2(endY - startY, endX - startX);
+        const distance = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+
+        // Ligne de connexion principale avec style amélioré
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', startX);
+        line.setAttribute('y1', startY);
+        line.setAttribute('x2', endX);
+        line.setAttribute('y2', endY);
+        line.setAttribute('class', 'relation-line');
+        line.setAttribute('stroke-dasharray', '8,4');
+        line.setAttribute('marker-end', 'url(#arrowhead)');
+        svg.appendChild(line);
+
+        // Créer le marqueur de flèche si il n'existe pas
+        if (!document.getElementById('arrowhead')) {
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+            marker.setAttribute('id', 'arrowhead');
+            marker.setAttribute('markerWidth', '10');
+            marker.setAttribute('markerHeight', '10');
+            marker.setAttribute('refX', '9');
+            marker.setAttribute('refY', '3');
+            marker.setAttribute('orient', 'auto');
+
+            const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            polygon.setAttribute('points', '0 0, 10 3, 0 6');
+            polygon.setAttribute('fill', '#2c5aa0');
+
+            marker.appendChild(polygon);
+            defs.appendChild(marker);
+            svg.appendChild(defs);
+        }
+
+        // Décalage perpendiculaire pour éviter le chevauchement des cardinalités
+        const perpAngle = angle + Math.PI / 2;
+        const perpOffset = 25;
+
+        // === CARDINALITÉ SOURCE (côté table source) ===
+        const sourceCardX = startX + 70 * Math.cos(angle) + perpOffset * Math.cos(perpAngle);
+        const sourceCardY = startY + 70 * Math.sin(angle) + perpOffset * Math.sin(perpAngle);
+
+        // Fond de la cardinalité source (rectangle arrondi)
+        const sourceCardBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        sourceCardBg.setAttribute('x', sourceCardX - 30);
+        sourceCardBg.setAttribute('y', sourceCardY - 18);
+        sourceCardBg.setAttribute('width', 60);
+        sourceCardBg.setAttribute('height', 36);
+        sourceCardBg.setAttribute('class', 'cardinality-bg');
+        sourceCardBg.setAttribute('rx', '8');
+        svg.appendChild(sourceCardBg);
+
+        // Texte de la cardinalité source
+        const sourceCardText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        sourceCardText.setAttribute('x', sourceCardX);
+        sourceCardText.setAttribute('y', sourceCardY + 7);
+        sourceCardText.setAttribute('class', 'cardinality-text');
+        sourceCardText.setAttribute('text-anchor', 'middle');
+        sourceCardText.setAttribute('dominant-baseline', 'middle');
+        sourceCardText.textContent = cardinality.source;
+        svg.appendChild(sourceCardText);
+
+        // === CARDINALITÉ CIBLE (côté table cible) ===
+        const targetCardX = endX - 70 * Math.cos(angle) + perpOffset * Math.cos(perpAngle);
+        const targetCardY = endY - 70 * Math.sin(angle) + perpOffset * Math.sin(perpAngle);
+
+        // Fond de la cardinalité cible
+        const targetCardBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        targetCardBg.setAttribute('x', targetCardX - 30);
+        targetCardBg.setAttribute('y', targetCardY - 18);
+        targetCardBg.setAttribute('width', 60);
+        targetCardBg.setAttribute('height', 36);
+        targetCardBg.setAttribute('class', 'cardinality-bg');
+        targetCardBg.setAttribute('rx', '8');
+        svg.appendChild(targetCardBg);
+
+        // Texte de la cardinalité cible
+        const targetCardText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        targetCardText.setAttribute('x', targetCardX);
+        targetCardText.setAttribute('y', targetCardY + 7);
+        targetCardText.setAttribute('class', 'cardinality-text');
+        targetCardText.setAttribute('text-anchor', 'middle');
+        targetCardText.setAttribute('dominant-baseline', 'middle');
+        targetCardText.textContent = cardinality.target;
+        svg.appendChild(targetCardText);
+
+        // === LABEL DE LA RELATION (au milieu) ===
+        const midX = (startX + endX) / 2;
+        const midY = (startY + endY) / 2;
+
+        // Calculer la largeur approximative du texte
+        const labelWidth = Math.max(100, label.length * 10);
+
+        // Fond du label
+        const textBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        textBg.setAttribute('x', midX - labelWidth/2);
+        textBg.setAttribute('y', midY - 20);
+        textBg.setAttribute('width', labelWidth);
+        textBg.setAttribute('height', 32);
+        textBg.setAttribute('class', 'relation-label-bg');
+        textBg.setAttribute('rx', '8');
+        svg.appendChild(textBg);
+
+        // Texte du label
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', midX);
+        text.setAttribute('y', midY + 6);
+        text.setAttribute('class', 'relation-label-text');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('dominant-baseline', 'middle');
+        text.textContent = label;
+        svg.appendChild(text);
+
+        // Ajuster la taille du fond du label après le rendu
+        setTimeout(() => {
+            try {
+                const bbox = text.getBBox();
+                textBg.setAttribute('x', bbox.x - 10);
+                textBg.setAttribute('y', bbox.y - 5);
+                textBg.setAttribute('width', bbox.width + 20);
+                textBg.setAttribute('height', bbox.height + 10);
+            } catch (e) {
+                // Si getBBox() échoue, garder les valeurs par défaut
+            }
+        }, 50);
+    }
+
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            drawRelations();
+        }, 1000);
+    });
+
+    window.addEventListener('resize', function() {
+        clearTimeout(window.resizeTimer);
+        window.resizeTimer = setTimeout(drawRelations, 250);
+    });
+
+    const container = document.getElementById('diagramContainer');
+    if (container) {
+        container.addEventListener('scroll', function() {
+            clearTimeout(window.scrollTimer);
+            window.scrollTimer = setTimeout(drawRelations, 100);
+        });
+    }
+</script>
+{% endblock %}
+
+{# templates/database_manager/schema_detail.html #}
+{#{% extends 'base.html' %}#}
+{#{% load static %}#}
+{##}
+{#{% block title %}{{ schema.name }} - DocMind{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#<div class="container">#}
+{#    <div class="d-flex justify-content-between align-items-center mb-4">#}
+{#        <h1><i class="bi bi-diagram-3"></i> {{ schema.name }}</h1>#}
+{#        <div>#}
+{#            <a href="{% url 'database_manager:schema_edit' schema.pk %}" class="btn btn-warning">#}
+{#                <i class="bi bi-pencil"></i> Modifier#}
+{#            </a>#}
+{#            {% if schema.status != 'validated' %}#}
+{#                <a href="{% url 'database_manager:schema_validate' schema.pk %}" class="btn btn-success">#}
+{#                    <i class="bi bi-check-circle"></i> Valider#}
+{#                </a>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <div class="row">#}
+{#        <div class="col-md-8">#}
+{#            <div class="card mb-4">#}
+{#                <div class="card-header">#}
+{#                    <h5><i class="bi bi-info-circle"></i> Informations</h5>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    <dl class="row">#}
+{#                        <dt class="col-sm-3">Document source:</dt>#}
+{#                        <dd class="col-sm-9">#}
+{#                            <a href="{% url 'documents:detail' schema.document.pk %}">{{ schema.document.title }}</a>#}
+{#                        </dd>#}
+{##}
+{#                        <dt class="col-sm-3">Statut:</dt>#}
+{#                        <dd class="col-sm-9">#}
+{#                            {% if schema.status == 'validated' %}#}
+{#                                <span class="badge bg-success">Validé</span>#}
+{#                            {% elif schema.status == 'modified' %}#}
+{#                                <span class="badge bg-warning">Modifié</span>#}
+{#                            {% else %}#}
+{#                                <span class="badge bg-info">Généré</span>#}
+{#                            {% endif %}#}
+{#                        </dd>#}
+{##}
+{#                        <dt class="col-sm-3">Tables:</dt>#}
+{#                        <dd class="col-sm-9">{{ tables.count }}</dd>#}
+{##}
+{#                        <dt class="col-sm-3">Créé le:</dt>#}
+{#                        <dd class="col-sm-9">{{ schema.created_at|date:"d/m/Y H:i" }}</dd>#}
+{##}
+{#                        {% if schema.validated_at %}#}
+{#                            <dt class="col-sm-3">Validé le:</dt>#}
+{#                            <dd class="col-sm-9">{{ schema.validated_at|date:"d/m/Y H:i" }} par {{ schema.validated_by.username }}</dd>#}
+{#                        {% endif %}#}
+{##}
+{#                        {% if schema.description %}#}
+{#                            <dt class="col-sm-3">Description:</dt>#}
+{#                            <dd class="col-sm-9">{{ schema.description }}</dd>#}
+{#                        {% endif %}#}
+{#                    </dl>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <!-- Tables -->#}
+{#            <div class="card mb-4">#}
+{#                <div class="card-header d-flex justify-content-between align-items-center">#}
+{#                    <h5><i class="bi bi-table"></i> Tables</h5>#}
+{#                    <a href="{% url 'database_manager:table_add' schema.pk %}" class="btn btn-sm btn-primary">#}
+{#                        <i class="bi bi-plus"></i> Ajouter une table#}
+{#                    </a>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    {% if tables %}#}
+{#                        {% for table in tables %}#}
+{#                            <div class="mb-4">#}
+{#                                <h6>#}
+{#                                    <i class="bi bi-table"></i> {{ table.name }}#}
+{#                                    {% if table.description %}#}
+{#                                        <small class="text-muted">- {{ table.description }}</small>#}
+{#                                    {% endif %}#}
+{#                                </h6>#}
+{#                                <div class="table-responsive">#}
+{#                                    <table class="table table-sm table-bordered">#}
+{#                                        <thead class="table-light">#}
+{#                                            <tr>#}
+{#                                                <th>Champ</th>#}
+{#                                                <th>Type</th>#}
+{#                                                <th>Nullable</th>#}
+{#                                                <th>PK</th>#}
+{#                                                <th>FK</th>#}
+{#                                                <th>Description</th>#}
+{#                                            </tr>#}
+{#                                        </thead>#}
+{#                                        <tbody>#}
+{#                                            {% for field in table.fields.all %}#}
+{#                                                <tr>#}
+{#                                                    <td><code>{{ field.name }}</code></td>#}
+{#                                                    <td><span class="badge bg-secondary">{{ field.field_type }}</span></td>#}
+{#                                                    <td>#}
+{#                                                        {% if field.is_nullable %}#}
+{#                                                            <i class="bi bi-check text-success"></i>#}
+{#                                                        {% else %}#}
+{#                                                            <i class="bi bi-x text-danger"></i>#}
+{#                                                        {% endif %}#}
+{#                                                    </td>#}
+{#                                                    <td>#}
+{#                                                        {% if field.is_primary_key %}#}
+{#                                                            <i class="bi bi-key-fill text-warning"></i>#}
+{#                                                        {% endif %}#}
+{#                                                    </td>#}
+{#                                                    <td>#}
+{#                                                        {% if field.field_type == 'foreign_key' %}#}
+{#                                                            <i class="bi bi-link-45deg text-info"></i>#}
+{#                                                        {% endif %}#}
+{#                                                    </td>#}
+{#                                                    <td><small>{{ field.description|default:"-" }}</small></td>#}
+{#                                                </tr>#}
+{#                                            {% empty %}#}
+{#                                                <tr>#}
+{#                                                    <td colspan="6" class="text-center text-muted">Aucun champ défini</td>#}
+{#                                                </tr>#}
+{#                                            {% endfor %}#}
+{#                                        </tbody>#}
+{#                                    </table>#}
+{#                                </div>#}
+{#                                <a href="{% url 'database_manager:field_add' table.pk %}" class="btn btn-sm btn-outline-primary">#}
+{#                                    <i class="bi bi-plus"></i> Ajouter un champ#}
+{#                                </a>#}
+{#                            </div>#}
+{#                            <hr>#}
+{#                        {% endfor %}#}
+{#                    {% else %}#}
+{#                        <p class="text-muted">Aucune table définie.</p>#}
+{#                    {% endif %}#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <div class="col-md-4">#}
+{#            <div class="card mb-3">#}
+{#                <div class="card-header">#}
+{#                    <h5><i class="bi bi-lightning"></i> Actions</h5>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    <div class="d-grid gap-2">#}
+{#                        <a href="{% url 'database_manager:schema_download_sql' schema.pk %}" class="btn btn-primary">#}
+{#                            <i class="bi bi-download"></i> Télécharger SQL#}
+{#                        </a>#}
+{#                        <a href="{% url 'database_manager:table_add' schema.pk %}" class="btn btn-outline-primary">#}
+{#                            <i class="bi bi-plus-circle"></i> Ajouter une table#}
+{#                        </a>#}
+{#                        <a href="{% url 'database_manager:schema_edit' schema.pk %}" class="btn btn-warning">#}
+{#                            <i class="bi bi-pencil"></i> Modifier#}
+{#                        </a>#}
+{#                        {% if schema.status != 'validated' %}#}
+{#                            <a href="{% url 'database_manager:schema_validate' schema.pk %}" class="btn btn-success">#}
+{#                                <i class="bi bi-check-circle"></i> Valider#}
+{#                            </a>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            {% if schema.status == 'validated' %}#}
+{#            <div class="card mb-3">#}
+{#                <div class="card-header bg-success text-white">#}
+{#                    <h5 class="mb-0"><i class="bi bi-database-fill-down"></i> Extraction de Données</h5>#}
+{#                </div>#}
+{#                <div class="card-body">#}
+{#                    <p class="card-text">#}
+{#                        Ce schéma est validé. Vous pouvez maintenant extraire les données d'un document pour remplir ce schéma.#}
+{#                    </p>#}
+{#                    <div class="d-grid gap-2">#}
+{#                        <a href="{% url 'database_manager:data_extraction_create' schema.pk schema.document.pk %}"#}
+{#                           class="btn btn-success">#}
+{#                            <i class="bi bi-play-circle"></i> Extraire depuis ce document#}
+{#                        </a>#}
+{#                        <a href="{% url 'database_manager:data_extraction_list' %}"#}
+{#                           class="btn btn-outline-primary">#}
+{#                            <i class="bi bi-list"></i> Voir toutes les extractions#}
+{#                        </a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <!-- Liste des extractions existantes pour ce schéma -->#}
+{#            {% if schema.data_extractions.all %}#}
+{#            <div class="card">#}
+{#                <div class="card-header">#}
+{#                    <h6 class="mb-0"><i class="bi bi-clock-history"></i> Extractions Récentes</h6>#}
+{#                </div>#}
+{#                <div class="list-group list-group-flush">#}
+{#                    {% for extraction in schema.data_extractions.all|slice:":5" %}#}
+{#                    <a href="{% url 'database_manager:data_extraction_detail' extraction.pk %}"#}
+{#                       class="list-group-item list-group-item-action">#}
+{#                        <div class="d-flex justify-content-between align-items-center">#}
+{#                            <div>#}
+{#                                <small class="text-muted">{{ extraction.created_at|date:"d/m/Y H:i" }}</small>#}
+{#                                <br>#}
+{#                                <strong>{{ extraction.document.title|truncatewords:3 }}</strong>#}
+{#                            </div>#}
+{#                            <div>#}
+{#                                {% if extraction.status == 'extracted' %}#}
+{#                                    <span class="badge bg-info">Extrait</span>#}
+{#                                {% elif extraction.status == 'validated' %}#}
+{#                                    <span class="badge bg-success">Validé</span>#}
+{#                                {% elif extraction.status == 'rejected' %}#}
+{#                                    <span class="badge bg-danger">Rejeté</span>#}
+{#                                {% endif %}#}
+{#                                <br>#}
+{#                                <small class="text-muted">{{ extraction.confidence_score|floatformat:0 }}%</small>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </a>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            </div>#}
+{#            {% endif %}#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}

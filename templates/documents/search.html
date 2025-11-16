@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Recherche - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4"><i class="bi bi-search"></i> Rechercher dans les Documents</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" action="{% url 'documents:search' %}">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Entrez vos mots-clés..." value="{{ query }}" required>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i> Rechercher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if query %}
+        <h4 class="mb-3">Résultats pour "{{ query }}"</h4>
+
+        {% if results %}
+            <div class="row">
+                {% for document in results %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ document.title }}</h5>
+                                <p class="card-text text-muted">
+                                    <small>
+                                        <i class="bi bi-calendar"></i> {{ document.uploaded_at|date:"d/m/Y" }}
+                                    </small>
+                                </p>
+                                {% if document.description %}
+                                    <p class="card-text">{{ document.description|truncatewords:30 }}</p>
+                                {% endif %}
+                                <a href="{% url 'documents:detail' document.pk %}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> Voir
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Aucun résultat trouvé pour "{{ query }}".
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{# templates/database_manager/schema_list.html #}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Schémas de Base de Données - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-diagram-3"></i> Schémas de Base de Données</h1>
+        <a href="{% url 'documents:list' %}" class="btn btn-primary">
+            <i class="bi bi-file-earmark-text"></i> Générer depuis un Document
+        </a>
+    </div>
+
+    {% if schemas %}
+        <div class="row">
+            {% for schema in schemas %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>{{ schema.name }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <span class="badge bg-secondary">{{ schema.tables.count }} table{{ schema.tables.count|pluralize }}</span>
+                                {% if schema.status == 'validated' %}
+                                    <span class="badge bg-success">Validé</span>
+                                {% elif schema.status == 'modified' %}
+                                    <span class="badge bg-warning">Modifié</span>
+                                {% else %}
+                                    <span class="badge bg-info">Généré</span>
+                                {% endif %}
+                            </p>
+                            <p class="card-text"><small class="text-muted">
+                                <i class="bi bi-file-earmark-text"></i> {{ schema.document.title }}<br>
+                                <i class="bi bi-calendar"></i> {{ schema.created_at|date:"d/m/Y" }}
+                            </small></p>
+                            {% if schema.description %}
+                                <p class="card-text">{{ schema.description|truncatewords:20 }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="{% url 'database_manager:schema_detail' schema.pk %}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye"></i> Voir
+                                    </a>
+                                    <a href="{% url 'database_manager:schema_edit' schema.pk %}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Modifier
+                                    </a>
+                                    {% if schema.status != 'validated' %}
+                                        <a href="{% url 'database_manager:schema_validate' schema.pk %}" class="btn btn-sm btn-success">
+                                            <i class="bi bi-check-circle"></i> Valider
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <a href="{% url 'database_manager:schema_download_sql' schema.pk %}"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="Télécharger le SQL">
+                                        <i class="bi bi-download"></i> SQL
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Vous n'avez pas encore de schémas générés.
+            <a href="{% url 'documents:list' %}" class="alert-link">Uploadez un document pour commencer !</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

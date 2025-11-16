@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Conversations - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-chat-dots"></i> Mes Conversations</h1>
+        <a href="{% url 'chat:conversation_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nouvelle Conversation
+        </a>
+    </div>
+
+    {% if conversations %}
+        <div class="row">
+            {% for conversation in conversations %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ conversation.title }}</h5>
+                            <p class="card-text text-muted">
+                                <small>
+                                    <i class="bi bi-calendar"></i> {{ conversation.created_at|date:"d/m/Y H:i" }}
+                                </small>
+                            </p>
+                            <p class="card-text">
+                                <span class="badge bg-secondary">
+                                    {{ conversation.messages.count }} message{{ conversation.messages.count|pluralize }}
+                                </span>
+                                <span class="badge bg-info text-dark">
+                                    {{ conversation.documents.count }} document{{ conversation.documents.count|pluralize }}
+                                </span>
+                            </p>
+                            {% if conversation.context_description %}
+                                <p class="card-text"><small>{{ conversation.context_description|truncatewords:20 }}</small></p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'chat:conversation_detail' conversation.pk %}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-chat-fill"></i> Ouvrir
+                            </a>
+                            <a href="{% url 'chat:conversation_delete' conversation.pk %}" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Supprimer
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Vous n'avez pas encore de conversations.
+            <a href="{% url 'chat:conversation_create' %}" class="alert-link">Créez-en une maintenant !</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

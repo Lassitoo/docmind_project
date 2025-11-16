@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Analyser {{ document.title }} - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4"><i class="bi bi-gear"></i> Analyser le Document</h1>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ document.title }}</h5>
+                    <p class="card-text">
+                        <strong>Type:</strong> {{ document.file_type }}<br>
+                        <strong>Taille:</strong> {{ document.file_size|filesizeformat }}
+                    </p>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        L'analyse du document peut prendre quelques instants selon sa taille.
+                        Le système va extraire le texte, identifier les entités clés, et générer un résumé.
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-play-circle"></i> Lancer l'analyse
+                            </button>
+                            <a href="{% url 'documents:detail' document.pk %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

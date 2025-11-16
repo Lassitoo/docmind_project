@@ -1,0 +1,1930 @@
+{#template_name: conversation_editor.html#}
+{% extends 'base.html' %}
+
+{% block title %}{{ conversation.title }} - Éditeur DocMind{% endblock %}
+
+{% block extra_css %}
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<style>
+    /* Layout principal - Full screen editor */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    main {
+        padding: 0 !important;
+        height: calc(100vh - 56px);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .editor-wrapper {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        background: #f5f7fa;
+    }
+
+    /* Barre d'outils supérieure */
+    .editor-toolbar {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: white;
+        border-bottom: 2px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        gap: 15px;
+    }
+
+    .editor-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #667eea;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .editor-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn-editor {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
+
+    .btn-editor:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-editor-secondary {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+
+    .btn-editor-success {
+        background: linear-gradient(135deg, #48c774 0%, #38b864 100%);
+    }
+
+    /* Zone principale */
+    .editor-main {
+        display: flex;
+        flex: 1;
+        margin-top: 60px;
+        height: calc(100% - 60px);
+    }
+
+    /* Panneau latéral gauche - Navigation & Agent IA */
+    .editor-sidebar-left {
+        width: 350px;
+        background: white;
+        border-right: 2px solid #e0e0e0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .sidebar-tabs {
+        display: flex;
+        border-bottom: 2px solid #e0e0e0;
+        background: #f8f9fa;
+    }
+
+    .sidebar-tab {
+        flex: 1;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        font-weight: 600;
+        color: #666;
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+    }
+
+    .sidebar-tab:hover {
+        background: #e9ecef;
+    }
+
+    .sidebar-tab.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+        background: white;
+    }
+
+    .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .sidebar-tab-panel {
+        display: none;
+    }
+
+    .sidebar-tab-panel.active {
+        display: block;
+    }
+
+    /* Agent IA Panel */
+    .agent-panel {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .agent-chat {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: #f8f9ff;
+        border-radius: 10px;
+        max-height: 400px;
+    }
+
+    .agent-message {
+        background: white;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-left: 3px solid #667eea;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .agent-input-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .agent-input {
+        flex: 1;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 0.9rem;
+        resize: none;
+    }
+
+    .agent-input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    /* Documents Panel */
+    .documents-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .document-item {
+        padding: 15px;
+        background: #f8f9ff;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .document-item:hover {
+        border-color: #667eea;
+        transform: translateX(5px);
+    }
+
+    .document-item.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+
+    .document-icon {
+        font-size: 2rem;
+        color: #667eea;
+    }
+
+    .document-item.active .document-icon {
+        color: white;
+    }
+
+    .document-info h6 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .document-info small {
+        opacity: 0.8;
+    }
+
+    /* Zone d'édition centrale */
+    .editor-canvas {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: #e9ecef;
+        padding: 20px;
+    }
+
+    .editor-mode-selector {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        justify-content: center;
+    }
+
+    .mode-btn {
+        padding: 10px 25px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .mode-btn:hover {
+        border-color: #667eea;
+    }
+
+    .mode-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+
+    /* Éditeur Quill */
+    .quill-editor-container {
+        flex: 1;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #editor {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .ql-toolbar {
+        background: #f8f9fa;
+        border: none !important;
+        border-bottom: 2px solid #e0e0e0 !important;
+        padding: 15px !important;
+    }
+
+    .ql-container {
+        border: none !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Canvas Fabric */
+    .fabric-canvas-container {
+        flex: 1;
+        background: #f8f9fa;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        overflow: auto;
+        padding: 30px;
+        display: none;
+        min-height: 100%;
+        max-height: 100%;
+    }
+
+    .fabric-canvas-container.active {
+        display: block;
+    }
+
+    .fabric-canvas-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100%;
+    }
+
+    #fabricCanvas {
+        border: 2px solid #cbd5e0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        background: white;
+    }
+
+    /* Panneau latéral droit - Propriétés */
+    .editor-sidebar-right {
+        width: 300px;
+        background: white;
+        border-left: 2px solid #e0e0e0;
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .properties-section {
+        margin-bottom: 25px;
+    }
+
+    .properties-section h6 {
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .property-control {
+        margin-bottom: 15px;
+    }
+
+    .property-control label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #555;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .property-control input,
+    .property-control select {
+        width: 100%;
+        padding: 8px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    .property-control input:focus,
+    .property-control select:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .color-picker-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .color-picker-row input[type="color"] {
+        width: 50px;
+        height: 40px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    /* Indicateur de sauvegarde */
+    .save-indicator {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 2000;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+    }
+
+    .save-indicator.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .save-indicator.saving {
+        background: #ffc107;
+        color: #333;
+    }
+
+    .save-indicator.saved {
+        background: #48c774;
+        color: white;
+    }
+
+    .save-indicator.error {
+        background: #f14668;
+        color: white;
+    }
+
+    /* Scrollbar personnalisée */
+    .editor-sidebar-left::-webkit-scrollbar,
+    .editor-sidebar-right::-webkit-scrollbar,
+    .agent-chat::-webkit-scrollbar,
+    #editor::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .editor-sidebar-left::-webkit-scrollbar-track,
+    .editor-sidebar-right::-webkit-scrollbar-track,
+    .agent-chat::-webkit-scrollbar-track,
+    #editor::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .editor-sidebar-left::-webkit-scrollbar-thumb,
+    .editor-sidebar-right::-webkit-scrollbar-thumb,
+    .agent-chat::-webkit-scrollbar-thumb,
+    #editor::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 10px;
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .editor-wrapper > * {
+        animation: slideIn 0.4s ease-out;
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+        .editor-sidebar-right {
+            width: 250px;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .editor-sidebar-left {
+            width: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="editor-wrapper">
+    <!-- Barre d'outils supérieure -->
+    <div class="editor-toolbar">
+        <div class="editor-title">
+            <i class="bi bi-pencil-square"></i>
+            <span id="documentTitle">{{ document.title }}</span>
+        </div>
+
+        <div class="editor-actions">
+            <button class="btn-editor btn-editor-secondary" id="undoBtn" title="Annuler">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+            <button class="btn-editor btn-editor-secondary" id="redoBtn" title="Refaire">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
+            <div style="width: 2px; height: 30px; background: #e0e0e0;"></div>
+            <button class="btn-editor btn-editor-secondary" id="reloadBtn" title="Recharger le contenu depuis le serveur">
+                <i class="bi bi-arrow-repeat"></i> Recharger
+            </button>
+            <button class="btn-editor btn-editor-secondary" id="exportBtn">
+                <i class="bi bi-download"></i> Exporter
+            </button>
+            <button class="btn-editor btn-editor-success" id="saveBtn">
+                <i class="bi bi-save"></i> Sauvegarder
+            </button>
+            <button class="btn-editor btn-editor-secondary" onclick="window.location.href='{% url 'chat:conversation_detail' conversation.id %}'">
+                <i class="bi bi-arrow-left"></i> Retour
+            </button>
+        </div>
+    </div>
+
+    <!-- Zone principale -->
+    <div class="editor-main">
+        <!-- Sidebar gauche -->
+        <div class="editor-sidebar-left">
+            <div class="sidebar-tabs">
+                <div class="sidebar-tab active" data-tab="agent">
+                    <i class="bi bi-robot"></i> Agent IA
+                </div>
+                <div class="sidebar-tab" data-tab="documents">
+                    <i class="bi bi-files"></i> Documents
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Panneau Agent IA -->
+                <div class="sidebar-tab-panel active" id="agentPanel">
+                    <div class="agent-panel">
+                        <h6 style="font-weight: 700; color: #667eea; margin-bottom: 15px;">
+                            <i class="bi bi-magic"></i> Assistant Intelligent
+                        </h6>
+                        <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">
+                            Demandez à l'agent de modifier, formater ou analyser votre document.
+                        </p>
+
+                        <div class="agent-chat" id="agentChat">
+                            <div class="agent-message">
+                                <strong style="color: #667eea;">🤖 Agent DocMind</strong>
+                                <p style="margin: 5px 0 0 0; font-size: 0.9rem;">
+                                    Bonjour ! Je peux vous aider à éditer ce document.
+                                    Que souhaitez-vous faire ?
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="agent-input-container">
+                            <textarea class="agent-input" id="agentInput" rows="3"
+                                      placeholder="Ex: Met en gras tous les titres..."></textarea>
+                            <button class="btn-editor" id="agentSendBtn" style="height: fit-content;">
+                                <i class="bi bi-send-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panneau Documents -->
+                <div class="sidebar-tab-panel" id="documentsPanel">
+                    <h6 style="font-weight: 700; color: #667eea; margin-bottom: 15px;">
+                        <i class="bi bi-files"></i> Documents de la conversation
+                    </h6>
+                    <div class="documents-list">
+                        {% for doc in all_documents %}
+                        <div class="document-item {% if doc.id == document.id %}active{% endif %}"
+                             data-doc-id="{{ doc.id }}"
+                             onclick="loadDocument({{ doc.id }})">
+                            <i class="bi bi-file-earmark-pdf-fill document-icon"></i>
+                            <div class="document-info">
+                                <h6>{{ doc.title|truncatechars:30 }}</h6>
+                                <small>{{ doc.upload_date|date:"d/m/Y" }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone d'édition centrale -->
+        <div class="editor-canvas">
+            <!-- Sélecteur de mode -->
+            <div class="editor-mode-selector">
+                <button class="mode-btn active" data-mode="text">
+                    <i class="bi bi-textarea-t"></i> Édition Texte
+                </button>
+                <button class="mode-btn" data-mode="visual">
+                    <i class="bi bi-palette"></i> Édition Visuelle
+                </button>
+            </div>
+
+            <!-- Éditeur de texte Quill -->
+            <div class="quill-editor-container" id="textEditorContainer">
+                <div id="editor"></div>
+            </div>
+
+            <!-- Canvas visuel Fabric -->
+            <div class="fabric-canvas-container" id="visualEditorContainer">
+                <div class="fabric-canvas-wrapper">
+                    <canvas id="fabricCanvas" width="900" height="1200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar droite - Propriétés -->
+        <div class="editor-sidebar-right">
+            <div class="properties-section">
+                <h6><i class="bi bi-sliders"></i> Document</h6>
+                <div class="property-control">
+                    <label>Titre</label>
+                    <input type="text" id="docTitleInput" value="{{ document.title }}">
+                </div>
+                <div class="property-control">
+                    <label>Pages</label>
+                    <input type="text" value="1" readonly>
+                </div>
+            </div>
+
+            <div class="properties-section">
+                <h6><i class="bi bi-type"></i> Formatage Texte</h6>
+                <div class="property-control">
+                    <label>Police</label>
+                    <select id="fontSelect">
+                        <option value="Arial">Arial</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Verdana">Verdana</option>
+                    </select>
+                </div>
+                <div class="property-control">
+                    <label>Taille</label>
+                    <input type="number" id="fontSizeInput" value="14" min="8" max="72">
+                </div>
+                <div class="property-control">
+                    <label>Couleur</label>
+                    <div class="color-picker-row">
+                        <input type="color" id="textColorPicker" value="#000000">
+                        <input type="text" id="textColorInput" value="#000000" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="properties-section" id="insertionSection">
+                <h6><i class="bi bi-image"></i> Insertion</h6>
+                <button class="btn-editor" id="insertImageBtn" style="width: 100%; margin-bottom: 10px;">
+                    <i class="bi bi-image"></i> Insérer une image
+                </button>
+                <button class="btn-editor btn-editor-secondary" id="insertTableBtn" style="width: 100%;">
+                    <i class="bi bi-table"></i> Insérer un tableau
+                </button>
+            </div>
+
+            <div class="properties-section" id="visualToolsSection" style="display: none;">
+                <h6><i class="bi bi-tools"></i> Outils Visuels</h6>
+                <button class="btn-editor" id="addTextBtn" style="width: 100%; margin-bottom: 10px;">
+                    <i class="bi bi-fonts"></i> Ajouter Texte
+                </button>
+                <button class="btn-editor btn-editor-secondary" id="addRectBtn" style="width: 100%; margin-bottom: 10px;">
+                    <i class="bi bi-square"></i> Rectangle
+                </button>
+                <button class="btn-editor btn-editor-secondary" id="addCircleBtn" style="width: 100%; margin-bottom: 10px;">
+                    <i class="bi bi-circle"></i> Cercle
+                </button>
+                <button class="btn-editor btn-editor-secondary" id="addLineBtn" style="width: 100%; margin-bottom: 10px;">
+                    <i class="bi bi-dash"></i> Ligne
+                </button>
+                <button class="btn-editor" id="deleteObjectBtn" style="width: 100%; background: linear-gradient(135deg, #f14668 0%, #d83f5e 100%);">
+                    <i class="bi bi-trash"></i> Supprimer
+                </button>
+            </div>
+
+            <div class="properties-section" id="objectPropertiesSection" style="display: none;">
+                <h6><i class="bi bi-sliders2"></i> Objet Sélectionné</h6>
+                <div class="property-control">
+                    <label>Position X</label>
+                    <input type="number" id="objLeftInput" value="0">
+                </div>
+                <div class="property-control">
+                    <label>Position Y</label>
+                    <input type="number" id="objTopInput" value="0">
+                </div>
+                <div class="property-control">
+                    <label>Largeur</label>
+                    <input type="number" id="objWidthInput" value="0">
+                </div>
+                <div class="property-control">
+                    <label>Hauteur</label>
+                    <input type="number" id="objHeightInput" value="0">
+                </div>
+                <div class="property-control">
+                    <label>Rotation</label>
+                    <input type="number" id="objAngleInput" value="0" min="0" max="360">
+                </div>
+                <div class="property-control">
+                    <label>Opacité</label>
+                    <input type="number" id="objOpacityInput" value="100" min="0" max="100">
+                </div>
+            </div>
+
+            <div class="properties-section">
+                <h6><i class="bi bi-info-circle"></i> Statistiques</h6>
+                <p style="font-size: 0.85rem; margin: 5px 0;">
+                    <strong>Mots:</strong> <span id="wordCount">0</span>
+                </p>
+                <p style="font-size: 0.85rem; margin: 5px 0;">
+                    <strong>Caractères:</strong> <span id="charCount">0</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Indicateur de sauvegarde -->
+<div class="save-indicator" id="saveIndicator">
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="saveIndicatorText">Sauvegardé</span>
+</div>
+
+<!-- Input caché pour upload d'image -->
+<input type="file" id="imageUpload" accept="image/*" style="display: none;">
+{% endblock %}
+
+{% block extra_js %}
+<!-- Quill.js -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<!-- Fabric.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+
+<!-- Variables Django injectées -->
+<script>
+    const DOCUMENT_ID = {{ document.id }};
+    const CONVERSATION_ID = {{ conversation.id }};
+    const CSRF_TOKEN = '{{ csrf_token }}';
+
+    // URLs
+    const URL_EXTRACT = '{% url "chat:extract_document_content" document.id %}';
+    const URL_SAVE = '{% url "chat:save_document_changes" document.id %}';
+    const URL_AUTOSAVE = '{% url "chat:auto_save_document" document.id %}';
+    const URL_EXPORT = '{% url "chat:export_document" document.id %}';
+    const URL_SEND_MESSAGE = '{% url "chat:send_message" conversation.id %}';
+</script>
+
+{% verbatim %}
+<script>
+$(document).ready(function() {
+    // Variables globales
+    let currentMode = 'text';
+    let quillEditor = null;
+    let fabricCanvas = null;
+    let autoSaveInterval = null;
+    let documentId = DOCUMENT_ID;
+    let conversationId = CONVERSATION_ID;
+
+    // Initialiser Quill
+    initQuillEditor();
+
+    // Initialiser Fabric Canvas
+    initFabricCanvas();
+
+    // Charger le contenu du document
+    loadDocumentContent();
+
+    // Event listeners
+    setupEventListeners();
+
+    // Auto-save toutes les 30 secondes
+    startAutoSave();
+
+    // ============================================
+    // FONCTIONS UTILITAIRES (Doivent être déclarées en premier)
+    // ============================================
+
+    function updateStats() {
+        const text = quillEditor.getText();
+        const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+        const chars = text.length;
+
+        $('#wordCount').text(words);
+        $('#charCount').text(chars);
+    }
+
+    function updateCanvasStats() {
+        const objects = fabricCanvas.getObjects();
+        const textObjects = objects.filter(o => o.type === 'textbox' || o.type === 'text');
+        let totalText = '';
+
+        textObjects.forEach(obj => {
+            totalText += obj.text + ' ';
+        });
+
+        const words = totalText.trim().split(/\s+/).filter(w => w.length > 0).length;
+        const chars = totalText.length;
+
+        $('#wordCount').text(words);
+        $('#charCount').text(chars);
+    }
+
+    function showSaveIndicator(text, type) {
+        $('#saveIndicatorText').text(text);
+        $('#saveIndicator')
+            .removeClass('saving saved error')
+            .addClass(type)
+            .addClass('show');
+    }
+
+    function hideSaveIndicator() {
+        $('#saveIndicator').removeClass('show');
+    }
+
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // ============================================
+    // INITIALISATION DES ÉDITEURS
+    // ============================================
+
+    function initQuillEditor() {
+        const toolbarOptions = [
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'script': 'sub'}, { 'script': 'super' }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'indent': '-1'}, { 'indent': '+1' }],
+            [{ 'align': [] }],
+            ['blockquote', 'code-block'],
+            ['link', 'image', 'video'],
+            ['clean']
+        ];
+
+        quillEditor = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: toolbarOptions
+            },
+            placeholder: 'Commencez à écrire ou chargez un document...'
+        });
+
+        // Événements de modification
+        quillEditor.on('text-change', function() {
+            updateStats();
+        });
+    }
+
+    function initFabricCanvas() {
+        fabricCanvas = new fabric.Canvas('fabricCanvas', {
+            backgroundColor: '#ffffff',
+            selection: true,
+            preserveObjectStacking: true,
+            width: 900,
+            height: 1200
+        });
+
+        // Événements
+        fabricCanvas.on('object:modified', function() {
+            showSaveIndicator('Modifications non sauvegardées', 'saving');
+        });
+
+        fabricCanvas.on('object:added', function() {
+            updateCanvasStats();
+        });
+
+        fabricCanvas.on('object:removed', function() {
+            updateCanvasStats();
+        });
+
+        fabricCanvas.on('selection:created', function(e) {
+            showObjectProperties(e.selected[0]);
+        });
+
+        fabricCanvas.on('selection:updated', function(e) {
+            showObjectProperties(e.selected[0]);
+        });
+
+        fabricCanvas.on('selection:cleared', function() {
+            hideObjectProperties();
+        });
+
+        // Configurer les contrôles
+        fabric.Object.prototype.transparentCorners = false;
+        fabric.Object.prototype.cornerColor = '#667eea';
+        fabric.Object.prototype.cornerStyle = 'circle';
+        fabric.Object.prototype.borderColor = '#667eea';
+        fabric.Object.prototype.cornerSize = 10;
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', function(e) {
+            if (currentMode === 'visual') {
+                // Supprimer avec Delete ou Backspace
+                if ((e.key === 'Delete' || e.key === 'Backspace') && fabricCanvas.getActiveObject()) {
+                    e.preventDefault();
+                    deleteSelectedObject();
+                }
+            }
+        });
+    }
+
+    // ============================================
+    // CHARGEMENT DU CONTENU
+    // ============================================
+
+    function loadDocumentContent() {
+        showSaveIndicator('Chargement du document...', 'saving');
+
+        $.ajax({
+            url: URL_EXTRACT,
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: CSRF_TOKEN,
+                format: 'quill'
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Charger dans Quill
+                    if (response.content && response.content.ops) {
+                        quillEditor.setContents(response.content);
+                    }
+
+                    showSaveIndicator('Document chargé', 'saved');
+                    setTimeout(() => hideSaveIndicator(), 2000);
+                    updateStats();
+                } else {
+                    showSaveIndicator('Erreur: ' + response.error, 'error');
+                }
+            },
+            error: function(xhr) {
+                showSaveIndicator('Erreur de chargement', 'error');
+                console.error('Erreur:', xhr);
+            }
+        });
+    }
+
+    function loadVisualContent() {
+    showSaveIndicator('Chargement de la structure PDF...', 'saving');
+
+    $.ajax({
+        url: URL_EXTRACT,
+        type: 'POST',
+        data: {
+            csrfmiddlewaretoken: CSRF_TOKEN,
+            format: 'fabric'
+        },
+        success: function(response) {
+            if (response.success) {
+                console.log('📦 Full response:', response);
+                fabricCanvas.clear();
+
+                const content = response.content;
+                
+                // Check if this is a saved Fabric canvas (has 'objects' array directly)
+                if (content.objects && Array.isArray(content.objects)) {
+                    console.log('📐 Loading saved Fabric canvas with', content.objects.length, 'objects');
+                    
+                    // Load saved Fabric.js canvas directly
+                    fabricCanvas.loadFromJSON(content, function() {
+                        fabricCanvas.renderAll();
+                        console.log('✅ Fabric canvas loaded');
+                        showSaveIndicator('Canvas chargé', 'saved');
+                        setTimeout(() => hideSaveIndicator(), 2000);
+                        updateCanvasStats();
+                    });
+                }
+                // Check if this is original PDF structure (has 'pages' array)
+                else if (content.pages && Array.isArray(content.pages)) {
+                    console.log('📚 Loading PDF structure with', content.pages.length, 'pages');
+                    
+                    let currentY = 50;
+                    const pageMargin = 100;
+                    let totalObjects = 0;
+                    
+                    content.pages.forEach((page, pageIndex) => {
+                        console.log(`\n📄 Page ${pageIndex + 1}:`, page);
+                        
+                        // Add page number header
+                        const pageHeader = new fabric.Text(`Page ${page.page_number}`, {
+                            left: 50,
+                            top: currentY,
+                            fontSize: 10,
+                            fill: '#999999',
+                            fontFamily: 'Arial',
+                            selectable: false
+                        });
+                        fabricCanvas.add(pageHeader);
+                        currentY += 30;
+                        
+                        // Convert text to Fabric text objects
+                        if (page.text && page.text.trim()) {
+                            const lines = page.text.split('\n');
+                            
+                            lines.forEach((line) => {
+                                if (line.trim()) {
+                                    const textObj = new fabric.IText(line, {
+                                        left: 50,
+                                        top: currentY,
+                                        fontSize: 12,
+                                        fontFamily: 'Arial',
+                                        fill: '#000000',
+                                        selectable: true,
+                                        editable: true,
+                                        width: 500
+                                    });
+                                    fabricCanvas.add(textObj);
+                                    currentY += 20;
+                                    totalObjects++;
+                                }
+                            });
+                        }
+                        
+                        // Convert tables
+                        if (page.tables && page.tables.length > 0) {
+                            console.log(`  📊 ${page.tables.length} table(s)`);
+                            
+                            page.tables.forEach((table, tableIndex) => {
+                                currentY += 20;
+                                
+                                const tableTitle = new fabric.Text(`Table ${tableIndex + 1}`, {
+                                    left: 50,
+                                    top: currentY,
+                                    fontSize: 11,
+                                    fill: '#3b82f6',
+                                    fontFamily: 'Arial',
+                                    fontWeight: 'bold',
+                                    selectable: false
+                                });
+                                fabricCanvas.add(tableTitle);
+                                currentY += 25;
+                                
+                                if (table.data && Array.isArray(table.data)) {
+                                    const cellWidth = 120;
+                                    const cellHeight = 25;
+                                    const startX = 50;
+                                    
+                                    table.data.forEach((row, rowIndex) => {
+                                        const rowY = currentY + (rowIndex * cellHeight);
+                                        
+                                        row.forEach((cell, colIndex) => {
+                                            const cellX = startX + (colIndex * cellWidth);
+                                            
+                                            const cellRect = new fabric.Rect({
+                                                left: cellX,
+                                                top: rowY,
+                                                width: cellWidth,
+                                                height: cellHeight,
+                                                fill: rowIndex === 0 ? '#f0f7ff' : '#ffffff',
+                                                stroke: '#d1d5db',
+                                                strokeWidth: 1,
+                                                selectable: false
+                                            });
+                                            fabricCanvas.add(cellRect);
+                                            
+                                            if (cell && cell.trim()) {
+                                                const cellText = new fabric.Text(cell, {
+                                                    left: cellX + 5,
+                                                    top: rowY + 5,
+                                                    fontSize: 10,
+                                                    fontFamily: 'Arial',
+                                                    fill: '#000000',
+                                                    width: cellWidth - 10,
+                                                    fontWeight: rowIndex === 0 ? 'bold' : 'normal',
+                                                    selectable: false
+                                                });
+                                                fabricCanvas.add(cellText);
+                                            }
+                                            
+                                            totalObjects += 2;
+                                        });
+                                    });
+                                    
+                                    currentY += (table.data.length * cellHeight) + 20;
+                                }
+                            });
+                        }
+                        
+                        // Page separator
+                        currentY += pageMargin;
+                        const separator = new fabric.Line([50, currentY - 30, 545, currentY - 30], {
+                            stroke: '#e5e7eb',
+                            strokeWidth: 2,
+                            strokeDashArray: [5, 5],
+                            selectable: false
+                        });
+                        fabricCanvas.add(separator);
+                    });
+                    
+                    fabricCanvas.setHeight(currentY + 100);
+                    fabricCanvas.setWidth(content.pages[0] ? content.pages[0].width + 100 : 695);
+                    fabricCanvas.renderAll();
+                    
+                    console.log(`✅ ${totalObjects} objects created from ${content.pages.length} pages`);
+                    showSaveIndicator(`${content.pages.length} pages chargées`, 'saved');
+                    setTimeout(() => hideSaveIndicator(), 2000);
+                    updateCanvasStats();
+                }
+                else {
+                    console.error('❌ Unknown content structure:', content);
+                    showSaveIndicator('Structure inconnue', 'error');
+                }
+            } else {
+                showSaveIndicator('Erreur: ' + response.error, 'error');
+            }
+        },
+        error: function(xhr) {
+            showSaveIndicator('Erreur de chargement', 'error');
+            console.error('AJAX Error:', xhr);
+        }
+    });
+}
+
+    function loadFabricObject(objData) {
+        try {
+            // Créer l'objet Fabric selon son type
+            let fabricObj = null;
+
+            if (objData.type === 'text' || objData.type === 'textbox') {
+                // Utiliser IText pour les textes éditables, Text pour les non-éditables
+                const TextClass = objData.editable !== false ? fabric.IText : fabric.Text;
+                fabricObj = new TextClass(objData.text || '', {
+                    left: objData.left || 0,
+                    top: objData.top || 0,
+                    fontSize: objData.fontSize || 12,
+                    fontFamily: objData.fontFamily || 'Arial',
+                    fontWeight: objData.fontWeight || 'normal',
+                    fontStyle: objData.fontStyle || 'normal',
+                    fill: objData.fill || '#000000',
+                    selectable: objData.selectable !== false,
+                    originX: objData.originX || 'left',
+                    originY: objData.originY || 'top'
+                });
+            } else if (objData.type === 'rect') {
+                fabricObj = new fabric.Rect({
+                    left: objData.left || 0,
+                    top: objData.top || 0,
+                    width: objData.width || 100,
+                    height: objData.height || 100,
+                    fill: objData.fill || '#ffffff',
+                    stroke: objData.stroke || null,
+                    strokeWidth: objData.strokeWidth || 0,
+                    selectable: objData.selectable !== false,
+                    evented: objData.evented !== false
+                });
+
+                // Ajouter l'ombre si présente
+                if (objData.shadow) {
+                    fabricObj.set('shadow', new fabric.Shadow(objData.shadow));
+                }
+            } else if (objData.type === 'line') {
+                // Supporter les deux formats: points [x1,y1,x2,y2] ou x1,y1,x2,y2 séparés
+                let linePoints;
+                if (objData.points) {
+                    linePoints = objData.points;
+                } else if (objData.x1 !== undefined && objData.y1 !== undefined) {
+                    linePoints = [objData.x1, objData.y1, objData.x2 || 0, objData.y2 || 0];
+                } else {
+                    linePoints = [0, 0, 100, 100];
+                }
+
+                fabricObj = new fabric.Line(linePoints, {
+                    stroke: objData.stroke || '#000000',
+                    strokeWidth: objData.strokeWidth || 1,
+                    selectable: objData.selectable !== false,
+                    evented: objData.evented !== false
+                });
+            } else if (objData.type === 'image') {
+                // Charger l'image depuis l'URL
+                fabric.Image.fromURL(objData.src, function(img) {
+                    img.set({
+                        left: objData.left || 0,
+                        top: objData.top || 0,
+                        scaleX: objData.scaleX || 1,
+                        scaleY: objData.scaleY || 1,
+                        selectable: objData.selectable !== false
+                    });
+                    fabricCanvas.add(img);
+                    fabricCanvas.renderAll();
+                });
+                return; // Sortir car l'image est chargée de manière asynchrone
+            } else if (objData.type === 'group') {
+                // Pour les tableaux groupés
+                const groupObjects = [];
+                if (objData.objects) {
+                    objData.objects.forEach(function(childData) {
+                        const childObj = createFabricObjectFromData(childData);
+                        if (childObj) {
+                            groupObjects.push(childObj);
+                        }
+                    });
+                }
+                if (groupObjects.length > 0) {
+                    fabricObj = new fabric.Group(groupObjects, {
+                        left: objData.left || 0,
+                        top: objData.top || 0,
+                        selectable: objData.selectable !== false
+                    });
+                }
+            }
+
+            if (fabricObj) {
+                fabricCanvas.add(fabricObj);
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement de l\'objet Fabric:', error, objData);
+        }
+    }
+
+    function createFabricObjectFromData(objData) {
+        // Fonction helper pour créer un objet Fabric depuis les données
+        if (objData.type === 'rect') {
+            return new fabric.Rect({
+                left: objData.left || 0,
+                top: objData.top || 0,
+                width: objData.width || 100,
+                height: objData.height || 100,
+                fill: objData.fill || '#ffffff',
+                stroke: objData.stroke || null,
+                strokeWidth: objData.strokeWidth || 0,
+                selectable: objData.selectable !== false,
+                evented: objData.evented !== false
+            });
+        } else if (objData.type === 'line') {
+            // Supporter les deux formats: points [x1,y1,x2,y2] ou x1,y1,x2,y2 séparés
+            let linePoints;
+            if (objData.points) {
+                linePoints = objData.points;
+            } else if (objData.x1 !== undefined && objData.y1 !== undefined) {
+                linePoints = [objData.x1, objData.y1, objData.x2 || 0, objData.y2 || 0];
+            } else {
+                linePoints = [0, 0, 100, 100];
+            }
+
+            return new fabric.Line(linePoints, {
+                stroke: objData.stroke || '#000000',
+                strokeWidth: objData.strokeWidth || 1,
+                selectable: objData.selectable !== false,
+                evented: objData.evented !== false
+            });
+        } else if (objData.type === 'text') {
+            // Utiliser IText pour les textes éditables
+            const TextClass = objData.editable !== false ? fabric.IText : fabric.Text;
+            return new TextClass(objData.text || '', {
+                left: objData.left || 0,
+                top: objData.top || 0,
+                fontSize: objData.fontSize || 12,
+                fontFamily: objData.fontFamily || 'Arial',
+                fontWeight: objData.fontWeight || 'normal',
+                fontStyle: objData.fontStyle || 'normal',
+                fill: objData.fill || '#000000',
+                selectable: objData.selectable !== false,
+                originX: objData.originX || 'left',
+                originY: objData.originY || 'top'
+            });
+        }
+        return null;
+    }
+
+    // ============================================
+    // GESTION DES ÉVÉNEMENTS
+    // ============================================
+
+    function setupEventListeners() {
+        // Tabs de la sidebar
+        $('.sidebar-tab').on('click', function() {
+            const tab = $(this).data('tab');
+            $('.sidebar-tab').removeClass('active');
+            $(this).addClass('active');
+            $('.sidebar-tab-panel').removeClass('active');
+            $('#' + tab + 'Panel').addClass('active');
+        });
+
+        // Sélection du mode
+        $('.mode-btn').on('click', function() {
+            const mode = $(this).data('mode');
+            switchEditorMode(mode);
+        });
+
+        // Boutons de la toolbar
+        $('#saveBtn').on('click', saveDocument);
+        $('#exportBtn').on('click', exportDocument);
+        $('#reloadBtn').on('click', reloadEditorContent);
+        $('#undoBtn').on('click', () => quillEditor.history.undo());
+        $('#redoBtn').on('click', () => quillEditor.history.redo());
+
+        // Agent IA
+        $('#agentSendBtn').on('click', sendAgentMessage);
+        $('#agentInput').on('keydown', function(e) {
+            if (e.ctrlKey && e.keyCode === 13) {
+                sendAgentMessage();
+            }
+        });
+
+        // Propriétés
+        $('#textColorPicker').on('change', function() {
+            const color = $(this).val();
+            $('#textColorInput').val(color);
+            quillEditor.format('color', color);
+        });
+
+        $('#fontSizeInput').on('change', function() {
+            const size = $(this).val() + 'px';
+            quillEditor.format('size', size);
+        });
+
+        $('#fontSelect').on('change', function() {
+            const font = $(this).val();
+            quillEditor.format('font', font);
+        });
+
+        // Insertion d'image
+        $('#insertImageBtn').on('click', () => $('#imageUpload').click());
+        $('#imageUpload').on('change', handleImageUpload);
+
+        // Titre du document
+        $('#docTitleInput').on('change', function() {
+            $('#documentTitle').text($(this).val());
+        });
+
+        // Outils visuels
+        $('#addTextBtn').on('click', addTextToCanvas);
+        $('#addRectBtn').on('click', addRectToCanvas);
+        $('#addCircleBtn').on('click', addCircleToCanvas);
+        $('#addLineBtn').on('click', addLineToCanvas);
+        $('#deleteObjectBtn').on('click', deleteSelectedObject);
+
+        // Propriétés de l'objet
+        $('#objLeftInput').on('change', updateObjectPosition);
+        $('#objTopInput').on('change', updateObjectPosition);
+        $('#objWidthInput').on('change', updateObjectSize);
+        $('#objHeightInput').on('change', updateObjectSize);
+        $('#objAngleInput').on('change', updateObjectRotation);
+        $('#objOpacityInput').on('change', updateObjectOpacity);
+    }
+
+    // ============================================
+    // CHANGEMENT DE MODE
+    // ============================================
+
+    function switchEditorMode(mode) {
+        $('.mode-btn').removeClass('active');
+        $('.mode-btn[data-mode="' + mode + '"]').addClass('active');
+
+        if (mode === 'text') {
+            // Basculer vers mode texte
+            if (currentMode === 'visual') {
+                // Convertir Fabric vers Quill avant de basculer
+                convertFabricToQuill();
+            }
+
+            $('#textEditorContainer').show();
+            $('#visualEditorContainer').removeClass('active');
+            currentMode = 'text';
+
+            // Afficher/masquer les panneaux de propriétés
+            $('#insertionSection').show();
+            $('#visualToolsSection').hide();
+            $('#objectPropertiesSection').hide();
+
+            updateStats();
+        } else {
+            // Basculer vers mode visuel
+            $('#textEditorContainer').hide();
+            $('#visualEditorContainer').addClass('active');
+            currentMode = 'visual';
+
+            // Afficher/masquer les panneaux de propriétés
+            $('#insertionSection').hide();
+            $('#visualToolsSection').show();
+
+            // Charger la structure PDF fidèle directement depuis le serveur
+            loadVisualContent();
+        }
+    }
+
+    function convertQuillToFabric() {
+        fabricCanvas.clear();
+
+        // Récupérer le contenu Quill
+        const delta = quillEditor.getContents();
+        const ops = delta.ops || [];
+
+        let currentY = 50;
+        let currentX = 50;
+        const pageWidth = 800;
+        const lineHeight = 25;
+        const maxWidth = pageWidth - 100;
+
+        // Parcourir les opérations Delta
+        ops.forEach((op, index) => {
+            if (typeof op.insert === 'string') {
+                const text = op.insert;
+                const attrs = op.attributes || {};
+
+                // Ignorer les sauts de ligne seuls
+                if (text === '\n') {
+                    currentY += lineHeight;
+                    currentX = 50;
+                    return;
+                }
+
+                // Créer un objet texte pour chaque segment
+                const lines = text.split('\n');
+
+                lines.forEach((line, lineIndex) => {
+                    if (line.trim()) {
+                        // Déterminer les styles
+                        const fontSize = attrs.size ? parseInt(attrs.size.replace('px', '')) : 14;
+                        const fontFamily = attrs.font || 'Arial';
+                        const fontWeight = attrs.bold ? 'bold' : 'normal';
+                        const fontStyle = attrs.italic ? 'italic' : 'normal';
+                        const fill = attrs.color || '#000000';
+                        const backgroundColor = attrs.background || 'transparent';
+
+                        // Créer l'objet texte sans textBaseline (non supporté par Textbox)
+                        const fabricText = new fabric.Textbox(line, {
+                            left: currentX,
+                            top: currentY,
+                            width: maxWidth,
+                            fontSize: fontSize,
+                            fontFamily: fontFamily,
+                            fontWeight: fontWeight,
+                            fontStyle: fontStyle,
+                            fill: fill,
+                            backgroundColor: backgroundColor,
+                            textAlign: attrs.align || 'left',
+                            underline: attrs.underline || false,
+                            linethrough: attrs.strike || false,
+                            editable: true,
+                            selectable: true
+                        });
+
+                        fabricCanvas.add(fabricText);
+                        currentY += fabricText.height + 10;
+                    }
+
+                    if (lineIndex < lines.length - 1) {
+                        currentY += lineHeight;
+                        currentX = 50;
+                    }
+                });
+            } else if (op.insert && op.insert.image) {
+                // Insérer une image
+                fabric.Image.fromURL(op.insert.image, function(img) {
+                    img.set({
+                        left: currentX,
+                        top: currentY,
+                        scaleX: 0.5,
+                        scaleY: 0.5
+                    });
+                    fabricCanvas.add(img);
+                    fabricCanvas.renderAll();
+                });
+
+                currentY += 200; // Espace pour l'image
+            }
+        });
+
+        fabricCanvas.renderAll();
+        updateCanvasStats();
+    }
+
+    function convertFabricToQuill() {
+        // Convertir les objets Fabric en format Quill Delta
+        const objects = fabricCanvas.getObjects();
+        const ops = [];
+
+        // Trier les objets par position Y puis X
+        objects.sort((a, b) => {
+            if (Math.abs(a.top - b.top) < 10) {
+                return a.left - b.left;
+            }
+            return a.top - b.top;
+        });
+
+        objects.forEach((obj, index) => {
+            if (obj.type === 'textbox' || obj.type === 'text') {
+                const attributes = {};
+
+                if (obj.fontSize !== 14) {
+                    attributes.size = obj.fontSize + 'px';
+                }
+                if (obj.fontFamily && obj.fontFamily !== 'Arial') {
+                    attributes.font = obj.fontFamily;
+                }
+                if (obj.fontWeight === 'bold') {
+                    attributes.bold = true;
+                }
+                if (obj.fontStyle === 'italic') {
+                    attributes.italic = true;
+                }
+                if (obj.fill !== '#000000') {
+                    attributes.color = obj.fill;
+                }
+                if (obj.backgroundColor && obj.backgroundColor !== 'transparent') {
+                    attributes.background = obj.backgroundColor;
+                }
+                if (obj.textAlign && obj.textAlign !== 'left') {
+                    attributes.align = obj.textAlign;
+                }
+                if (obj.underline) {
+                    attributes.underline = true;
+                }
+                if (obj.linethrough) {
+                    attributes.strike = true;
+                }
+
+                ops.push({
+                    insert: obj.text,
+                    attributes: Object.keys(attributes).length > 0 ? attributes : undefined
+                });
+
+                // Ajouter un saut de ligne après chaque objet texte
+                ops.push({ insert: '\n' });
+
+            } else if (obj.type === 'image') {
+                ops.push({
+                    insert: { image: obj.getSrc() }
+                });
+                ops.push({ insert: '\n' });
+            }
+        });
+
+        // Mettre à jour Quill
+        if (ops.length > 0) {
+            quillEditor.setContents({ ops: ops });
+            updateStats();
+        }
+    }
+
+    // ============================================
+    // SAUVEGARDE
+    // ============================================
+
+    function saveDocument() {
+        showSaveIndicator('Sauvegarde en cours...', 'saving');
+
+        const content = currentMode === 'text'
+            ? quillEditor.getContents()
+            : fabricCanvas.toJSON();
+
+        $.ajax({
+            url: URL_SAVE,
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: CSRF_TOKEN,
+                content_type: currentMode === 'text' ? 'quill' : 'fabric',
+                content_data: JSON.stringify(content),
+                conversation_id: conversationId
+            },
+            success: function(response) {
+                if (response.success) {
+                    showSaveIndicator('✓ Sauvegardé avec succès', 'saved');
+                    setTimeout(() => hideSaveIndicator(), 3000);
+                } else {
+                    showSaveIndicator('Erreur: ' + response.error, 'error');
+                }
+            },
+            error: function(xhr) {
+                showSaveIndicator('Erreur de sauvegarde', 'error');
+            }
+        });
+    }
+
+    function startAutoSave() {
+        autoSaveInterval = setInterval(function() {
+            autoSaveDocument();
+        }, 30000); // 30 secondes
+    }
+
+    // Fonction pour recharger le contenu depuis le serveur (utile après modification par l'agent)
+    function reloadEditorContent() {
+        console.log('🔄 Rechargement du contenu depuis le serveur...');
+
+        if (currentMode === 'visual') {
+            // Recharger le contenu Fabric.js
+            loadVisualContent();
+        } else {
+            // Recharger le contenu Quill
+            loadDocument();
+        }
+    }
+
+    // Exposer la fonction globalement pour l'appeler depuis le chat
+    window.reloadEditorContent = reloadEditorContent;
+
+    function autoSaveDocument() {
+        const content = currentMode === 'text'
+            ? quillEditor.getContents()
+            : fabricCanvas.toJSON();
+
+        $.ajax({
+            url: URL_AUTOSAVE,
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: CSRF_TOKEN,
+                content_type: currentMode === 'text' ? 'quill' : 'fabric',
+                content_data: JSON.stringify(content)
+            },
+            success: function(response) {
+                console.log('Auto-sauvegarde effectuée');
+            }
+        });
+    }
+
+    // ============================================
+    // EXPORT
+    // ============================================
+
+    function exportDocument() {
+        const format = prompt('Format d\'export:\n- pdf\n- html\n- txt', 'pdf');
+        if (!format) return;
+
+        const content = currentMode === 'text'
+            ? quillEditor.getContents()
+            : fabricCanvas.toJSON();
+
+        // Créer un formulaire pour télécharger
+        const form = $('<form>', {
+            method: 'POST',
+            action: '/chat/editor/' + documentId + '/export/'
+        });
+
+        // Utiliser le token CSRF défini globalement (ligne 754)
+        form.append($('<input>', {
+            type: 'hidden',
+            name: 'csrfmiddlewaretoken',
+            value: CSRF_TOKEN
+        }));
+
+        form.append($('<input>', {
+            type: 'hidden',
+            name: 'format',
+            value: format
+        }));
+
+        form.append($('<input>', {
+            type: 'hidden',
+            name: 'content_type',
+            value: currentMode === 'text' ? 'quill' : 'fabric'
+        }));
+
+        form.append($('<input>', {
+            type: 'hidden',
+            name: 'content_data',
+            value: JSON.stringify(content)
+        }));
+
+        $('body').append(form);
+        form.submit();
+        form.remove();
+    }
+
+    // ============================================
+    // AGENT IA
+    // ============================================
+
+    function sendAgentMessage() {
+        const message = $('#agentInput').val().trim();
+        if (!message) return;
+
+        // Afficher le message utilisateur
+        $('#agentChat').append(
+            '<div class="agent-message" style="background: #e9ecff; border-left-color: #764ba2;">' +
+                '<strong style="color: #764ba2;">Vous</strong>' +
+                '<p style="margin: 5px 0 0 0; font-size: 0.9rem;">' + escapeHtml(message) + '</p>' +
+            '</div>'
+        );
+
+        $('#agentInput').val('');
+        scrollAgentChat();
+
+        // Envoyer au serveur (utilise l'agent existant)
+        $.ajax({
+            url: URL_SEND_MESSAGE,
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: CSRF_TOKEN,
+                content: message
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#agentChat').append(
+                        '<div class="agent-message">' +
+                            '<strong style="color: #667eea;">🤖 Agent DocMind</strong>' +
+                            '<p style="margin: 5px 0 0 0; font-size: 0.9rem;">' +
+                            escapeHtml(response.assistant_message.content) + '</p>' +
+                        '</div>'
+                    );
+                    scrollAgentChat();
+
+                    // Si l'agent a modifié le document, recharger
+                    if (response.assistant_message.generated_files &&
+                        response.assistant_message.generated_files.length > 0) {
+                        loadDocumentContent();
+                    }
+                }
+            }
+        });
+    }
+
+    function scrollAgentChat() {
+        const chat = document.getElementById('agentChat');
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    // ============================================
+    // IMAGES
+    // ============================================
+
+    function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const dataUrl = event.target.result;
+
+            if (currentMode === 'text') {
+                // Insérer dans Quill
+                const range = quillEditor.getSelection(true);
+                quillEditor.insertEmbed(range.index, 'image', dataUrl);
+            } else {
+                // Insérer dans Fabric
+                fabric.Image.fromURL(dataUrl, function(img) {
+                    img.scale(0.5);
+                    fabricCanvas.add(img);
+                    fabricCanvas.renderAll();
+                });
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function loadDocument(docId) {
+        window.location.href = '/chat/conversation/' + conversationId + '/editor/' + docId + '/';
+    }
+
+    // ============================================
+    // OUTILS VISUELS (FABRIC.JS)
+    // ============================================
+
+    function addTextToCanvas() {
+        const text = new fabric.Textbox('Nouveau texte', {
+            left: 100,
+            top: 100,
+            width: 200,
+            fontSize: 16,
+            fill: '#000000',
+            fontFamily: 'Arial',
+            editable: true,
+            selectable: true
+        });
+        fabricCanvas.add(text);
+        fabricCanvas.setActiveObject(text);
+        fabricCanvas.renderAll();
+    }
+
+    function addRectToCanvas() {
+        const rect = new fabric.Rect({
+            left: 100,
+            top: 100,
+            width: 150,
+            height: 100,
+            fill: '#667eea',
+            stroke: '#764ba2',
+            strokeWidth: 2
+        });
+        fabricCanvas.add(rect);
+        fabricCanvas.setActiveObject(rect);
+        fabricCanvas.renderAll();
+    }
+
+    function addCircleToCanvas() {
+        const circle = new fabric.Circle({
+            left: 100,
+            top: 100,
+            radius: 50,
+            fill: '#48c774',
+            stroke: '#38b864',
+            strokeWidth: 2
+        });
+        fabricCanvas.add(circle);
+        fabricCanvas.setActiveObject(circle);
+        fabricCanvas.renderAll();
+    }
+
+    function addLineToCanvas() {
+        const line = new fabric.Line([50, 50, 200, 50], {
+            stroke: '#667eea',
+            strokeWidth: 3,
+            left: 100,
+            top: 100
+        });
+        fabricCanvas.add(line);
+        fabricCanvas.setActiveObject(line);
+        fabricCanvas.renderAll();
+    }
+
+    function deleteSelectedObject() {
+        const activeObject = fabricCanvas.getActiveObject();
+        if (activeObject) {
+            if (confirm('Supprimer cet objet ?')) {
+                fabricCanvas.remove(activeObject);
+                fabricCanvas.renderAll();
+            }
+        } else {
+            alert('Veuillez sélectionner un objet à supprimer.');
+        }
+    }
+
+    function showObjectProperties(obj) {
+        if (!obj) return;
+
+        $('#objectPropertiesSection').show();
+
+        // Remplir les valeurs
+        $('#objLeftInput').val(Math.round(obj.left));
+        $('#objTopInput').val(Math.round(obj.top));
+
+        if (obj.width) {
+            $('#objWidthInput').val(Math.round(obj.width * (obj.scaleX || 1)));
+        }
+        if (obj.height) {
+            $('#objHeightInput').val(Math.round(obj.height * (obj.scaleY || 1)));
+        }
+        if (obj.radius) {
+            $('#objWidthInput').val(Math.round(obj.radius * 2 * (obj.scaleX || 1)));
+            $('#objHeightInput').val(Math.round(obj.radius * 2 * (obj.scaleY || 1)));
+        }
+
+        $('#objAngleInput').val(Math.round(obj.angle || 0));
+        $('#objOpacityInput').val(Math.round((obj.opacity || 1) * 100));
+    }
+
+    function hideObjectProperties() {
+        $('#objectPropertiesSection').hide();
+    }
+
+    function updateObjectPosition() {
+        const obj = fabricCanvas.getActiveObject();
+        if (obj) {
+            obj.set({
+                left: parseInt($('#objLeftInput').val()),
+                top: parseInt($('#objTopInput').val())
+            });
+            fabricCanvas.renderAll();
+        }
+    }
+
+    function updateObjectSize() {
+        const obj = fabricCanvas.getActiveObject();
+        if (obj) {
+            const newWidth = parseInt($('#objWidthInput').val());
+            const newHeight = parseInt($('#objHeightInput').val());
+
+            if (obj.type === 'rect' || obj.type === 'textbox') {
+                obj.set({
+                    width: newWidth,
+                    height: newHeight,
+                    scaleX: 1,
+                    scaleY: 1
+                });
+            } else if (obj.type === 'circle') {
+                obj.set({
+                    radius: Math.min(newWidth, newHeight) / 2,
+                    scaleX: 1,
+                    scaleY: 1
+                });
+            }
+            fabricCanvas.renderAll();
+        }
+    }
+
+    function updateObjectRotation() {
+        const obj = fabricCanvas.getActiveObject();
+        if (obj) {
+            obj.set('angle', parseInt($('#objAngleInput').val()));
+            fabricCanvas.renderAll();
+        }
+    }
+
+    function updateObjectOpacity() {
+        const obj = fabricCanvas.getActiveObject();
+        if (obj) {
+            obj.set('opacity', parseInt($('#objOpacityInput').val()) / 100);
+            fabricCanvas.renderAll();
+        }
+    }
+
+    // Nettoyer à la fermeture
+    window.addEventListener('beforeunload', function() {
+        if (autoSaveInterval) {
+            clearInterval(autoSaveInterval);
+        }
+    });
+});
+</script>
+{% endverbatim %}
+{% endblock %}

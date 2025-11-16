@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Nouvelle Conversation - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4"><i class="bi bi-chat-dots"></i> Nouvelle Conversation</h1>
+
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">Titre de la conversation</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger">{{ form.title.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.context_description.id_for_label }}" class="form-label">Description du contexte (optionnel)</label>
+                            {{ form.context_description }}
+                            {% if form.context_description.errors %}
+                                <div class="text-danger">{{ form.context_description.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Décrivez le sujet ou le contexte de cette conversation.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.documents.id_for_label }}" class="form-label">Documents associés</label>
+                            {{ form.documents }}
+                            {% if form.documents.errors %}
+                                <div class="text-danger">{{ form.documents.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Sélectionnez un ou plusieurs documents pour cette conversation.</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Créer la conversation
+                            </button>
+                            <a href="{% url 'chat:conversation_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

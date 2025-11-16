@@ -1,0 +1,228 @@
+/* Prismate.AI Landing Page Styles */
+
+:root {
+    --analyst-color: #4ECDC4;
+    --planner-color: #E84A5F;
+    --modeler-color: #FF9F1C;
+    --dark-bg: #0A1128;
+    --text-dark: #2C3E50;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #E8F5F7 0%, #F0E7F8 100%);
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar-dark.bg-dark-custom {
+    background: var(--dark-bg) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--analyst-color), var(--planner-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.search-input {
+    border-radius: 20px;
+    border: none;
+    padding: 8px 20px;
+    width: 300px;
+}
+
+.navbar-icons .nav-icon {
+    color: white;
+    margin-left: 20px;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.navbar-icons .nav-icon:hover {
+    color: var(--analyst-color);
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 80px 0;
+    background: transparent;
+}
+
+.hero-content {
+    text-align: left;
+}
+
+.logo-icon {
+    font-size: 4rem;
+    color: var(--dark-bg);
+    margin-bottom: 20px;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--dark-bg);
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: #5A6C7D;
+    line-height: 1.8;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.btn-action {
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    color: white;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    width: 250px;
+}
+
+.btn-analyst {
+    background: linear-gradient(135deg, #4ECDC4, #44A39F);
+}
+
+.btn-modeler {
+    background: linear-gradient(135deg, #FF9F1C, #FF8C00);
+}
+
+.btn-planner {
+    background: linear-gradient(135deg, #E84A5F, #D63447);
+}
+
+.btn-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    color: white;
+}
+
+/* Feature Cards */
+.features-section {
+    padding: 60px 0 100px 0;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    height: 100%;
+    transition: all 0.3s;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+}
+
+.card-analyst::before {
+    background: linear-gradient(90deg, var(--analyst-color), #44A39F);
+}
+
+.card-planner::before {
+    background: linear-gradient(90deg, var(--planner-color), #D63447);
+}
+
+.card-modeler::before {
+    background: linear-gradient(90deg, var(--modeler-color), #FF8C00);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.card-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    font-size: 2rem;
+    color: white;
+}
+
+.card-analyst .card-icon {
+    background: linear-gradient(135deg, var(--analyst-color), #44A39F);
+}
+
+.card-planner .card-icon {
+    background: linear-gradient(135deg, var(--planner-color), #D63447);
+}
+
+.card-modeler .card-icon {
+    background: linear-gradient(135deg, var(--modeler-color), #FF8C00);
+}
+
+.card-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tag {
+    background: #F0F4F8;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #5A6C7D;
+    display: flex;
+    align-items: center;
+}
+
+.card-description {
+    text-align: center;
+    color: #5A6C7D;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .action-buttons {
+        align-items: stretch;
+    }
+    
+    .btn-action {
+        width: 100%;
+    }
+}

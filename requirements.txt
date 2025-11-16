@@ -1,0 +1,49 @@
+# FICHIER: requirements.txt
+# DÉPENDANCES DU PROJET DOCMIND
+# ============================================
+
+# Django
+Django
+django-crispy-forms
+crispy-bootstrap5
+
+# Traitement de documents
+PyPDF2
+python-docx
+pdfplumber
+Pillow
+reportlab  # Pour génération de PDF
+markdown  # Pour conversion Markdown vers HTML
+
+# Base de données et ORM
+psycopg2-binary  # Pour PostgreSQL (optionnel)
+SQLAlchemy  # Pour connexions bases externes
+
+# IA et NLP
+groq  # API Groq (LLM open source)
+openai  # API OpenAI (optionnel)
+# spacy  # Pour NLP avancé (décommenter si nécessaire)
+# transformers  # Pour modèles Hugging Face (décommenter si nécessaire)
+
+# Utilitaires
+python-dotenv  # Pour variables d'environnement
+python-magic  # Détection de types de fichiers
+
+# API et web
+requests
+httpx
+
+# Tâches asynchrones (optionnel)
+# celery
+# redis
+
+# Tests et développement
+pytest
+pytest-django
+black
+flake8
+
+# Production
+gunicorn  # Serveur WSGI
+whitenoise  # Servir fichiers statiques
+fitz

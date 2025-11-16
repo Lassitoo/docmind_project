@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil - DocMind{% endblock %}
+
+{% block content %}
+<div class="bg-primary text-white">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-brain"></i> DocMind
+                </h1>
+                <p class="lead mb-4">
+                    Plateforme d'IA documentaire évolutive pour analyser vos documents,
+                    répondre à vos questions et générer automatiquement des structures de base de données.
+                </p>
+                <div class="d-grid gap-2 d-md-flex">
+                    <a href="{% url 'core:register' %}" class="btn btn-light btn-lg px-4">
+                        <i class="bi bi-person-plus"></i> Commencer gratuitement
+                    </a>
+                    <a href="{% url 'core:login' %}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="bi bi-file-earmark-text display-1"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row text-center mb-5">
+        <div class="col">
+            <h2 class="mb-4">Fonctionnalités principales</h2>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-cloud-upload display-3 text-primary mb-3"></i>
+                    <h5 class="card-title">Upload de documents</h5>
+                    <p class="card-text">
+                        Déposez vos documents (PDF, Word, etc.) et le système les analyse automatiquement
+                        pour comprendre leur contenu.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-chat-dots display-3 text-success mb-3"></i>
+                    <h5 class="card-title">Questions & Réponses</h5>
+                    <p class="card-text">
+                        Posez des questions sur vos documents et obtenez des réponses précises
+                        basées sur le contenu analysé.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-diagram-3 display-3 text-warning mb-3"></i>
+                    <h5 class="card-title">Génération de schémas</h5>
+                    <p class="card-text">
+                        Le système propose automatiquement une structure de base de données
+                        adaptée au contenu de vos documents.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-database display-3 text-info mb-3"></i>
+                    <h5 class="card-title">Bases externes</h5>
+                    <p class="card-text">
+                        Connectez vos propres bases de données pour combiner les informations
+                        avec vos documents.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-lightning display-3 text-danger mb-3"></i>
+                    <h5 class="card-title">Analyse automatique</h5>
+                    <p class="card-text">
+                        IA/NLP pour extraire les entités, mots-clés, et structure
+                        de vos documents automatiquement.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-graph-up display-3 text-secondary mb-3"></i>
+                    <h5 class="card-title">Rapports & Analyses</h5>
+                    <p class="card-text">
+                        Générez des rapports pertinents et faites des analyses croisées
+                        entre documents et données.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-light py-5 mt-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3>Prêt à commencer ?</h3>
+                <p class="mb-0">Créez votre compte gratuitement et commencez à analyser vos documents dès maintenant.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'core:register' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-arrow-right-circle"></i> Démarrer maintenant
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

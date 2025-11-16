@@ -1,0 +1,176 @@
+{#templates/database_manager/data_extraction_detail.html#}
+{% extends 'base.html' %}
+
+{% block title %}Extraction: {{ extraction.document.title }} - DocMind{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-database-fill-down"></i> Détails de l'Extraction</h2>
+        <div>
+            <a href="{% url 'database_manager:data_extraction_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <!-- Informations générales -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informations</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Document source:</strong>
+                        <a href="{% url 'documents:detail' extraction.document.pk %}">
+                            {{ extraction.document.title }}
+                        </a>
+                    </p>
+                    <p><strong>Schéma cible:</strong>
+                        <a href="{% url 'database_manager:schema_detail' extraction.schema.pk %}">
+                            {{ extraction.schema.name }}
+                        </a>
+                    </p>
+                    <p><strong>Statut:</strong>
+                        {% if extraction.status == 'extracted' %}
+                            <span class="badge bg-info">Extrait</span>
+                        {% elif extraction.status == 'validated' %}
+                            <span class="badge bg-success">Validé</span>
+                        {% elif extraction.status == 'rejected' %}
+                            <span class="badge bg-danger">Rejeté</span>
+                        {% elif extraction.status == 'imported' %}
+                            <span class="badge bg-primary">Importé</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ extraction.get_status_display }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Date d'extraction:</strong> {{ extraction.created_at|date:"d/m/Y à H:i" }}</p>
+                    <p><strong>Score de confiance global:</strong>
+                        <span class="badge {% if global_confidence >= 0.8 %}bg-success{% elif global_confidence >= 0.6 %}bg-warning{% else %}bg-danger{% endif %}">
+                            {{ global_confidence|floatformat:2 }}
+                        </span>
+                    </p>
+                    {% if extraction.validated_by %}
+                        <p><strong>Validé par:</strong> {{ extraction.validated_by.username }} le {{ extraction.validated_at|date:"d/m/Y à H:i" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if global_notes %}
+            <div class="alert alert-info mt-3">
+                <strong><i class="bi bi-chat-left-text"></i> Notes globales:</strong><br>
+                {{ global_notes }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-gear"></i> Actions</h5>
+        </div>
+        <div class="card-body">
+            <div class="btn-group" role="group">
+                <a href="{% url 'database_manager:data_extraction_download_json' extraction.pk %}"
+                   class="btn btn-primary">
+                    <i class="bi bi-download"></i> Télécharger JSON
+                </a>
+                <a href="{% url 'database_manager:data_extraction_download_sql' extraction.pk %}"
+                   class="btn btn-success">
+                    <i class="bi bi-download"></i> Télécharger SQL
+                </a>
+            </div>
+
+            {% if extraction.status == 'extracted' %}
+                <div class="btn-group ms-2" role="group">
+                    <a href="{% url 'database_manager:data_extraction_validate' extraction.pk %}"
+                       class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Valider
+                    </a>
+                    <form method="post" action="{% url 'database_manager:data_extraction_reject' extraction.pk %}"
+                          style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Êtes-vous sûr de vouloir rejeter cette extraction ?')">
+                            <i class="bi bi-x-circle"></i> Rejeter
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Données extraites par table -->
+    <h3 class="mb-3">Données Extraites</h3>
+
+    {% if tables_info %}
+        {% for table in tables_info %}
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-table"></i> Table: {{ table.name }}
+                    <span class="badge bg-secondary">{{ table.row_count }} ligne(s)</span>
+                </h5>
+                <span class="badge {% if table.confidence >= 0.8 %}bg-success{% elif table.confidence >= 0.6 %}bg-warning{% else %}bg-danger{% endif %}">
+                    Confiance: {{ table.confidence|floatformat:2 }}
+                </span>
+            </div>
+            <div class="card-body">
+                {% if table.notes %}
+                <div class="alert alert-secondary mb-3">
+                    <strong><i class="bi bi-info-circle"></i> Notes:</strong> {{ table.notes }}
+                </div>
+                {% endif %}
+
+                {% if table.rows %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                {% for key in table.rows.0.keys %}
+                                    {% if not key|slice:":1" == "_" %}
+                                        <th>{{ key }}</th>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table.rows %}
+                            <tr>
+                                {% for key, value in row.items %}
+                                    {% if not key|slice:":1" == "_" %}
+                                        <td>
+                                            {% if value == None %}
+                                                <em class="text-muted">NULL</em>
+                                            {% elif value == True %}
+                                                <span class="badge bg-success">TRUE</span>
+                                            {% elif value == False %}
+                                                <span class="badge bg-danger">FALSE</span>
+                                            {% else %}
+                                                {{ value }}
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">Aucune donnée extraite pour cette table.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i> Aucune donnée n'a été extraite.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

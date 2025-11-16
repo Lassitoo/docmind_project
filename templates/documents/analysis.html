@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Analyse - {{ document.title }} - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-graph-up"></i> Analyse du Document</h1>
+        <a href="{% url 'documents:detail' document.pk %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>{{ document.title }}</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Type de document détecté:</dt>
+                        <dd class="col-sm-8">{{ analysis.detected_document_type|default:"Non détecté" }}</dd>
+
+                        <dt class="col-sm-4">Langue:</dt>
+                        <dd class="col-sm-8">{{ analysis.language|default:"Non détectée" }}</dd>
+
+                        <dt class="col-sm-4">Niveau de confiance:</dt>
+                        <dd class="col-sm-8">
+                            {% if analysis.confidence_score %}
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ analysis.confidence_score }}%">
+                                        {{ analysis.confidence_score }}%
+                                    </div>
+                                </div>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Date d'analyse:</dt>
+                        <dd class="col-sm-8">{{ analysis.analyzed_at|date:"d/m/Y H:i" }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            {% if analysis.summary %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-file-earmark-text"></i> Résumé</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ analysis.summary }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if analysis.key_entities %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-tags"></i> Entités Clés</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ analysis.key_entities|safe }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if analysis.topics %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="bi bi-bookmark"></i> Sujets Identifiés</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ analysis.topics|safe }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-info-circle"></i> Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'chat:conversation_create' %}?document={{ document.pk }}" class="btn btn-primary">
+                            <i class="bi bi-chat-dots"></i> Poser des questions
+                        </a>
+                        <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-info">
+                            <i class="bi bi-diagram-3"></i> Générer un schéma
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

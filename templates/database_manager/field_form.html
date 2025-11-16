@@ -1,0 +1,114 @@
+{# templates/database_manager/field_form.html #}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ajouter un Champ - DocMind{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4"><i class="bi bi-input-cursor-text"></i> Ajouter un Champ</h1>
+
+            <div class="alert alert-info">
+                <strong>Table:</strong> {{ table.name }}
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Nom du champ</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger">{{ form.name.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Ex: id, username, email, created_at</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Type de données</label>
+                            {{ form.data_type }}
+                            {% if form.data_type.errors %}
+                                <div class="text-danger">{{ form.data_type.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Longueur maximale (optionnel)</label>
+                                {{ form.max_length }}
+                                {% if form.max_length.errors %}
+                                    <div class="text-danger">{{ form.max_length.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Précision (optionnel)</label>
+                                {{ form.precision }}
+                                {% if form.precision.errors %}
+                                    <div class="text-danger">{{ form.precision.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_nullable }}
+                                <label class="form-check-label" for="{{ form.is_nullable.id_for_label }}">
+                                    Nullable (peut être NULL)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_primary_key }}
+                                <label class="form-check-label" for="{{ form.is_primary_key.id_for_label }}">
+                                    Clé primaire
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_foreign_key }}
+                                <label class="form-check-label" for="{{ form.is_foreign_key.id_for_label }}">
+                                    Clé étrangère
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_unique }}
+                                <label class="form-check-label" for="{{ form.is_unique.id_for_label }}">
+                                    Unique
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description (optionnel)</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="text-danger">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Ajouter le champ
+                            </button>
+                            <a href="{% url 'database_manager:schema_detail' table.schema.pk %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
