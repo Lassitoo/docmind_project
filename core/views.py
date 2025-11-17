@@ -23,7 +23,7 @@ def home(request):
     """Page d'accueil"""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
-    return render(request, 'core/home.html')
+    return redirect('core:login')  # Redirect to login for non-authenticated users
 
 
 @login_required

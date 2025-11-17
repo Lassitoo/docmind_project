@@ -27,6 +27,18 @@
             </GhostTextMetaData>
           </value>
         </entry>
+        <entry key="En fait je veux faire quelque chose je veux que quand je lance le serveur je puisde me connecter a DocMind sur la page Login une fois connecté ca me ramene vers le dashboarc avec Analyste, Planificateur,Modelisateur c est a dire la page landing html">
+          <value>
+            <GhostTextMetaData>
+              <option name="count" value="1.0" />
+              <option name="timestamps">
+                <list>
+                  <option value="1763328804802" />
+                </list>
+              </option>
+            </GhostTextMetaData>
+          </value>
+        </entry>
         <entry key="File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 1006, in _find_and_load_unlocked&#10;  File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 688, in _load_unlocked&#10;  File &quot;&lt;frozen importlib._bootstrap_external&gt;&quot;, line 883, in exec_module&#10;  File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 241, in _call_with_frames_removed&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\urls.py&quot;, line 7, in &lt;module&gt;&#10;    from . import editor_views as editor&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\editor_views.py&quot;, line 14, in &lt;module&gt;&#10;    from .advanced_pdf_service import AdvancedPDFExtractor, PDFToEditableConverter&#10;  File &quot;C:\Users\yayab\PycharmProjects\Pharmacie\docmind_project\chat\advanced_pdf_service.py&quot;, line 7, in &lt;module&gt;&#10;    import fitz  # PyMuPDF&#10;ModuleNotFoundError: No module named 'fitz'">
           <value>
             <GhostTextMetaData>
