@@ -4,95 +4,85 @@
 {% block title %}Analyse - {{ document.title }} - DocMind{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-graph-up"></i> Analyse du Document</h1>
-        <a href="{% url 'documents:detail' document.pk %}" class="btn btn-secondary">
+<div class="container" style="max-width:1100px;">
+    <div class="d-flex justify-content-between align-items-center mb-3" style="padding-top:1.2em; padding-bottom:0.7em; border-bottom:1px solid #ececec;">
+        <div class="d-flex align-items-center" style="gap:0.7em;">
+            <span style="font-size:2em; color:#1976d2; line-height:1;">
+                <i class="bi bi-graph-up"></i>
+            </span>
+            <span style="font-size:1.35em; font-weight:600; color:#222; font-family:'Segoe UI',Arial,sans-serif;">Analyse du document</span>
+        </div>
+        <a href="{% url 'documents:detail' document.pk %}" class="btn btn-outline-secondary btn-sm" style="font-weight:500; min-width:110px;">
             <i class="bi bi-arrow-left"></i> Retour
         </a>
     </div>
 
-    <div class="row">
+    <div class="row g-4">
         <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>{{ document.title }}</h5>
+            <div class="mb-4 p-4" style="background:#fafbfc; border-radius:0.7em; border:1px solid #f0f0f0; font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-2" style="font-size:1.1em; font-weight:500; color:#2a2a2a;">
+                    {{ document.title }}
                 </div>
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-4">Type de document détecté:</dt>
-                        <dd class="col-sm-8">{{ analysis.detected_document_type|default:"Non détecté" }}</dd>
-
-                        <dt class="col-sm-4">Langue:</dt>
-                        <dd class="col-sm-8">{{ analysis.language|default:"Non détectée" }}</dd>
-
-                        <dt class="col-sm-4">Niveau de confiance:</dt>
-                        <dd class="col-sm-8">
-                            {% if analysis.confidence_score %}
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: {{ analysis.confidence_score }}%">
-                                        {{ analysis.confidence_score }}%
-                                    </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Type de document détecté</div>
+                    <div class="col-sm-8">{{ analysis.detected_document_type|default:"Non détecté" }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Langue</div>
+                    <div class="col-sm-8">{{ analysis.language|default:"Non détectée" }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Niveau de confiance</div>
+                    <div class="col-sm-8">
+                        {% if analysis.confidence_score %}
+                            <div class="progress" style="height:18px; background:#f0f0f0;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: {{ analysis.confidence_score|stringformat:'d' }}%; font-weight:500;">
+                                    {{ analysis.confidence_score }}%
                                 </div>
-                            {% else %}
-                                N/A
-                            {% endif %}
-                        </dd>
-
-                        <dt class="col-sm-4">Date d'analyse:</dt>
-                        <dd class="col-sm-8">{{ analysis.analyzed_at|date:"d/m/Y H:i" }}</dd>
-                    </dl>
+                            </div>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Date d'analyse</div>
+                    <div class="col-sm-8">{{ analysis.analyzed_at|date:"d/m/Y H:i" }}</div>
                 </div>
             </div>
 
             {% if analysis.summary %}
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5><i class="bi bi-file-earmark-text"></i> Résumé</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>{{ analysis.summary }}</p>
-                    </div>
-                </div>
+            <div class="mb-4 p-4" style="background:#fff; border-radius:0.7em; border:1px solid #f0f0f0; font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-2" style="font-size:1.1em; font-weight:500; color:#1976d2;"><i class="bi bi-file-earmark-text"></i> Résumé</div>
+                <div style="color:#222;">{{ analysis.summary }}</div>
+            </div>
             {% endif %}
 
             {% if analysis.key_entities %}
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5><i class="bi bi-tags"></i> Entités Clés</h5>
-                    </div>
-                    <div class="card-body">
-                        {{ analysis.key_entities|safe }}
-                    </div>
-                </div>
+            <div class="mb-4 p-4" style="background:#fff; border-radius:0.7em; border:1px solid #f0f0f0; font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-2" style="font-size:1.1em; font-weight:500; color:#1976d2;"><i class="bi bi-tags"></i> Entités Clés</div>
+                <div style="color:#222;">{{ analysis.key_entities|safe }}</div>
+            </div>
             {% endif %}
 
             {% if analysis.topics %}
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5><i class="bi bi-bookmark"></i> Sujets Identifiés</h5>
-                    </div>
-                    <div class="card-body">
-                        {{ analysis.topics|safe }}
-                    </div>
-                </div>
+            <div class="mb-4 p-4" style="background:#fff; border-radius:0.7em; border:1px solid #f0f0f0; font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-2" style="font-size:1.1em; font-weight:500; color:#1976d2;"><i class="bi bi-bookmark"></i> Sujets Identifiés</div>
+                <div style="color:#222;">{{ analysis.topics|safe }}</div>
+            </div>
             {% endif %}
         </div>
 
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5><i class="bi bi-info-circle"></i> Actions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{% url 'chat:conversation_create' %}?document={{ document.pk }}" class="btn btn-primary">
-                            <i class="bi bi-chat-dots"></i> Poser des questions
-                        </a>
-                        <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-info">
-                            <i class="bi bi-diagram-3"></i> Générer un schéma
-                        </a>
-                    </div>
+            <div class="mb-4 p-4" style="background:#fafbfc; border-radius:0.7em; border:1px solid #f0f0f0; font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-3 text-muted" style="font-size:1.1em; font-weight:500;"><i class="bi bi-info-circle"></i> Actions</div>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'chat:conversation_create' %}?document={{ document.pk }}" class="btn btn-outline-primary btn-sm" style="font-weight:500;">
+                        <i class="bi bi-chat-dots"></i> Poser des questions
+                    </a>
+                    <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-outline-info btn-sm" style="font-weight:500;">
+                        <i class="bi bi-diagram-3"></i> Générer un schéma
+                    </a>
                 </div>
             </div>
         </div>

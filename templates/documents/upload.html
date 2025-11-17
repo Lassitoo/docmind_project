@@ -3,47 +3,36 @@
 {% block title %}Upload Document - DocMind{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="bi bi-cloud-upload"></i> Uploader un nouveau document
-                    </h4>
-                </div>
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-sm" style="border-radius:1.2em;">
                 <div class="card-body p-4">
+                    <h5 class="mb-3 text-center text-primary" style="font-weight:600;">
+                        <i class="bi bi-cloud-upload"></i> Uploader un document
+                    </h5>
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-
                         <div class="mb-3">
-                            <label for="id_title" class="form-label">Titre du document *</label>
-                            <input type="text" name="title" class="form-control" id="id_title" required>
+                            <input type="text" name="title" class="form-control form-control-sm rounded-pill" id="id_title" placeholder="Titre du document *" required>
                         </div>
-
                         <div class="mb-3">
-                            <label for="id_file" class="form-label">Fichier *</label>
-                            <input type="file" name="file" class="form-control" id="id_file" required accept=".pdf,.docx,.doc,.txt">
-                            <div class="form-text">
-                                Formats supportés: PDF, Word (.docx, .doc), Texte (.txt). Taille maximale: 50 MB
+                            <input type="file" name="file" class="form-control form-control-sm rounded-pill" id="id_file" required accept=".pdf,.docx,.doc,.txt">
+                            <div class="form-text text-center">
+                                PDF, Word, Texte &bull; max 50 MB
                             </div>
                         </div>
-
                         <div class="mb-3">
-                            <label for="id_description" class="form-label">Description (optionnel)</label>
-                            <textarea name="description" class="form-control" id="id_description" rows="3"></textarea>
+                            <textarea name="description" class="form-control form-control-sm rounded-3" id="id_description" rows="2" placeholder="Description (optionnel)"></textarea>
                         </div>
-
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i>
-                            <strong>À savoir:</strong> Une fois uploadé, le document sera automatiquement analysé par notre système d'IA pour extraire le contenu, identifier les entités et générer un résumé.
+                        <div class="small text-muted text-center mb-3">
+                            <i class="bi bi-info-circle"></i> Le document sera analysé automatiquement après l'upload.
                         </div>
-
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-upload"></i> Uploader et analyser
+                        <div class="d-flex gap-2 justify-content-center">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-upload"></i> Uploader
                             </button>
-                            <a href="{% url 'documents:list' %}" class="btn btn-outline-secondary">
+                            <a href="{% url 'documents:list' %}" class="btn btn-outline-secondary rounded-pill px-4">
                                 <i class="bi bi-x-circle"></i> Annuler
                             </a>
                         </div>

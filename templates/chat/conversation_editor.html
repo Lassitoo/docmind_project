@@ -7,13 +7,34 @@
 <!-- Quill CSS -->
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <style>
-    /* Layout principal - Full screen editor */
+    /* Design tokens minimaliste */
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f9fafb;
+        --bg-tertiary: #f3f4f6;
+        --text-primary: #111827;
+        --text-secondary: #6b7280;
+        --text-tertiary: #9ca3af;
+        --border-light: #e5e7eb;
+        --border-medium: #d1d5db;
+        --accent-primary: #3b82f6;
+        --accent-hover: #2563eb;
+        --success: #10b981;
+        --error: #ef4444;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Reset base */
     html, body {
         height: 100%;
         margin: 0;
         padding: 0;
         overflow: hidden;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
     }
 
     main {
@@ -27,30 +48,30 @@
         display: flex;
         height: 100%;
         width: 100%;
-        background: #f5f7fa;
+        background: var(--bg-secondary);
     }
 
-    /* Barre d'outils supérieure */
+    /* Toolbar simplifiée et épurée */
     .editor-toolbar {
         position: fixed;
         top: 56px;
         left: 0;
         right: 0;
-        height: 60px;
-        background: white;
-        border-bottom: 2px solid #e0e0e0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        height: 56px;
+        background: var(--bg-primary);
+        border-bottom: 1px solid var(--border-light);
+        box-shadow: var(--shadow-sm);
         z-index: 1000;
         display: flex;
         align-items: center;
-        padding: 0 20px;
-        gap: 15px;
+        padding: 0 24px;
+        gap: 20px;
     }
 
     .editor-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #667eea;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-primary);
         display: flex;
         align-items: center;
         gap: 10px;
@@ -59,53 +80,74 @@
 
     .editor-actions {
         display: flex;
-        gap: 10px;
+        gap: 8px;
         align-items: center;
     }
 
+    /* Boutons minimalistes sans gradient */
     .btn-editor {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--accent-primary);
         color: white;
         border: none;
-        padding: 8px 20px;
-        border-radius: 10px;
-        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.875rem;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 0.9rem;
+        gap: 6px;
+        line-height: 1;
     }
 
     .btn-editor:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        background: var(--accent-hover);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .btn-editor:active {
+        transform: scale(0.98);
     }
 
     .btn-editor-secondary {
-        background: white;
-        color: #667eea;
-        border: 2px solid #667eea;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-light);
+    }
+
+    .btn-editor-secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--border-medium);
     }
 
     .btn-editor-success {
-        background: linear-gradient(135deg, #48c774 0%, #38b864 100%);
+        background: var(--success);
+    }
+
+    .btn-editor-success:hover {
+        background: #059669;
+    }
+
+    .toolbar-divider {
+        width: 1px;
+        height: 24px;
+        background: var(--border-light);
     }
 
     /* Zone principale */
     .editor-main {
         display: flex;
         flex: 1;
-        margin-top: 60px;
-        height: calc(100% - 60px);
+        margin-top: 56px;
+        height: calc(100% - 56px);
     }
 
-    /* Panneau latéral gauche - Navigation & Agent IA */
+    /* Sidebars plus épurées */
     .editor-sidebar-left {
-        width: 350px;
-        background: white;
-        border-right: 2px solid #e0e0e0;
+        width: 320px;
+        background: var(--bg-primary);
+        border-right: 1px solid var(--border-light);
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -113,35 +155,37 @@
 
     .sidebar-tabs {
         display: flex;
-        border-bottom: 2px solid #e0e0e0;
-        background: #f8f9fa;
+        border-bottom: 1px solid var(--border-light);
+        background: var(--bg-secondary);
     }
 
     .sidebar-tab {
         flex: 1;
-        padding: 15px;
+        padding: 12px;
         text-align: center;
         cursor: pointer;
-        font-weight: 600;
-        color: #666;
-        transition: all 0.3s ease;
-        border-bottom: 3px solid transparent;
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        transition: all 0.2s ease;
+        border-bottom: 2px solid transparent;
     }
 
     .sidebar-tab:hover {
-        background: #e9ecef;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
     }
 
     .sidebar-tab.active {
-        color: #667eea;
-        border-bottom-color: #667eea;
-        background: white;
+        color: var(--accent-primary);
+        border-bottom-color: var(--accent-primary);
+        background: var(--bg-primary);
     }
 
     .sidebar-content {
         flex: 1;
         overflow-y: auto;
-        padding: 20px;
+        padding: 16px;
     }
 
     .sidebar-tab-panel {
@@ -159,90 +203,126 @@
         height: 100%;
     }
 
+    .agent-panel h6 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .agent-panel > p {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin: 0 0 12px 0;
+        line-height: 1.4;
+    }
+
     .agent-chat {
         flex: 1;
         overflow-y: auto;
-        margin-bottom: 15px;
-        padding: 15px;
-        background: #f8f9ff;
-        border-radius: 10px;
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 0;
         max-height: 400px;
     }
 
     .agent-message {
-        background: white;
+        background: var(--bg-secondary);
         padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        border-left: 3px solid #667eea;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        border-left: 3px solid var(--accent-primary);
+        font-size: 0.85rem;
+    }
+
+    .agent-message strong {
+        color: var(--accent-primary);
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .agent-message p {
+        margin: 0;
+        color: var(--text-primary);
+        line-height: 1.4;
     }
 
     .agent-input-container {
         display: flex;
-        gap: 10px;
+        gap: 8px;
     }
 
     .agent-input {
         flex: 1;
-        border: 2px solid #e0e0e0;
-        border-radius: 10px;
-        padding: 10px;
-        font-size: 0.9rem;
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        font-family: inherit;
         resize: none;
+        background: var(--bg-primary);
+        color: var(--text-primary);
     }
 
     .agent-input:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
     }
 
     /* Documents Panel */
     .documents-list {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
     }
 
     .document-item {
-        padding: 15px;
-        background: #f8f9ff;
-        border-radius: 10px;
-        border: 2px solid transparent;
+        padding: 12px;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        border: 1px solid var(--border-light);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
+        font-size: 0.85rem;
     }
 
     .document-item:hover {
-        border-color: #667eea;
-        transform: translateX(5px);
+        border-color: var(--accent-primary);
+        background: var(--bg-tertiary);
     }
 
     .document-item.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--accent-primary);
         color: white;
-        border-color: #667eea;
+        border-color: var(--accent-primary);
     }
 
     .document-icon {
-        font-size: 2rem;
-        color: #667eea;
+        font-size: 1.4rem;
+        opacity: 0.7;
     }
 
     .document-item.active .document-icon {
-        color: white;
+        opacity: 1;
     }
 
     .document-info h6 {
         margin: 0;
-        font-weight: 700;
+        font-weight: 600;
+        font-size: 0.875rem;
     }
 
     .document-info small {
-        opacity: 0.8;
+        opacity: 0.7;
+        font-size: 0.75rem;
     }
 
     /* Zone d'édition centrale */
@@ -251,46 +331,50 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        background: #e9ecef;
-        padding: 20px;
+        background: var(--bg-secondary);
+        padding: 16px;
     }
 
+    /* Mode selector épuré */
     .editor-mode-selector {
         display: flex;
-        gap: 10px;
-        margin-bottom: 15px;
+        gap: 8px;
+        margin-bottom: 12px;
         justify-content: center;
     }
 
     .mode-btn {
-        padding: 10px 25px;
-        background: white;
-        border: 2px solid #e0e0e0;
-        border-radius: 10px;
+        padding: 8px 16px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
         cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
+        color: var(--text-primary);
     }
 
     .mode-btn:hover {
-        border-color: #667eea;
+        border-color: var(--accent-primary);
+        background: var(--bg-secondary);
     }
 
     .mode-btn.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--accent-primary);
         color: white;
-        border-color: #667eea;
+        border-color: var(--accent-primary);
     }
 
     /* Éditeur Quill */
     .quill-editor-container {
         flex: 1;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        background: var(--bg-primary);
+        border-radius: 8px;
+        box-shadow: var(--shadow-md);
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -299,31 +383,41 @@
     #editor {
         flex: 1;
         overflow-y: auto;
-        padding: 20px;
-        font-size: 14px;
+        padding: 24px;
+        font-size: 15px;
         line-height: 1.6;
+        color: var(--text-primary);
     }
 
     .ql-toolbar {
-        background: #f8f9fa;
+        background: var(--bg-secondary) !important;
         border: none !important;
-        border-bottom: 2px solid #e0e0e0 !important;
-        padding: 15px !important;
+        border-bottom: 1px solid var(--border-light) !important;
+        padding: 12px !important;
+    }
+
+    .ql-toolbar button {
+        color: var(--text-secondary);
+    }
+
+    .ql-toolbar button:hover,
+    .ql-toolbar button.ql-active {
+        color: var(--accent-primary) !important;
     }
 
     .ql-container {
         border: none !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: inherit;
     }
 
     /* Canvas Fabric */
     .fabric-canvas-container {
         flex: 1;
-        background: #f8f9fa;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        box-shadow: var(--shadow-md);
         overflow: auto;
-        padding: 30px;
+        padding: 24px;
         display: none;
         min-height: 100%;
         max-height: 100%;
@@ -341,71 +435,76 @@
     }
 
     #fabricCanvas {
-        border: 2px solid #cbd5e0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        background: white;
+        border: 1px solid var(--border-light);
+        box-shadow: var(--shadow-md);
+        background: var(--bg-primary);
     }
 
-    /* Panneau latéral droit - Propriétés */
+    /* Sidebar droite */
     .editor-sidebar-right {
-        width: 300px;
-        background: white;
-        border-left: 2px solid #e0e0e0;
+        width: 280px;
+        background: var(--bg-primary);
+        border-left: 1px solid var(--border-light);
         overflow-y: auto;
-        padding: 20px;
+        padding: 16px;
     }
 
     .properties-section {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
     }
 
     .properties-section h6 {
-        font-weight: 700;
-        color: #667eea;
-        margin-bottom: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        margin: 0 0 12px 0;
         display: flex;
         align-items: center;
         gap: 8px;
     }
 
     .property-control {
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
 
     .property-control label {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #555;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-secondary);
         display: block;
-        margin-bottom: 5px;
+        margin-bottom: 4px;
     }
 
     .property-control input,
     .property-control select {
         width: 100%;
         padding: 8px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 0.9rem;
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-family: inherit;
+        background: var(--bg-primary);
+        color: var(--text-primary);
     }
 
     .property-control input:focus,
     .property-control select:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
     }
 
     .color-picker-row {
         display: flex;
-        gap: 10px;
+        gap: 8px;
         align-items: center;
     }
 
     .color-picker-row input[type="color"] {
-        width: 50px;
-        height: 40px;
-        border: none;
-        border-radius: 8px;
+        width: 44px;
+        height: 36px;
+        border: 1px solid var(--border-light);
+        border-radius: 6px;
         cursor: pointer;
     }
 
@@ -414,17 +513,19 @@
         position: fixed;
         bottom: 20px;
         right: 20px;
-        padding: 12px 20px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        padding: 12px 16px;
+        background: var(--bg-primary);
+        border-radius: 6px;
+        box-shadow: var(--shadow-lg);
         display: flex;
         align-items: center;
         gap: 10px;
         z-index: 2000;
         opacity: 0;
         transform: translateY(20px);
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+        font-weight: 500;
     }
 
     .save-indicator.show {
@@ -433,64 +534,46 @@
     }
 
     .save-indicator.saving {
-        background: #ffc107;
-        color: #333;
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fcd34d;
     }
 
     .save-indicator.saved {
-        background: #48c774;
-        color: white;
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #6ee7b7;
     }
 
     .save-indicator.error {
-        background: #f14668;
-        color: white;
+        background: #fee2e2;
+        color: #7f1d1d;
+        border: 1px solid #fca5a5;
     }
 
-    /* Scrollbar personnalisée */
-    .editor-sidebar-left::-webkit-scrollbar,
-    .editor-sidebar-right::-webkit-scrollbar,
-    .agent-chat::-webkit-scrollbar,
-    #editor::-webkit-scrollbar {
-        width: 8px;
+    /* Scrollbars épurées */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
     }
 
-    .editor-sidebar-left::-webkit-scrollbar-track,
-    .editor-sidebar-right::-webkit-scrollbar-track,
-    .agent-chat::-webkit-scrollbar-track,
-    #editor::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
+    ::-webkit-scrollbar-track {
+        background: transparent;
     }
 
-    .editor-sidebar-left::-webkit-scrollbar-thumb,
-    .editor-sidebar-right::-webkit-scrollbar-thumb,
-    .agent-chat::-webkit-scrollbar-thumb,
-    #editor::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
+    ::-webkit-scrollbar-thumb {
+        background: var(--border-medium);
+        border-radius: 3px;
     }
 
-    /* Animations */
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .editor-wrapper > * {
-        animation: slideIn 0.4s ease-out;
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--border-medium);
     }
 
     /* Responsive */
     @media (max-width: 1400px) {
         .editor-sidebar-right {
-            width: 250px;
+            width: 260px;
         }
     }
 
@@ -518,7 +601,7 @@
             <button class="btn-editor btn-editor-secondary" id="redoBtn" title="Refaire">
                 <i class="bi bi-arrow-clockwise"></i>
             </button>
-            <div style="width: 2px; height: 30px; background: #e0e0e0;"></div>
+            <div class="toolbar-divider"></div>
             <button class="btn-editor btn-editor-secondary" id="reloadBtn" title="Recharger le contenu depuis le serveur">
                 <i class="bi bi-arrow-repeat"></i> Recharger
             </button>
@@ -540,7 +623,7 @@
         <div class="editor-sidebar-left">
             <div class="sidebar-tabs">
                 <div class="sidebar-tab active" data-tab="agent">
-                    <i class="bi bi-robot"></i> Agent IA
+                    <i class="bi bi-robot"></i> Agent
                 </div>
                 <div class="sidebar-tab" data-tab="documents">
                     <i class="bi bi-files"></i> Documents
@@ -551,26 +634,19 @@
                 <!-- Panneau Agent IA -->
                 <div class="sidebar-tab-panel active" id="agentPanel">
                     <div class="agent-panel">
-                        <h6 style="font-weight: 700; color: #667eea; margin-bottom: 15px;">
-                            <i class="bi bi-magic"></i> Assistant Intelligent
-                        </h6>
-                        <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">
-                            Demandez à l'agent de modifier, formater ou analyser votre document.
-                        </p>
+                        <h6><i class="bi bi-magic"></i> Assistant</h6>
+                        <p>Décrivez les modifications à apporter à votre document.</p>
 
                         <div class="agent-chat" id="agentChat">
                             <div class="agent-message">
-                                <strong style="color: #667eea;">🤖 Agent DocMind</strong>
-                                <p style="margin: 5px 0 0 0; font-size: 0.9rem;">
-                                    Bonjour ! Je peux vous aider à éditer ce document.
-                                    Que souhaitez-vous faire ?
-                                </p>
+                                <strong>🤖 DocMind</strong>
+                                <p>Bonjour ! Que puis-je vous aider ?</p>
                             </div>
                         </div>
 
                         <div class="agent-input-container">
                             <textarea class="agent-input" id="agentInput" rows="3"
-                                      placeholder="Ex: Met en gras tous les titres..."></textarea>
+                                      placeholder="Ex: Mets en gras les titres..."></textarea>
                             <button class="btn-editor" id="agentSendBtn" style="height: fit-content;">
                                 <i class="bi bi-send-fill"></i>
                             </button>
@@ -580,9 +656,7 @@
 
                 <!-- Panneau Documents -->
                 <div class="sidebar-tab-panel" id="documentsPanel">
-                    <h6 style="font-weight: 700; color: #667eea; margin-bottom: 15px;">
-                        <i class="bi bi-files"></i> Documents de la conversation
-                    </h6>
+                    <h6 style="margin-top: 0;"><i class="bi bi-files"></i> Documents</h6>
                     <div class="documents-list">
                         {% for doc in all_documents %}
                         <div class="document-item {% if doc.id == document.id %}active{% endif %}"
@@ -590,7 +664,7 @@
                              onclick="loadDocument({{ doc.id }})">
                             <i class="bi bi-file-earmark-pdf-fill document-icon"></i>
                             <div class="document-info">
-                                <h6>{{ doc.title|truncatechars:30 }}</h6>
+                                <h6>{{ doc.title|truncatechars:25 }}</h6>
                                 <small>{{ doc.upload_date|date:"d/m/Y" }}</small>
                             </div>
                         </div>
@@ -605,10 +679,10 @@
             <!-- Sélecteur de mode -->
             <div class="editor-mode-selector">
                 <button class="mode-btn active" data-mode="text">
-                    <i class="bi bi-textarea-t"></i> Édition Texte
+                    <i class="bi bi-textarea-t"></i> Texte
                 </button>
                 <button class="mode-btn" data-mode="visual">
-                    <i class="bi bi-palette"></i> Édition Visuelle
+                    <i class="bi bi-palette"></i> Visuel
                 </button>
             </div>
 
@@ -625,10 +699,10 @@
             </div>
         </div>
 
-        <!-- Sidebar droite - Propriétés -->
+        <!-- Sidebar droite -->
         <div class="editor-sidebar-right">
             <div class="properties-section">
-                <h6><i class="bi bi-sliders"></i> Document</h6>
+                <h6><i class="bi bi-file-text"></i> Document</h6>
                 <div class="property-control">
                     <label>Titre</label>
                     <input type="text" id="docTitleInput" value="{{ document.title }}">
@@ -640,7 +714,7 @@
             </div>
 
             <div class="properties-section">
-                <h6><i class="bi bi-type"></i> Formatage Texte</h6>
+                <h6><i class="bi bi-type"></i> Texte</h6>
                 <div class="property-control">
                     <label>Police</label>
                     <select id="fontSelect">
@@ -666,35 +740,35 @@
 
             <div class="properties-section" id="insertionSection">
                 <h6><i class="bi bi-image"></i> Insertion</h6>
-                <button class="btn-editor" id="insertImageBtn" style="width: 100%; margin-bottom: 10px;">
-                    <i class="bi bi-image"></i> Insérer une image
+                <button class="btn-editor" id="insertImageBtn" style="width: 100%; margin-bottom: 8px; font-size: 0.8rem; padding: 8px;">
+                    <i class="bi bi-image"></i> Image
                 </button>
-                <button class="btn-editor btn-editor-secondary" id="insertTableBtn" style="width: 100%;">
-                    <i class="bi bi-table"></i> Insérer un tableau
+                <button class="btn-editor btn-editor-secondary" id="insertTableBtn" style="width: 100%; font-size: 0.8rem; padding: 8px;">
+                    <i class="bi bi-table"></i> Tableau
                 </button>
             </div>
 
             <div class="properties-section" id="visualToolsSection" style="display: none;">
-                <h6><i class="bi bi-tools"></i> Outils Visuels</h6>
-                <button class="btn-editor" id="addTextBtn" style="width: 100%; margin-bottom: 10px;">
-                    <i class="bi bi-fonts"></i> Ajouter Texte
+                <h6><i class="bi bi-tools"></i> Outils</h6>
+                <button class="btn-editor" id="addTextBtn" style="width: 100%; margin-bottom: 6px; font-size: 0.8rem; padding: 6px;">
+                    <i class="bi bi-fonts"></i> Texte
                 </button>
-                <button class="btn-editor btn-editor-secondary" id="addRectBtn" style="width: 100%; margin-bottom: 10px;">
+                <button class="btn-editor btn-editor-secondary" id="addRectBtn" style="width: 100%; margin-bottom: 6px; font-size: 0.8rem; padding: 6px;">
                     <i class="bi bi-square"></i> Rectangle
                 </button>
-                <button class="btn-editor btn-editor-secondary" id="addCircleBtn" style="width: 100%; margin-bottom: 10px;">
+                <button class="btn-editor btn-editor-secondary" id="addCircleBtn" style="width: 100%; margin-bottom: 6px; font-size: 0.8rem; padding: 6px;">
                     <i class="bi bi-circle"></i> Cercle
                 </button>
-                <button class="btn-editor btn-editor-secondary" id="addLineBtn" style="width: 100%; margin-bottom: 10px;">
+                <button class="btn-editor btn-editor-secondary" id="addLineBtn" style="width: 100%; margin-bottom: 6px; font-size: 0.8rem; padding: 6px;">
                     <i class="bi bi-dash"></i> Ligne
                 </button>
-                <button class="btn-editor" id="deleteObjectBtn" style="width: 100%; background: linear-gradient(135deg, #f14668 0%, #d83f5e 100%);">
+                <button class="btn-editor" id="deleteObjectBtn" style="width: 100%; background: var(--error); font-size: 0.8rem; padding: 6px;">
                     <i class="bi bi-trash"></i> Supprimer
                 </button>
             </div>
 
             <div class="properties-section" id="objectPropertiesSection" style="display: none;">
-                <h6><i class="bi bi-sliders2"></i> Objet Sélectionné</h6>
+                <h6><i class="bi bi-sliders2"></i> Objet</h6>
                 <div class="property-control">
                     <label>Position X</label>
                     <input type="number" id="objLeftInput" value="0">
@@ -716,17 +790,17 @@
                     <input type="number" id="objAngleInput" value="0" min="0" max="360">
                 </div>
                 <div class="property-control">
-                    <label>Opacité</label>
+                    <label>Opacité (%)</label>
                     <input type="number" id="objOpacityInput" value="100" min="0" max="100">
                 </div>
             </div>
 
             <div class="properties-section">
-                <h6><i class="bi bi-info-circle"></i> Statistiques</h6>
-                <p style="font-size: 0.85rem; margin: 5px 0;">
+                <h6><i class="bi bi-graph-up"></i> Stats</h6>
+                <p style="font-size: 0.8rem; margin: 4px 0; color: var(--text-secondary);">
                     <strong>Mots:</strong> <span id="wordCount">0</span>
                 </p>
-                <p style="font-size: 0.85rem; margin: 5px 0;">
+                <p style="font-size: 0.8rem; margin: 4px 0; color: var(--text-secondary);">
                     <strong>Caractères:</strong> <span id="charCount">0</span>
                 </p>
             </div>
@@ -758,7 +832,7 @@
 
     // URLs
     const URL_EXTRACT = '{% url "chat:extract_document_content" document.id %}';
-    const URL_EXTRACT_CONTENT = URL_EXTRACT; // alias compatibilité
+    const URL_EXTRACT_CONTENT = URL_EXTRACT;
     const URL_SAVE = '{% url "chat:save_document_changes" document.id %}';
     const URL_AUTOSAVE = '{% url "chat:auto_save_document" document.id %}';
     const URL_EXPORT = '{% url "chat:export_document" document.id %}';
@@ -768,7 +842,6 @@
 {% verbatim %}
 <script>
 $(document).ready(function() {
-    // Variables globales
     let currentMode = 'text';
     let quillEditor = null;
     let fabricCanvas = null;
@@ -776,30 +849,16 @@ $(document).ready(function() {
     let documentId = DOCUMENT_ID;
     let conversationId = CONVERSATION_ID;
 
-    // Initialiser Quill
     initQuillEditor();
-
-    // Initialiser Fabric Canvas
     initFabricCanvas();
-
-    // Charger le contenu du document
     loadDocumentContent();
-
-    // Event listeners
     setupEventListeners();
-
-    // Auto-save toutes les 30 secondes
     startAutoSave();
-
-    // ============================================
-    // FONCTIONS UTILITAIRES (Doivent être déclarées en premier)
-    // ============================================
 
     function updateStats() {
         const text = quillEditor.getText();
         const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
         const chars = text.length;
-
         $('#wordCount').text(words);
         $('#charCount').text(chars);
     }
@@ -808,14 +867,11 @@ $(document).ready(function() {
         const objects = fabricCanvas.getObjects();
         const textObjects = objects.filter(o => o.type === 'textbox' || o.type === 'text');
         let totalText = '';
-
         textObjects.forEach(obj => {
             totalText += obj.text + ' ';
         });
-
         const words = totalText.trim().split(/\s+/).filter(w => w.length > 0).length;
         const chars = totalText.length;
-
         $('#wordCount').text(words);
         $('#charCount').text(chars);
     }
@@ -853,10 +909,6 @@ $(document).ready(function() {
         return text.replace(/[&<>"']/g, m => map[m]);
     }
 
-    // ============================================
-    // INITIALISATION DES ÉDITEURS
-    // ============================================
-
     function initQuillEditor() {
         const toolbarOptions = [
             [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -881,7 +933,6 @@ $(document).ready(function() {
             placeholder: 'Commencez à écrire ou chargez un document...'
         });
 
-        // Événements de modification
         quillEditor.on('text-change', function() {
             updateStats();
         });
@@ -896,7 +947,6 @@ $(document).ready(function() {
             height: 1200
         });
 
-        // Événements
         fabricCanvas.on('object:modified', function() {
             showSaveIndicator('Modifications non sauvegardées', 'saving');
         });
@@ -921,17 +971,14 @@ $(document).ready(function() {
             hideObjectProperties();
         });
 
-        // Configurer les contrôles
         fabric.Object.prototype.transparentCorners = false;
-        fabric.Object.prototype.cornerColor = '#667eea';
+        fabric.Object.prototype.cornerColor = '#3b82f6';
         fabric.Object.prototype.cornerStyle = 'circle';
-        fabric.Object.prototype.borderColor = '#667eea';
+        fabric.Object.prototype.borderColor = '#3b82f6';
         fabric.Object.prototype.cornerSize = 10;
 
-        // Raccourcis clavier
         document.addEventListener('keydown', function(e) {
             if (currentMode === 'visual') {
-                // Supprimer avec Delete ou Backspace
                 if ((e.key === 'Delete' || e.key === 'Backspace') && fabricCanvas.getActiveObject()) {
                     e.preventDefault();
                     deleteSelectedObject();
@@ -940,28 +987,22 @@ $(document).ready(function() {
         });
     }
 
-    // ============================================
-    // CHARGEMENT DU CONTENU
-    // ============================================
-
     function createBlankCanvas() {
         try {
             if (!fabricCanvas) {
                 initFabricCanvas();
             }
             fabricCanvas.clear();
-            // Default size and background
             fabricCanvas.setHeight(1000);
             fabricCanvas.setWidth(695);
             fabricCanvas.setBackgroundColor('#ffffff', fabricCanvas.renderAll.bind(fabricCanvas));
 
-            // Optionally add a hint text
-            const hint = new fabric.Textbox('Canvas vide — utilisez les outils à droite pour ajouter du texte, des formes ou des images.', {
+            const hint = new fabric.Textbox('Canvas vide — utilisez les outils à droite pour ajouter du contenu.', {
                 left: 50,
                 top: 60,
                 width: 560,
                 fontSize: 14,
-                fill: '#6b7280',
+                fill: '#9ca3af',
                 fontFamily: 'Arial',
                 editable: false,
                 selectable: false
@@ -977,7 +1018,7 @@ $(document).ready(function() {
     }
 
     function loadDocumentContent() {
-        showSaveIndicator('Chargement du document...', 'saving');
+        showSaveIndicator('Chargement...', 'saving');
 
         $.ajax({
             url: URL_EXTRACT,
@@ -988,11 +1029,9 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.success) {
-                    // Charger dans Quill
                     if (response.content && response.content.ops) {
                         quillEditor.setContents(response.content);
                     }
-
                     showSaveIndicator('Document chargé', 'saved');
                     setTimeout(() => hideSaveIndicator(), 2000);
                     updateStats();
@@ -1008,161 +1047,240 @@ $(document).ready(function() {
     }
 
     function loadVisualContent() {
-    showSaveIndicator('Chargement de la structure PDF...', 'saving');
+        showSaveIndicator('Chargement...', 'saving');
 
-    $.ajax({
-        url: URL_EXTRACT,
-        type: 'POST',
-        data: {
-            csrfmiddlewaretoken: CSRF_TOKEN,
-            format: 'fabric'
-        },
-        success: function(response) {
-            if (response.success) {
-                console.log('📦 Full response:', response);
-                fabricCanvas.clear();
+        $.ajax({
+            url: URL_EXTRACT,
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: CSRF_TOKEN,
+                format: 'fabric'
+            },
+            success: function(response) {
+                if (response.success) {
+                    console.log('📦 Full response:', response);
+                    fabricCanvas.clear();
 
-                const content = response.content;
-                
-                // Check if this is a saved Fabric canvas (has 'objects' array directly)
-                if (content.objects && Array.isArray(content.objects)) {
-                    console.log('📐 Loading saved Fabric canvas with', content.objects.length, 'objects');
+                    const content = response.content;
                     
-                    // Load saved Fabric.js canvas directly
-                    fabricCanvas.loadFromJSON(content, function() {
-                        fabricCanvas.renderAll();
-                        console.log('✅ Fabric canvas loaded');
-                        showSaveIndicator('Canvas chargé', 'saved');
-                        setTimeout(() => hideSaveIndicator(), 2000);
-                        updateCanvasStats();
-                    });
-                }
-                // Check if this is original PDF structure (has 'pages' array)
-                else if (content.pages && Array.isArray(content.pages)) {
-                    console.log('📚 Loading PDF structure with', content.pages.length, 'pages');
-                    
-                    let currentY = 50;
-                    const pageMargin = 100;
-                    let totalObjects = 0;
-                    
-                    content.pages.forEach((page, pageIndex) => {
-                        console.log(`\n📄 Page ${pageIndex + 1}:`, page);
-                        
-                        // Add page number header
-                        const pageHeader = new fabric.Text(`Page ${page.page_number}`, {
-                            left: 50,
-                            top: currentY,
-                            fontSize: 10,
-                            fill: '#999999',
-                            fontFamily: 'Arial',
-                            selectable: false
+                    if (content.objects && Array.isArray(content.objects)) {
+                        console.log('📐 Loading saved Fabric canvas with', content.objects.length, 'objects');
+                        fabricCanvas.loadFromJSON(content, function() {
+                            fabricCanvas.renderAll();
+                            console.log('✅ Fabric canvas loaded');
+                            showSaveIndicator('Canvas chargé', 'saved');
+                            setTimeout(() => hideSaveIndicator(), 2000);
+                            updateCanvasStats();
                         });
-                        fabricCanvas.add(pageHeader);
-                        currentY += 30;
+                    }
+                    else if (content.pages && Array.isArray(content.pages)) {
+                        console.log('📚 Loading PDF structure with', content.pages.length, 'pages');
                         
-                        // Prefer structured blocks when available (align with Chat view)
-                        if (Array.isArray(page.blocks) && page.blocks.length > 0) {
-                            page.blocks.forEach((block, bIndex) => {
-                                const type = (block.type || '').toLowerCase();
-                                // Headings
-                                if (type === 'heading' || type === 'title' || type === 'h1' || type === 'h2' || type === 'h3') {
-                                    const level = block.level || (type === 'h1' ? 1 : type === 'h2' ? 2 : type === 'h3' ? 3 : 2);
-                                    const fontSize = level === 1 ? 22 : level === 2 ? 18 : 16;
-                                    const text = (block.text || block.content || '').trim();
-                                    if (text) {
-                                        const hText = new fabric.Textbox(text, {
-                                            left: 50,
-                                            top: currentY,
-                                            fontSize: fontSize,
-                                            fontFamily: 'Arial',
-                                            fontWeight: 'bold',
-                                            fill: '#111827',
-                                            width: 500,
-                                            selectable: true
-                                        });
-                                        fabricCanvas.add(hText);
-                                        currentY += hText.height + 10;
-                                        totalObjects++;
+                        let currentY = 50;
+                        const pageMargin = 100;
+                        let totalObjects = 0;
+                        
+                        content.pages.forEach((page, pageIndex) => {
+                            console.log(`\n📄 Page ${pageIndex + 1}:`, page);
+                            
+                            const pageHeader = new fabric.Text(`Page ${page.page_number}`, {
+                                left: 50,
+                                top: currentY,
+                                fontSize: 10,
+                                fill: '#9ca3af',
+                                fontFamily: 'Arial',
+                                selectable: false
+                            });
+                            fabricCanvas.add(pageHeader);
+                            currentY += 30;
+                            
+                            if (Array.isArray(page.blocks) && page.blocks.length > 0) {
+                                page.blocks.forEach((block, bIndex) => {
+                                    const type = (block.type || '').toLowerCase();
+                                    if (type === 'heading' || type === 'title' || type === 'h1' || type === 'h2' || type === 'h3') {
+                                        const level = block.level || (type === 'h1' ? 1 : type === 'h2' ? 2 : type === 'h3' ? 3 : 2);
+                                        const fontSize = level === 1 ? 22 : level === 2 ? 18 : 16;
+                                        const text = (block.text || block.content || '').trim();
+                                        if (text) {
+                                            const hText = new fabric.Textbox(text, {
+                                                left: 50,
+                                                top: currentY,
+                                                fontSize: fontSize,
+                                                fontFamily: 'Arial',
+                                                fontWeight: 'bold',
+                                                fill: '#111827',
+                                                width: 500,
+                                                selectable: true
+                                            });
+                                            fabricCanvas.add(hText);
+                                            currentY += hText.height + 10;
+                                            totalObjects++;
+                                        }
                                     }
-                                }
-                                // Paragraphs
-                                else if (type === 'paragraph' || type === 'text' || type === 'block') {
-                                    const text = (block.text || block.content || '').trim();
-                                    if (text) {
-                                        const pText = new fabric.Textbox(text, {
-                                            left: 50,
-                                            top: currentY,
-                                            fontSize: 12,
-                                            fontFamily: 'Arial',
-                                            fill: '#000000',
-                                            width: 500,
-                                            editable: true
-                                        });
-                                        fabricCanvas.add(pText);
-                                        currentY += pText.height + 8;
-                                        totalObjects++;
+                                    else if (type === 'paragraph' || type === 'text' || type === 'block') {
+                                        const text = (block.text || block.content || '').trim();
+                                        if (text) {
+                                            const pText = new fabric.Textbox(text, {
+                                                left: 50,
+                                                top: currentY,
+                                                fontSize: 12,
+                                                fontFamily: 'Arial',
+                                                fill: '#111827',
+                                                width: 500,
+                                                editable: true
+                                            });
+                                            fabricCanvas.add(pText);
+                                            currentY += pText.height + 8;
+                                            totalObjects++;
+                                        }
                                     }
-                                }
-                                // Subtitle (mapped close to heading level 3)
-                                else if (type === 'subtitle' || type === 'subheading') {
-                                    const text = (block.text || block.content || '').trim();
-                                    if (text) {
-                                        const sText = new fabric.Textbox(text, {
-                                            left: 50,
-                                            top: currentY,
-                                            fontSize: 16,
-                                            fontFamily: 'Arial',
-                                            fontWeight: '600',
-                                            fill: '#1f2937',
-                                            width: 500,
-                                            selectable: true
-                                        });
-                                        fabricCanvas.add(sText);
-                                        currentY += sText.height + 8;
-                                        totalObjects++;
+                                    else if (type === 'subtitle' || type === 'subheading') {
+                                        const text = (block.text || block.content || '').trim();
+                                        if (text) {
+                                            const sText = new fabric.Textbox(text, {
+                                                left: 50,
+                                                top: currentY,
+                                                fontSize: 16,
+                                                fontFamily: 'Arial',
+                                                fontWeight: '600',
+                                                fill: '#1f2937',
+                                                width: 500,
+                                                selectable: true
+                                            });
+                                            fabricCanvas.add(sText);
+                                            currentY += sText.height + 8;
+                                            totalObjects++;
+                                        }
                                     }
-                                }
-                                // Lists (bullet/numbered) aligned with Chat view
-                                else if (type === 'list' || type === 'bullet' || type === 'unordered_list' || type === 'ordered' || type === 'numbered' || type === 'list_item') {
-                                    let items = [];
-                                    if (Array.isArray(block.items)) {
-                                        items = block.items;
-                                    } else if (Array.isArray(block.children)) {
-                                        items = block.children.map(it => (typeof it === 'string') ? it : (it && (it.text || it.content) || ''));
-                                    } else if (Array.isArray(block.lines)) {
-                                        items = block.lines;
-                                    } else if (typeof block.text === 'string' && block.text.includes('\n')) {
-                                        items = block.text.split('\n');
-                                    } else if (typeof block.text === 'string') {
-                                        items = [block.text];
-                                    }
+                                    else if (type === 'list' || type === 'bullet' || type === 'unordered_list' || type === 'ordered' || type === 'numbered' || type === 'list_item') {
+                                        let items = [];
+                                        if (Array.isArray(block.items)) {
+                                            items = block.items;
+                                        } else if (Array.isArray(block.children)) {
+                                            items = block.children.map(it => (typeof it === 'string') ? it : (it && (it.text || it.content) || ''));
+                                        } else if (Array.isArray(block.lines)) {
+                                            items = block.lines;
+                                        } else if (typeof block.text === 'string' && block.text.includes('\n')) {
+                                            items = block.text.split('\n');
+                                        } else if (typeof block.text === 'string') {
+                                            items = [block.text];
+                                        }
 
-                                    const isOrdered = type === 'ordered' || type === 'numbered' || !!block.ordered;
-                                    items.forEach((rawItem, liIndex) => {
-                                        const itemText = (typeof rawItem === 'string') ? rawItem : (rawItem && (rawItem.text || rawItem.content) || '');
-                                        const clean = String(itemText).trim();
-                                        if (!clean) return;
-                                        const prefix = isOrdered ? `${liIndex + 1}. ` : '• ';
-                                        const li = new fabric.Textbox(prefix + clean, {
-                                            left: 70, // indent for list
-                                            top: currentY,
-                                            fontSize: 12,
-                                            fontFamily: 'Arial',
-                                            fill: '#111827',
-                                            width: 480,
-                                            editable: true
+                                        const isOrdered = type === 'ordered' || type === 'numbered' || !!block.ordered;
+                                        items.forEach((rawItem, liIndex) => {
+                                            const itemText = (typeof rawItem === 'string') ? rawItem : (rawItem && (rawItem.text || rawItem.content) || '');
+                                            const clean = String(itemText).trim();
+                                            if (!clean) return;
+                                            const prefix = isOrdered ? `${liIndex + 1}. ` : '• ';
+                                            const li = new fabric.Textbox(prefix + clean, {
+                                                left: 70,
+                                                top: currentY,
+                                                fontSize: 12,
+                                                fontFamily: 'Arial',
+                                                fill: '#111827',
+                                                width: 480,
+                                                editable: true
+                                            });
+                                            fabricCanvas.add(li);
+                                            currentY += li.height + 6;
+                                            totalObjects++;
                                         });
-                                        fabricCanvas.add(li);
-                                        currentY += li.height + 6;
-                                        totalObjects++;
+                                    }
+                                    else if (type === 'table' || (block.data && Array.isArray(block.data))) {
+                                        const data = Array.isArray(block.data) ? block.data : (Array.isArray(block.rows) ? block.rows : []);
+                                        if (data.length > 0) {
+                                            currentY += 10;
+                                            const title = new fabric.Text(`Table ${bIndex + 1}` , {
+                                                left: 50,
+                                                top: currentY,
+                                                fontSize: 11,
+                                                fill: '#3b82f6',
+                                                fontFamily: 'Arial',
+                                                fontWeight: 'bold',
+                                                selectable: false
+                                            });
+                                            fabricCanvas.add(title);
+                                            currentY += 20;
+
+                                            const cellWidth = 120;
+                                            const cellHeight = 25;
+                                            const startX = 50;
+                                            data.forEach((row, rowIndex) => {
+                                                const rowY = currentY + (rowIndex * cellHeight);
+                                                (row || []).forEach((cell, colIndex) => {
+                                                    const cellX = startX + (colIndex * cellWidth);
+                                                    const cellRect = new fabric.Rect({
+                                                        left: cellX,
+                                                        top: rowY,
+                                                        width: cellWidth,
+                                                        height: cellHeight,
+                                                        fill: rowIndex === 0 ? '#f3f4f6' : '#ffffff',
+                                                        stroke: '#e5e7eb',
+                                                        strokeWidth: 1,
+                                                        selectable: false
+                                                    });
+                                                    fabricCanvas.add(cellRect);
+                                                    const cellVal = (typeof cell === 'string') ? cell : (cell && (cell.text || cell.value)) || '';
+                                                    if (String(cellVal).trim()) {
+                                                        const cellText = new fabric.Text(String(cellVal), {
+                                                            left: cellX + 5,
+                                                            top: rowY + 5,
+                                                            fontSize: 10,
+                                                            fontFamily: 'Arial',
+                                                            fill: '#111827',
+                                                            width: cellWidth - 10,
+                                                            fontWeight: rowIndex === 0 ? 'bold' : 'normal',
+                                                            selectable: false
+                                                        });
+                                                        fabricCanvas.add(cellText);
+                                                    }
+                                                    totalObjects += 2;
+                                                });
+                                            });
+                                            currentY += (data.length * cellHeight) + 20;
+                                        }
+                                    }
+                                    else if (type === 'image' || block.image || block.image_data || block.src) {
+                                        const src = block.image_data || block.src || (block.image && block.image.data);
+                                        if (src) {
+                                            const url = src.startsWith('data:') ? src : `data:image/png;base64,${src}`;
+                                            fabric.Image.fromURL(url, function(img) {
+                                                img.set({ left: 50, top: currentY, scaleX: 0.5, scaleY: 0.5, selectable: true });
+                                                fabricCanvas.add(img);
+                                                fabricCanvas.requestRenderAll();
+                                            });
+                                            currentY += 180;
+                                            totalObjects++;
+                                        }
+                                    }
+                                });
+                            } else {
+                                if (page.text && page.text.trim()) {
+                                    const lines = page.text.split('\n');
+                                    lines.forEach((line) => {
+                                        if (line.trim()) {
+                                            const textObj = new fabric.IText(line, {
+                                                left: 50,
+                                                top: currentY,
+                                                fontSize: 12,
+                                                fontFamily: 'Arial',
+                                                fill: '#111827',
+                                                selectable: true,
+                                                editable: true,
+                                                width: 500
+                                            });
+                                            fabricCanvas.add(textObj);
+                                            currentY += 20;
+                                            totalObjects++;
+                                        }
                                     });
                                 }
-                                // Tables in blocks
-                                else if (type === 'table' || (block.data && Array.isArray(block.data))) {
-                                    const data = Array.isArray(block.data) ? block.data : (Array.isArray(block.rows) ? block.rows : []);
-                                    if (data.length > 0) {
-                                        currentY += 10;
-                                        const title = new fabric.Text(`Table ${bIndex + 1}` , {
+
+                                if (page.tables && page.tables.length > 0) {
+                                    console.log(`  📊 ${page.tables.length} table(s)`);
+                                    page.tables.forEach((table, tableIndex) => {
+                                        currentY += 20;
+                                        const tableTitle = new fabric.Text(`Table ${tableIndex + 1}`, {
                                             left: 50,
                                             top: currentY,
                                             fontSize: 11,
@@ -1171,349 +1289,102 @@ $(document).ready(function() {
                                             fontWeight: 'bold',
                                             selectable: false
                                         });
-                                        fabricCanvas.add(title);
-                                        currentY += 20;
-
-                                        const cellWidth = 120;
-                                        const cellHeight = 25;
-                                        const startX = 50;
-                                        data.forEach((row, rowIndex) => {
-                                            const rowY = currentY + (rowIndex * cellHeight);
-                                            (row || []).forEach((cell, colIndex) => {
-                                                const cellX = startX + (colIndex * cellWidth);
-                                                const cellRect = new fabric.Rect({
-                                                    left: cellX,
-                                                    top: rowY,
-                                                    width: cellWidth,
-                                                    height: cellHeight,
-                                                    fill: rowIndex === 0 ? '#f0f7ff' : '#ffffff',
-                                                    stroke: '#d1d5db',
-                                                    strokeWidth: 1,
-                                                    selectable: false
-                                                });
-                                                fabricCanvas.add(cellRect);
-                                                const cellVal = (typeof cell === 'string') ? cell : (cell && (cell.text || cell.value)) || '';
-                                                if (String(cellVal).trim()) {
-                                                    const cellText = new fabric.Text(String(cellVal), {
-                                                        left: cellX + 5,
-                                                        top: rowY + 5,
-                                                        fontSize: 10,
-                                                        fontFamily: 'Arial',
-                                                        fill: '#000000',
-                                                        width: cellWidth - 10,
-                                                        fontWeight: rowIndex === 0 ? 'bold' : 'normal',
+                                        fabricCanvas.add(tableTitle);
+                                        currentY += 25;
+                                        if (table.data && Array.isArray(table.data)) {
+                                            const cellWidth = 120;
+                                            const cellHeight = 25;
+                                            const startX = 50;
+                                            table.data.forEach((row, rowIndex) => {
+                                                const rowY = currentY + (rowIndex * cellHeight);
+                                                row.forEach((cell, colIndex) => {
+                                                    const cellX = startX + (colIndex * cellWidth);
+                                                    const cellRect = new fabric.Rect({
+                                                        left: cellX,
+                                                        top: rowY,
+                                                        width: cellWidth,
+                                                        height: cellHeight,
+                                                        fill: rowIndex === 0 ? '#f3f4f6' : '#ffffff',
+                                                        stroke: '#e5e7eb',
+                                                        strokeWidth: 1,
                                                         selectable: false
                                                     });
-                                                    fabricCanvas.add(cellText);
-                                                }
-                                                totalObjects += 2;
+                                                    fabricCanvas.add(cellRect);
+                                                    if (cell && (typeof cell !== 'object' ? String(cell).trim() : (cell.text||'').trim())) {
+                                                        const txt = typeof cell === 'object' ? (cell.text||'') : String(cell);
+                                                        const cellText = new fabric.Text(txt, {
+                                                            left: cellX + 5,
+                                                            top: rowY + 5,
+                                                            fontSize: 10,
+                                                            fontFamily: 'Arial',
+                                                            fill: '#111827',
+                                                            width: cellWidth - 10,
+                                                            fontWeight: rowIndex === 0 ? 'bold' : 'normal',
+                                                            selectable: false
+                                                        });
+                                                        fabricCanvas.add(cellText);
+                                                    }
+                                                    totalObjects += 2;
+                                                });
                                             });
-                                        });
-                                        currentY += (data.length * cellHeight) + 20;
-                                    }
-                                }
-                                // Images in blocks
-                                else if (type === 'image' || block.image || block.image_data || block.src) {
-                                    const src = block.image_data || block.src || (block.image && block.image.data);
-                                    if (src) {
-                                        // Ensure data URL prefix
-                                        const url = src.startsWith('data:') ? src : `data:image/png;base64,${src}`;
-                                        fabric.Image.fromURL(url, function(img) {
-                                            img.set({ left: 50, top: currentY, scaleX: 0.5, scaleY: 0.5, selectable: true });
-                                            fabricCanvas.add(img);
-                                            fabricCanvas.requestRenderAll();
-                                        });
-                                        currentY += 180; // approximate spacing after image
-                                        totalObjects++;
-                                    }
-                                }
-                            });
-                        } else {
-                            // Fallback: Convert simple page.text to Fabric text objects
-                            if (page.text && page.text.trim()) {
-                                const lines = page.text.split('\n');
-                                lines.forEach((line) => {
-                                    if (line.trim()) {
-                                        const textObj = new fabric.IText(line, {
-                                            left: 50,
-                                            top: currentY,
-                                            fontSize: 12,
-                                            fontFamily: 'Arial',
-                                            fill: '#000000',
-                                            selectable: true,
-                                            editable: true,
-                                            width: 500
-                                        });
-                                        fabricCanvas.add(textObj);
-                                        currentY += 20;
-                                        totalObjects++;
-                                    }
-                                });
-                            }
-
-                            // Fallback tables at page level
-                            if (page.tables && page.tables.length > 0) {
-                                console.log(`  📊 ${page.tables.length} table(s)`);
-                                page.tables.forEach((table, tableIndex) => {
-                                    currentY += 20;
-                                    const tableTitle = new fabric.Text(`Table ${tableIndex + 1}`, {
-                                        left: 50,
-                                        top: currentY,
-                                        fontSize: 11,
-                                        fill: '#3b82f6',
-                                        fontFamily: 'Arial',
-                                        fontWeight: 'bold',
-                                        selectable: false
+                                            currentY += (table.data.length * cellHeight) + 20;
+                                        }
                                     });
-                                    fabricCanvas.add(tableTitle);
-                                    currentY += 25;
-                                    if (table.data && Array.isArray(table.data)) {
-                                        const cellWidth = 120;
-                                        const cellHeight = 25;
-                                        const startX = 50;
-                                        table.data.forEach((row, rowIndex) => {
-                                            const rowY = currentY + (rowIndex * cellHeight);
-                                            row.forEach((cell, colIndex) => {
-                                                const cellX = startX + (colIndex * cellWidth);
-                                                const cellRect = new fabric.Rect({
-                                                    left: cellX,
-                                                    top: rowY,
-                                                    width: cellWidth,
-                                                    height: cellHeight,
-                                                    fill: rowIndex === 0 ? '#f0f7ff' : '#ffffff',
-                                                    stroke: '#d1d5db',
-                                                    strokeWidth: 1,
-                                                    selectable: false
-                                                });
-                                                fabricCanvas.add(cellRect);
-                                                if (cell && (typeof cell !== 'object' ? String(cell).trim() : (cell.text||'').trim())) {
-                                                    const txt = typeof cell === 'object' ? (cell.text||'') : String(cell);
-                                                    const cellText = new fabric.Text(txt, {
-                                                        left: cellX + 5,
-                                                        top: rowY + 5,
-                                                        fontSize: 10,
-                                                        fontFamily: 'Arial',
-                                                        fill: '#000000',
-                                                        width: cellWidth - 10,
-                                                        fontWeight: rowIndex === 0 ? 'bold' : 'normal',
-                                                        selectable: false
-                                                    });
-                                                    fabricCanvas.add(cellText);
-                                                }
-                                                totalObjects += 2;
-                                            });
-                                        });
-                                        currentY += (table.data.length * cellHeight) + 20;
-                                    }
-                                });
-                            }
+                                }
 
-                            // Page-level images if provided
-                            if (Array.isArray(page.images) && page.images.length > 0) {
-                                page.images.forEach((imgObj) => {
-                                    const src = imgObj.data || imgObj.base64 || imgObj.src;
-                                    if (src) {
-                                        const url = (src.startsWith && src.startsWith('data:')) ? src : `data:image/png;base64,${src}`;
-                                        fabric.Image.fromURL(url, function(img) {
-                                            img.set({ left: 50, top: currentY, scaleX: 0.5, scaleY: 0.5, selectable: true });
-                                            fabricCanvas.add(img);
-                                            fabricCanvas.requestRenderAll();
-                                        });
-                                        currentY += 180;
-                                        totalObjects++;
-                                    }
-                                });
+                                if (Array.isArray(page.images) && page.images.length > 0) {
+                                    page.images.forEach((imgObj) => {
+                                        const src = imgObj.data || imgObj.base64 || imgObj.src;
+                                        if (src) {
+                                            const url = (src.startsWith && src.startsWith('data:')) ? src : `data:image/png;base64,${src}`;
+                                            fabric.Image.fromURL(url, function(img) {
+                                                img.set({ left: 50, top: currentY, scaleX: 0.5, scaleY: 0.5, selectable: true });
+                                                fabricCanvas.add(img);
+                                                fabricCanvas.requestRenderAll();
+                                            });
+                                            currentY += 180;
+                                            totalObjects++;
+                                        }
+                                    });
+                                }
                             }
-                        }
-                        
-                        // Page separator
-                        currentY += pageMargin;
-                        const separator = new fabric.Line([50, currentY - 30, 545, currentY - 30], {
-                            stroke: '#e5e7eb',
-                            strokeWidth: 2,
-                            strokeDashArray: [5, 5],
-                            selectable: false
+                            
+                            currentY += pageMargin;
+                            const separator = new fabric.Line([50, currentY - 30, 545, currentY - 30], {
+                                stroke: '#e5e7eb',
+                                strokeWidth: 2,
+                                strokeDashArray: [5, 5],
+                                selectable: false
+                            });
+                            fabricCanvas.add(separator);
                         });
-                        fabricCanvas.add(separator);
-                    });
-                    
-                    fabricCanvas.setHeight(currentY + 100);
-                    fabricCanvas.setWidth(content.pages[0] ? content.pages[0].width + 100 : 695);
-                    fabricCanvas.renderAll();
-                    
-                    console.log(`✅ ${totalObjects} objects created from ${content.pages.length} pages`);
-                    showSaveIndicator(`${content.pages.length} pages chargées`, 'saved');
-                    setTimeout(() => hideSaveIndicator(), 2000);
-                    updateCanvasStats();
-                }
-                else {
-                    console.warn('⚠️ Unknown or empty content structure, creating blank canvas.');
+                        
+                        fabricCanvas.setHeight(currentY + 100);
+                        fabricCanvas.setWidth(content.pages[0] ? content.pages[0].width + 100 : 695);
+                        fabricCanvas.renderAll();
+                        
+                        console.log(`✅ ${totalObjects} objects created from ${content.pages.length} pages`);
+                        showSaveIndicator(`${content.pages.length} pages chargées`, 'saved');
+                        setTimeout(() => hideSaveIndicator(), 2000);
+                        updateCanvasStats();
+                    }
+                    else {
+                        console.warn('⚠️ Unknown content, creating blank canvas.');
+                        createBlankCanvas();
+                    }
+                } else {
+                    console.warn('⚠️ Server error, creating blank canvas. Error:', response.error);
                     createBlankCanvas();
                 }
-            } else {
-                console.warn('⚠️ Server returned error, creating blank canvas. Error:', response.error);
+            },
+            error: function(xhr) {
+                console.error('AJAX Error:', xhr);
                 createBlankCanvas();
             }
-        },
-        error: function(xhr) {
-            console.error('AJAX Error:', xhr);
-            createBlankCanvas();
-        }
-    });
-}
-
-    function loadFabricObject(objData) {
-        try {
-            // Créer l'objet Fabric selon son type
-            let fabricObj = null;
-
-            if (objData.type === 'text' || objData.type === 'textbox') {
-                // Utiliser IText pour les textes éditables, Text pour les non-éditables
-                const TextClass = objData.editable !== false ? fabric.IText : fabric.Text;
-                fabricObj = new TextClass(objData.text || '', {
-                    left: objData.left || 0,
-                    top: objData.top || 0,
-                    fontSize: objData.fontSize || 12,
-                    fontFamily: objData.fontFamily || 'Arial',
-                    fontWeight: objData.fontWeight || 'normal',
-                    fontStyle: objData.fontStyle || 'normal',
-                    fill: objData.fill || '#000000',
-                    selectable: objData.selectable !== false,
-                    originX: objData.originX || 'left',
-                    originY: objData.originY || 'top'
-                });
-            } else if (objData.type === 'rect') {
-                fabricObj = new fabric.Rect({
-                    left: objData.left || 0,
-                    top: objData.top || 0,
-                    width: objData.width || 100,
-                    height: objData.height || 100,
-                    fill: objData.fill || '#ffffff',
-                    stroke: objData.stroke || null,
-                    strokeWidth: objData.strokeWidth || 0,
-                    selectable: objData.selectable !== false,
-                    evented: objData.evented !== false
-                });
-
-                // Ajouter l'ombre si présente
-                if (objData.shadow) {
-                    fabricObj.set('shadow', new fabric.Shadow(objData.shadow));
-                }
-            } else if (objData.type === 'line') {
-                // Supporter les deux formats: points [x1,y1,x2,y2] ou x1,y1,x2,y2 séparés
-                let linePoints;
-                if (objData.points) {
-                    linePoints = objData.points;
-                } else if (objData.x1 !== undefined && objData.y1 !== undefined) {
-                    linePoints = [objData.x1, objData.y1, objData.x2 || 0, objData.y2 || 0];
-                } else {
-                    linePoints = [0, 0, 100, 100];
-                }
-
-                fabricObj = new fabric.Line(linePoints, {
-                    stroke: objData.stroke || '#000000',
-                    strokeWidth: objData.strokeWidth || 1,
-                    selectable: objData.selectable !== false,
-                    evented: objData.evented !== false
-                });
-            } else if (objData.type === 'image') {
-                // Charger l'image depuis l'URL
-                fabric.Image.fromURL(objData.src, function(img) {
-                    img.set({
-                        left: objData.left || 0,
-                        top: objData.top || 0,
-                        scaleX: objData.scaleX || 1,
-                        scaleY: objData.scaleY || 1,
-                        selectable: objData.selectable !== false
-                    });
-                    fabricCanvas.add(img);
-                    fabricCanvas.renderAll();
-                });
-                return; // Sortir car l'image est chargée de manière asynchrone
-            } else if (objData.type === 'group') {
-                // Pour les tableaux groupés
-                const groupObjects = [];
-                if (objData.objects) {
-                    objData.objects.forEach(function(childData) {
-                        const childObj = createFabricObjectFromData(childData);
-                        if (childObj) {
-                            groupObjects.push(childObj);
-                        }
-                    });
-                }
-                if (groupObjects.length > 0) {
-                    fabricObj = new fabric.Group(groupObjects, {
-                        left: objData.left || 0,
-                        top: objData.top || 0,
-                        selectable: objData.selectable !== false
-                    });
-                }
-            }
-
-            if (fabricObj) {
-                fabricCanvas.add(fabricObj);
-            }
-        } catch (error) {
-            console.error('Erreur lors du chargement de l\'objet Fabric:', error, objData);
-        }
+        });
     }
-
-    function createFabricObjectFromData(objData) {
-        // Fonction helper pour créer un objet Fabric depuis les données
-        if (objData.type === 'rect') {
-            return new fabric.Rect({
-                left: objData.left || 0,
-                top: objData.top || 0,
-                width: objData.width || 100,
-                height: objData.height || 100,
-                fill: objData.fill || '#ffffff',
-                stroke: objData.stroke || null,
-                strokeWidth: objData.strokeWidth || 0,
-                selectable: objData.selectable !== false,
-                evented: objData.evented !== false
-            });
-        } else if (objData.type === 'line') {
-            // Supporter les deux formats: points [x1,y1,x2,y2] ou x1,y1,x2,y2 séparés
-            let linePoints;
-            if (objData.points) {
-                linePoints = objData.points;
-            } else if (objData.x1 !== undefined && objData.y1 !== undefined) {
-                linePoints = [objData.x1, objData.y1, objData.x2 || 0, objData.y2 || 0];
-            } else {
-                linePoints = [0, 0, 100, 100];
-            }
-
-            return new fabric.Line(linePoints, {
-                stroke: objData.stroke || '#000000',
-                strokeWidth: objData.strokeWidth || 1,
-                selectable: objData.selectable !== false,
-                evented: objData.evented !== false
-            });
-        } else if (objData.type === 'text') {
-            // Utiliser IText pour les textes éditables
-            const TextClass = objData.editable !== false ? fabric.IText : fabric.Text;
-            return new TextClass(objData.text || '', {
-                left: objData.left || 0,
-                top: objData.top || 0,
-                fontSize: objData.fontSize || 12,
-                fontFamily: objData.fontFamily || 'Arial',
-                fontWeight: objData.fontWeight || 'normal',
-                fontStyle: objData.fontStyle || 'normal',
-                fill: objData.fill || '#000000',
-                selectable: objData.selectable !== false,
-                originX: objData.originX || 'left',
-                originY: objData.originY || 'top'
-            });
-        }
-        return null;
-    }
-
-    // ============================================
-    // GESTION DES ÉVÉNEMENTS
-    // ============================================
 
     function setupEventListeners() {
-        // Tabs de la sidebar
         $('.sidebar-tab').on('click', function() {
             const tab = $(this).data('tab');
             $('.sidebar-tab').removeClass('active');
@@ -1522,20 +1393,17 @@ $(document).ready(function() {
             $('#' + tab + 'Panel').addClass('active');
         });
 
-        // Sélection du mode
         $('.mode-btn').on('click', function() {
             const mode = $(this).data('mode');
             switchEditorMode(mode);
         });
 
-        // Boutons de la toolbar
         $('#saveBtn').on('click', saveDocument);
         $('#exportBtn').on('click', exportDocument);
         $('#reloadBtn').on('click', reloadEditorContent);
         $('#undoBtn').on('click', () => quillEditor.history.undo());
         $('#redoBtn').on('click', () => quillEditor.history.redo());
 
-        // Agent IA
         $('#agentSendBtn').on('click', sendAgentMessage);
         $('#agentInput').on('keydown', function(e) {
             if (e.ctrlKey && e.keyCode === 13) {
@@ -1543,7 +1411,6 @@ $(document).ready(function() {
             }
         });
 
-        // Propriétés
         $('#textColorPicker').on('change', function() {
             const color = $(this).val();
             $('#textColorInput').val(color);
@@ -1560,23 +1427,19 @@ $(document).ready(function() {
             quillEditor.format('font', font);
         });
 
-        // Insertion d'image
         $('#insertImageBtn').on('click', () => $('#imageUpload').click());
         $('#imageUpload').on('change', handleImageUpload);
 
-        // Titre du document
         $('#docTitleInput').on('change', function() {
             $('#documentTitle').text($(this).val());
         });
 
-        // Outils visuels
         $('#addTextBtn').on('click', addTextToCanvas);
         $('#addRectBtn').on('click', addRectToCanvas);
         $('#addCircleBtn').on('click', addCircleToCanvas);
         $('#addLineBtn').on('click', addLineToCanvas);
         $('#deleteObjectBtn').on('click', deleteSelectedObject);
 
-        // Propriétés de l'objet
         $('#objLeftInput').on('change', updateObjectPosition);
         $('#objTopInput').on('change', updateObjectPosition);
         $('#objWidthInput').on('change', updateObjectSize);
@@ -1585,18 +1448,12 @@ $(document).ready(function() {
         $('#objOpacityInput').on('change', updateObjectOpacity);
     }
 
-    // ============================================
-    // CHANGEMENT DE MODE
-    // ============================================
-
     function switchEditorMode(mode) {
         $('.mode-btn').removeClass('active');
         $('.mode-btn[data-mode="' + mode + '"]').addClass('active');
 
         if (mode === 'text') {
-            // Basculer vers mode texte
             if (currentMode === 'visual') {
-                // Convertir Fabric vers Quill avant de basculer
                 convertFabricToQuill();
             }
 
@@ -1604,23 +1461,19 @@ $(document).ready(function() {
             $('#visualEditorContainer').removeClass('active');
             currentMode = 'text';
 
-            // Afficher/masquer les panneaux de propriétés
             $('#insertionSection').show();
             $('#visualToolsSection').hide();
             $('#objectPropertiesSection').hide();
 
             updateStats();
         } else {
-            // Basculer vers mode visuel
             $('#textEditorContainer').hide();
             $('#visualEditorContainer').addClass('active');
             currentMode = 'visual';
 
-            // Afficher/masquer les panneaux de propriétés
             $('#insertionSection').hide();
             $('#visualToolsSection').show();
 
-            // Charger la structure PDF fidèle directement depuis le serveur
             loadVisualContent();
         }
     }
@@ -1628,7 +1481,6 @@ $(document).ready(function() {
     function convertQuillToFabric() {
         fabricCanvas.clear();
 
-        // Récupérer le contenu Quill
         const delta = quillEditor.getContents();
         const ops = delta.ops || [];
 
@@ -1638,33 +1490,28 @@ $(document).ready(function() {
         const lineHeight = 25;
         const maxWidth = pageWidth - 100;
 
-        // Parcourir les opérations Delta
         ops.forEach((op, index) => {
             if (typeof op.insert === 'string') {
                 const text = op.insert;
                 const attrs = op.attributes || {};
 
-                // Ignorer les sauts de ligne seuls
                 if (text === '\n') {
                     currentY += lineHeight;
                     currentX = 50;
                     return;
                 }
 
-                // Créer un objet texte pour chaque segment
                 const lines = text.split('\n');
 
                 lines.forEach((line, lineIndex) => {
                     if (line.trim()) {
-                        // Déterminer les styles
                         const fontSize = attrs.size ? parseInt(attrs.size.replace('px', '')) : 14;
                         const fontFamily = attrs.font || 'Arial';
                         const fontWeight = attrs.bold ? 'bold' : 'normal';
                         const fontStyle = attrs.italic ? 'italic' : 'normal';
-                        const fill = attrs.color || '#000000';
+                        const fill = attrs.color || '#111827';
                         const backgroundColor = attrs.background || 'transparent';
 
-                        // Créer l'objet texte sans textBaseline (non supporté par Textbox)
                         const fabricText = new fabric.Textbox(line, {
                             left: currentX,
                             top: currentY,
@@ -1692,7 +1539,6 @@ $(document).ready(function() {
                     }
                 });
             } else if (op.insert && op.insert.image) {
-                // Insérer une image
                 fabric.Image.fromURL(op.insert.image, function(img) {
                     img.set({
                         left: currentX,
@@ -1704,7 +1550,7 @@ $(document).ready(function() {
                     fabricCanvas.renderAll();
                 });
 
-                currentY += 200; // Espace pour l'image
+                currentY += 200;
             }
         });
 
@@ -1713,11 +1559,9 @@ $(document).ready(function() {
     }
 
     function convertFabricToQuill() {
-        // Convertir les objets Fabric en format Quill Delta
         const objects = fabricCanvas.getObjects();
         const ops = [];
 
-        // Trier les objets par position Y puis X
         objects.sort((a, b) => {
             if (Math.abs(a.top - b.top) < 10) {
                 return a.left - b.left;
@@ -1741,7 +1585,7 @@ $(document).ready(function() {
                 if (obj.fontStyle === 'italic') {
                     attributes.italic = true;
                 }
-                if (obj.fill !== '#000000') {
+                if (obj.fill !== '#111827') {
                     attributes.color = obj.fill;
                 }
                 if (obj.backgroundColor && obj.backgroundColor !== 'transparent') {
@@ -1762,7 +1606,6 @@ $(document).ready(function() {
                     attributes: Object.keys(attributes).length > 0 ? attributes : undefined
                 });
 
-                // Ajouter un saut de ligne après chaque objet texte
                 ops.push({ insert: '\n' });
 
             } else if (obj.type === 'image') {
@@ -1773,19 +1616,14 @@ $(document).ready(function() {
             }
         });
 
-        // Mettre à jour Quill
         if (ops.length > 0) {
             quillEditor.setContents({ ops: ops });
             updateStats();
         }
     }
 
-    // ============================================
-    // SAUVEGARDE
-    // ============================================
-
     function saveDocument() {
-        showSaveIndicator('Sauvegarde en cours...', 'saving');
+        showSaveIndicator('Sauvegarde...', 'saving');
 
         const content = currentMode === 'text'
             ? quillEditor.getContents()
@@ -1802,7 +1640,7 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if (response.success) {
-                    showSaveIndicator('✓ Sauvegardé avec succès', 'saved');
+                    showSaveIndicator('✓ Sauvegardé', 'saved');
                     setTimeout(() => hideSaveIndicator(), 3000);
                 } else {
                     showSaveIndicator('Erreur: ' + response.error, 'error');
@@ -1817,23 +1655,19 @@ $(document).ready(function() {
     function startAutoSave() {
         autoSaveInterval = setInterval(function() {
             autoSaveDocument();
-        }, 30000); // 30 secondes
+        }, 30000);
     }
 
-    // Fonction pour recharger le contenu depuis le serveur (utile après modification par l'agent)
     function reloadEditorContent() {
-        console.log('🔄 Rechargement du contenu depuis le serveur...');
+        console.log('🔄 Rechargement...');
 
         if (currentMode === 'visual') {
-            // Recharger le contenu Fabric.js
             loadVisualContent();
         } else {
-            // Recharger le contenu Quill
-            loadDocument();
+            loadDocumentContent();
         }
     }
 
-    // Exposer la fonction globalement pour l'appeler depuis le chat
     window.reloadEditorContent = reloadEditorContent;
 
     function autoSaveDocument() {
@@ -1850,14 +1684,10 @@ $(document).ready(function() {
                 content_data: JSON.stringify(content)
             },
             success: function(response) {
-                console.log('Auto-sauvegarde effectuée');
+                console.log('Auto-sauvegarde');
             }
         });
     }
-
-    // ============================================
-    // EXPORT
-    // ============================================
 
     function exportDocument() {
         const format = prompt('Format d\'export:\n- pdf\n- html\n- txt', 'pdf');
@@ -1867,13 +1697,11 @@ $(document).ready(function() {
             ? quillEditor.getContents()
             : fabricCanvas.toJSON();
 
-        // Créer un formulaire pour télécharger
         const form = $('<form>', {
             method: 'POST',
             action: '/chat/editor/' + documentId + '/export/'
         });
 
-        // Utiliser le token CSRF défini globalement (ligne 754)
         form.append($('<input>', {
             type: 'hidden',
             name: 'csrfmiddlewaretoken',
@@ -1903,18 +1731,13 @@ $(document).ready(function() {
         form.remove();
     }
 
-    // ============================================
-    // AGENT IA
-    // ============================================
-
     function sendAgentMessage() {
         const message = $('#agentInput').val().trim();
         if (!message) return;
 
-        // Afficher le message utilisateur
         $('#agentChat').append(
-            '<div class="agent-message" style="background: #e9ecff; border-left-color: #764ba2;">' +
-                '<strong style="color: #764ba2;">Vous</strong>' +
+            '<div class="agent-message" style="background: var(--accent-primary); color: white; border-left-color: var(--accent-hover);">' +
+                '<strong style="color: white;">Vous</strong>' +
                 '<p style="margin: 5px 0 0 0; font-size: 0.9rem;">' + escapeHtml(message) + '</p>' +
             '</div>'
         );
@@ -1922,7 +1745,6 @@ $(document).ready(function() {
         $('#agentInput').val('');
         scrollAgentChat();
 
-        // Envoyer au serveur (utilise l'agent existant)
         $.ajax({
             url: URL_SEND_MESSAGE,
             type: 'POST',
@@ -1934,14 +1756,13 @@ $(document).ready(function() {
                 if (response.success) {
                     $('#agentChat').append(
                         '<div class="agent-message">' +
-                            '<strong style="color: #667eea;">🤖 Agent DocMind</strong>' +
+                            '<strong style="color: var(--accent-primary);">🤖 DocMind</strong>' +
                             '<p style="margin: 5px 0 0 0; font-size: 0.9rem;">' +
                             escapeHtml(response.assistant_message.content) + '</p>' +
                         '</div>'
                     );
                     scrollAgentChat();
 
-                    // Si l'agent a modifié le document, recharger
                     if (response.assistant_message.generated_files &&
                         response.assistant_message.generated_files.length > 0) {
                         loadDocumentContent();
@@ -1956,10 +1777,6 @@ $(document).ready(function() {
         chat.scrollTop = chat.scrollHeight;
     }
 
-    // ============================================
-    // IMAGES
-    // ============================================
-
     function handleImageUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -1969,11 +1786,9 @@ $(document).ready(function() {
             const dataUrl = event.target.result;
 
             if (currentMode === 'text') {
-                // Insérer dans Quill
                 const range = quillEditor.getSelection(true);
                 quillEditor.insertEmbed(range.index, 'image', dataUrl);
             } else {
-                // Insérer dans Fabric
                 fabric.Image.fromURL(dataUrl, function(img) {
                     img.scale(0.5);
                     fabricCanvas.add(img);
@@ -1988,17 +1803,13 @@ $(document).ready(function() {
         window.location.href = '/chat/conversation/' + conversationId + '/editor/' + docId + '/';
     }
 
-    // ============================================
-    // OUTILS VISUELS (FABRIC.JS)
-    // ============================================
-
     function addTextToCanvas() {
         const text = new fabric.Textbox('Nouveau texte', {
             left: 100,
             top: 100,
             width: 200,
             fontSize: 16,
-            fill: '#000000',
+            fill: '#111827',
             fontFamily: 'Arial',
             editable: true,
             selectable: true
@@ -2014,8 +1825,8 @@ $(document).ready(function() {
             top: 100,
             width: 150,
             height: 100,
-            fill: '#667eea',
-            stroke: '#764ba2',
+            fill: '#3b82f6',
+            stroke: '#2563eb',
             strokeWidth: 2
         });
         fabricCanvas.add(rect);
@@ -2028,8 +1839,8 @@ $(document).ready(function() {
             left: 100,
             top: 100,
             radius: 50,
-            fill: '#48c774',
-            stroke: '#38b864',
+            fill: '#10b981',
+            stroke: '#059669',
             strokeWidth: 2
         });
         fabricCanvas.add(circle);
@@ -2039,7 +1850,7 @@ $(document).ready(function() {
 
     function addLineToCanvas() {
         const line = new fabric.Line([50, 50, 200, 50], {
-            stroke: '#667eea',
+            stroke: '#3b82f6',
             strokeWidth: 3,
             left: 100,
             top: 100
@@ -2066,7 +1877,6 @@ $(document).ready(function() {
 
         $('#objectPropertiesSection').show();
 
-        // Remplir les valeurs
         $('#objLeftInput').val(Math.round(obj.left));
         $('#objTopInput').val(Math.round(obj.top));
 
@@ -2140,7 +1950,6 @@ $(document).ready(function() {
         }
     }
 
-    // Nettoyer à la fermeture
     window.addEventListener('beforeunload', function() {
         if (autoSaveInterval) {
             clearInterval(autoSaveInterval);

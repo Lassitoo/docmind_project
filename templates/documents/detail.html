@@ -5,13 +5,18 @@
 
 {% block content %}
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-file-earmark-text"></i> {{ document.title }}</h1>
-        <div>
-            <a href="{% url 'documents:download' document.pk %}" class="btn btn-success">
+    <div class="d-flex justify-content-between align-items-center mb-2" style="padding-top:0.7em; padding-bottom:0.7em; border-bottom:1px solid #ececec;">
+        <div class="d-flex align-items-center" style="gap:0.7em;">
+            <span style="font-size:2em; color:#222; line-height:1;">
+                <i class="bi bi-file-earmark-text"></i>
+            </span>
+            <span style="font-size:1.45em; font-weight:600; color:#222; font-family:'Segoe UI',Arial,sans-serif;">{{ document.title }}</span>
+        </div>
+        <div style="display:flex; gap:0.5em;">
+            <a href="{% url 'documents:download' document.pk %}" class="btn btn-outline-success btn-sm" style="font-weight:500; min-width:120px;">
                 <i class="bi bi-download"></i> Télécharger
             </a>
-            <a href="{% url 'documents:delete' document.pk %}" class="btn btn-danger">
+            <a href="{% url 'documents:delete' document.pk %}" class="btn btn-outline-danger btn-sm" style="font-weight:500; min-width:120px;">
                 <i class="bi bi-trash"></i> Supprimer
             </a>
         </div>
@@ -19,126 +24,135 @@
 
     <div class="row">
         <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5><i class="bi bi-info-circle"></i> Informations</h5>
+            <div class="mb-4 p-4" style="background:#fff; border-radius:0.7em; box-shadow:0 1px 6px rgba(0,0,0,0.04); font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-3" style="font-size:1.1em; font-weight:500; color:#2a2a2a; letter-spacing:0.02em;">
+                    <i class="bi bi-info-circle"></i> Informations
                 </div>
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-3">Type de fichier:</dt>
-                        <dd class="col-sm-9">{{ document.file_type|default:"Non détecté" }}</dd>
-
-                        <dt class="col-sm-3">Taille:</dt>
-                        <dd class="col-sm-9">{{ document.file_size|filesizeformat }}</dd>
-
-                        <dt class="col-sm-3">Uploadé le:</dt>
-                        <dd class="col-sm-9">{{ document.uploaded_at|date:"d/m/Y H:i" }}</dd>
-
-                        <dt class="col-sm-3">Statut:</dt>
-                        <dd class="col-sm-9">
-                            {% if document.status == 'completed' %}
-                                <span class="badge bg-success">Analysé</span>
-                            {% elif document.status == 'processing' %}
-                                <span class="badge bg-warning">En cours</span>
-                            {% elif document.status == 'pending' %}
-                                <span class="badge bg-secondary">En attente</span>
-                            {% else %}
-                                <span class="badge bg-danger">Erreur</span>
-                            {% endif %}
-                        </dd>
-
-                        {% if document.description %}
-                            <dt class="col-sm-3">Description:</dt>
-                            <dd class="col-sm-9">{{ document.description }}</dd>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Type de fichier</div>
+                    <div class="col-sm-8">{{ document.file_type|default:"Non détecté" }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Taille</div>
+                    <div class="col-sm-8">{{ document.file_size|filesizeformat }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Uploadé le</div>
+                    <div class="col-sm-8">{{ document.uploaded_at|date:"d/m/Y H:i" }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Statut</div>
+                    <div class="col-sm-8">
+                        {% if document.status == 'completed' %}
+                            <span class="badge bg-success">Analysé</span>
+                        {% elif document.status == 'processing' %}
+                            <span class="badge bg-warning">En cours</span>
+                        {% elif document.status == 'pending' %}
+                            <span class="badge bg-secondary">En attente</span>
+                        {% else %}
+                            <span class="badge bg-danger">Erreur</span>
                         {% endif %}
-                    </dl>
-
-                    {% if document.status == 'pending' %}
-                        <a href="{% url 'documents:analyze' document.pk %}" class="btn btn-primary">
-                            <i class="bi bi-gear"></i> Analyser le document
-                        </a>
-                    {% endif %}
+                    </div>
                 </div>
+                {% if document.description %}
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Description</div>
+                    <div class="col-sm-8">{{ document.description }}</div>
+                </div>
+                {% endif %}
+                {% if document.status == 'pending' %}
+                <div class="mt-3">
+                    <a href="{% url 'documents:analyze' document.pk %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-gear"></i> Analyser le document
+                    </a>
+                </div>
+                {% endif %}
             </div>
 
             {% if content %}
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5><i class="bi bi-file-text"></i> Contenu extrait</h5>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Pages:</strong> {{ content.page_count }}</p>
-                        <p><strong>Mots:</strong> {{ content.word_count }}</p>
-                        <hr>
-                        <div style="max-height: 400px; overflow-y: auto;">
-                            <pre class="bg-light p-3">{{ content.extracted_text|truncatewords:500 }}</pre>
-                        </div>
-                        <a href="{% url 'documents:content' document.pk %}" class="btn btn-sm btn-outline-primary mt-2">
-                            Voir le contenu complet
-                        </a>
-                    </div>
+            <div class="mb-4 p-4" style="background:#fff; border-radius:0.7em; box-shadow:0 1px 6px rgba(0,0,0,0.04); font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-3" style="font-size:1.1em; font-weight:500; color:#2a2a2a; letter-spacing:0.02em;">
+                    <i class="bi bi-file-text"></i> Contenu extrait
                 </div>
+                <div class="mb-2 d-flex justify-content-between" style="font-size:1em; color:#222;">
+                    <span><i class="bi bi-file-earmark"></i> {{ content.page_count }} pages</span>
+                    <span><i class="bi bi-fonts"></i> {{ content.word_count }} mots</span>
+                </div>
+                {% if content.extracted_text %}
+                <div style="max-height: 160px; overflow-y: auto; background: #f8f9fa; border-radius: 0.4em; padding: 0.9em; font-size: 1em; color: #222; border: 1px solid #eee;">
+                    <div style="white-space: pre-wrap; word-break: break-word; margin:0;">{{ content.extracted_text|truncatewords:500 }}</div>
+                </div>
+                {% else %}
+                <div class="text-muted text-center" style="font-size:0.95em; background:#f8f9fa; border-radius:0.4em; padding:0.7em;">Aucun texte extrait.</div>
+                {% endif %}
+                <div class="text-center mt-2">
+                    <a href="{% url 'documents:content' document.pk %}" class="btn btn-sm btn-outline-primary">
+                        Voir tout
+                    </a>
+                </div>
+            </div>
             {% endif %}
 
             {% if analysis %}
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5><i class="bi bi-graph-up"></i> Analyse</h5>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Type de document:</strong> {{ analysis.detected_document_type|default:"Non détecté" }}</p>
-                        <p><strong>Langue:</strong> {{ analysis.language|default:"Non détectée" }}</p>
-
-                        {% if analysis.summary %}
-                            <hr>
-                            <h6>Résumé:</h6>
-                            <p>{{ analysis.summary }}</p>
-                        {% endif %}
-
-                        {% if analysis.key_entities %}
-                            <hr>
-                            <h6>Entités clés:</h6>
-                            <div>{{ analysis.key_entities|safe }}</div>
-                        {% endif %}
-
-                        <a href="{% url 'documents:analysis' document.pk %}" class="btn btn-sm btn-outline-primary mt-2">
-                            Voir l'analyse complète
-                        </a>
-                    </div>
+            <div class="mb-4 p-4" style="background:#fff; border-radius:0.7em; box-shadow:0 1px 6px rgba(0,0,0,0.04); font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-3" style="font-size:1.1em; font-weight:500; color:#2a2a2a; letter-spacing:0.02em;">
+                    <i class="bi bi-graph-up"></i> Analyse
                 </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Type de document</div>
+                    <div class="col-sm-8">{{ analysis.detected_document_type|default:"Non détecté" }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Langue</div>
+                    <div class="col-sm-8">{{ analysis.language|default:"Non détectée" }}</div>
+                </div>
+                {% if analysis.summary %}
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Résumé</div>
+                    <div class="col-sm-8">{{ analysis.summary }}</div>
+                </div>
+                {% endif %}
+                {% if analysis.key_entities %}
+                <div class="row mb-2">
+                    <div class="col-sm-4 text-muted">Entités clés</div>
+                    <div class="col-sm-8">{{ analysis.key_entities|safe }}</div>
+                </div>
+                {% endif %}
+                <div class="text-center mt-2">
+                    <a href="{% url 'documents:analysis' document.pk %}" class="btn btn-sm btn-outline-primary">
+                        Voir l'analyse complète
+                    </a>
+                </div>
+            </div>
             {% endif %}
         </div>
 
         <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5><i class="bi bi-lightning"></i> Actions rapides</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{% url 'chat:conversation_create' %}?document={{ document.pk }}" class="btn btn-primary">
-                            <i class="bi bi-chat-dots"></i> Démarrer une conversation
+            <div class="mb-4 p-4" style="background:#fff; border-radius:0.7em; box-shadow:0 1px 6px rgba(0,0,0,0.04); font-family:'Segoe UI',Arial,sans-serif;">
+                <div class="mb-3 text-muted" style="font-size:1em;"><i class="bi bi-lightning"></i> Actions rapides</div>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'chat:conversation_create' %}?document={{ document.pk }}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-chat-dots"></i> Démarrer une conversation
+                    </a>
+                    {% if document.status == 'completed' %}
+                        <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-info btn-sm">
+                            <i class="bi bi-diagram-3"></i> Générer un schéma BD
                         </a>
-                        {% if document.status == 'completed' %}
-                            <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-info">
-                                <i class="bi bi-diagram-3"></i> Générer un schéma BD
-                            </a>
-                        {% else %}
-                            <button class="btn btn-secondary" disabled>
-                                <i class="bi bi-diagram-3"></i> Générer un schéma (analyser d'abord)
-                            </button>
-                        {% endif %}
-                        {% if content %}
-                            <a href="{% url 'documents:content' document.pk %}" class="btn btn-outline-secondary">
-                                <i class="bi bi-file-text"></i> Contenu complet
-                            </a>
-                        {% endif %}
-                        {% if analysis %}
-                            <a href="{% url 'documents:analysis' document.pk %}" class="btn btn-outline-secondary">
-                                <i class="bi bi-graph-up"></i> Analyse complète
-                            </a>
-                        {% endif %}
-                    </div>
+                    {% else %}
+                        <button class="btn btn-secondary btn-sm" disabled>
+                            <i class="bi bi-diagram-3"></i> Générer un schéma (analyser d'abord)
+                        </button>
+                    {% endif %}
+                    {% if content %}
+                        <a href="{% url 'documents:content' document.pk %}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-file-text"></i> Contenu complet
+                        </a>
+                    {% endif %}
+                    {% if analysis %}
+                        <a href="{% url 'documents:analysis' document.pk %}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-graph-up"></i> Analyse complète
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -4,32 +4,36 @@
 {% block title %}Analyser {{ document.title }} - DocMind{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1 class="mb-4"><i class="bi bi-gear"></i> Analyser le Document</h1>
-
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ document.title }}</h5>
-                    <p class="card-text">
-                        <strong>Type:</strong> {{ document.file_type }}<br>
-                        <strong>Taille:</strong> {{ document.file_size|filesizeformat }}
-                    </p>
-
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i>
-                        L'analyse du document peut prendre quelques instants selon sa taille.
-                        Le système va extraire le texte, identifier les entités clés, et générer un résumé.
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-sm" style="border-radius:1.2em;">
+                <div class="card-body p-4">
+                    <h5 class="mb-3 text-center text-primary" style="font-weight:600;">
+                        <i class="bi bi-gear"></i> Analyse du document
+                    </h5>
+                    <div class="row mb-3 g-2 text-center">
+                        <div class="col-12">
+                            <span class="fw-bold" style="font-size:1.1em;">{{ document.title }}</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="badge bg-light text-dark px-3 py-2"><i class="bi bi-file-earmark"></i> {{ document.file_type }}</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="badge bg-light text-dark px-3 py-2"><i class="bi bi-hdd"></i> {{ document.file_size|filesizeformat }}</span>
+                        </div>
                     </div>
-
+                    <div class="alert alert-info text-center mb-4" style="font-size:0.98em;">
+                        <i class="bi bi-info-circle"></i>
+                        L'analyse peut prendre quelques instants selon la taille. Le système va extraire le texte, identifier les entités clés et générer un résumé.
+                    </div>
                     <form method="post">
                         {% csrf_token %}
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                        <div class="d-flex gap-2 justify-content-center">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
                                 <i class="bi bi-play-circle"></i> Lancer l'analyse
                             </button>
-                            <a href="{% url 'documents:detail' document.pk %}" class="btn btn-secondary">
+                            <a href="{% url 'documents:detail' document.pk %}" class="btn btn-outline-secondary rounded-pill px-4">
                                 <i class="bi bi-x-circle"></i> Annuler
                             </a>
                         </div>

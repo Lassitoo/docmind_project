@@ -3,22 +3,19 @@
 {% block title %}Mes Documents - DocMind{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row mb-4">
-        <div class="col">
-            <h1><i class="bi bi-file-earmark-text"></i> Mes Documents</h1>
-        </div>
-        <div class="col-auto">
-            <a href="{% url 'documents:upload' %}" class="btn btn-primary">
-                <i class="bi bi-cloud-upload"></i> Nouveau document
-            </a>
-        </div>
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0"><i class="bi bi-file-earmark-text"></i> Mes Documents</h2>
+        <a href="{% url 'documents:upload' %}" class="btn btn-primary">
+            <i class="bi bi-cloud-upload"></i> Nouveau document
+        </a>
     </div>
 
     <!-- Filtres -->
     <div class="card mb-4">
         <div class="card-body">
-            <form method="get" class="row g-3 align-items-center">
+            <form method="get" class="row g-3">
                 <div class="col-md-6">
                     <input type="search" name="q" class="form-control" placeholder="Rechercher un document..." value="{{ request.GET.q }}">
                 </div>
@@ -42,41 +39,54 @@
 
     <!-- Liste des documents -->
     {% if documents %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="row g-3">
             {% for document in documents %}
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="bi bi-file-earmark-{{ document.file_type|slice:'1:' }}"></i>
+                            <!-- Titre -->
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-file-earmark-pdf text-primary"></i>
                                 {{ document.title }}
                             </h5>
-                            <p class="card-text text-muted small">
-                                {{ document.description|truncatewords:20 }}
-                            </p>
-                            <div class="mb-2">
-                                <span class="badge bg-{{ document.status }}">
-                                    {{ document.get_status_display }}
-                                </span>
-                                <small class="text-muted ms-2">
-                                    {{ document.file_size|filesizeformat }}
-                                </small>
+                            
+                            <!-- Statut et taille -->
+                            <div class="mb-3">
+                                {% if document.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark">En attente</span>
+                                {% elif document.status == 'processing' %}
+                                    <span class="badge bg-info text-dark">En cours</span>
+                                {% elif document.status == 'completed' %}
+                                    <span class="badge bg-success">Complété</span>
+                                {% elif document.status == 'error' %}
+                                    <span class="badge bg-danger">Erreur</span>
+                                {% endif %}
+                                <small class="text-muted ms-2">{{ document.file_size|filesizeformat }}</small>
                             </div>
-                            <small class="text-muted">
+                            
+                            <!-- Description -->
+                            {% if document.description %}
+                                <p class="card-text text-muted small mb-3">
+                                    {{ document.description|truncatewords:15 }}
+                                </p>
+                            {% endif %}
+                            
+                            <!-- Date -->
+                            <p class="text-muted small mb-3">
                                 <i class="bi bi-calendar"></i> {{ document.uploaded_at|date:"d/m/Y" }}
-                            </small>
-                        </div>
-                        <div class="card-footer bg-white">
-                            <div class="d-flex justify-content-between gap-1">
-                                <a href="{% url 'documents:detail' document.pk %}" class="btn btn-sm btn-outline-primary">
+                            </p>
+                            
+                            <!-- Actions -->
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'documents:detail' document.pk %}" class="btn btn-sm btn-outline-primary flex-fill">
                                     <i class="bi bi-eye"></i> Voir
                                 </a>
                                 {% if document.status == 'completed' %}
-                                    <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-sm btn-outline-info" title="Générer un schéma">
+                                    <a href="{% url 'database_manager:schema_generate' document.pk %}" class="btn btn-sm btn-outline-info" title="Schéma">
                                         <i class="bi bi-diagram-3"></i>
                                     </a>
                                 {% endif %}
-                                <a href="{% url 'documents:download' document.pk %}" class="btn btn-sm btn-outline-secondary">
+                                <a href="{% url 'documents:download' document.pk %}" class="btn btn-sm btn-outline-secondary" title="Télécharger">
                                     <i class="bi bi-download"></i>
                                 </a>
                             </div>
@@ -86,10 +96,32 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="alert alert-info">
+        <div class="alert alert-info text-center">
             <i class="bi bi-info-circle"></i> Aucun document trouvé.
             <a href="{% url 'documents:upload' %}" class="alert-link">Commencez par uploader votre premier document</a>.
         </div>
     {% endif %}
 </div>
+
+<style>
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    transition: box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.btn {
+    border-radius: 6px;
+}
+</style>
 {% endblock %}

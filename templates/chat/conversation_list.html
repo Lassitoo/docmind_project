@@ -4,44 +4,47 @@
 {% block title %}Conversations - DocMind{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-4" style="max-width:1100px; margin-top:2.5em;">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-chat-dots"></i> Mes Conversations</h1>
+        <h2 class="mb-0"><i class="bi bi-chat-dots"></i> Mes Conversations</h2>
         <a href="{% url 'chat:conversation_create' %}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Nouvelle Conversation
         </a>
     </div>
 
     {% if conversations %}
-        <div class="row">
+        <div class="row g-3">
             {% for conversation in conversations %}
-                <div class="col-md-6 col-lg-4 mb-4">
+                <div class="col-md-6 col-lg-4">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">{{ conversation.title }}</h5>
-                            <p class="card-text text-muted">
-                                <small>
-                                    <i class="bi bi-calendar"></i> {{ conversation.created_at|date:"d/m/Y H:i" }}
-                                </small>
-                            </p>
-                            <p class="card-text">
+                            <h5 class="card-title mb-3">
+                                <i class="bi bi-chat-dots text-primary"></i>
+                                {{ conversation.title }}
+                            </h5>
+                            <div class="mb-3">
                                 <span class="badge bg-secondary">
                                     {{ conversation.messages.count }} message{{ conversation.messages.count|pluralize }}
                                 </span>
                                 <span class="badge bg-info text-dark">
                                     {{ conversation.documents.count }} document{{ conversation.documents.count|pluralize }}
                                 </span>
-                            </p>
+                            </div>
                             {% if conversation.context_description %}
-                                <p class="card-text"><small>{{ conversation.context_description|truncatewords:20 }}</small></p>
+                                <p class="card-text text-muted small mb-3">
+                                    {{ conversation.context_description|truncatewords:15 }}
+                                </p>
                             {% endif %}
+                            <p class="text-muted small mb-3">
+                                <i class="bi bi-calendar"></i> {{ conversation.created_at|date:"d/m/Y" }}
+                            </p>
                         </div>
-                        <div class="card-footer bg-transparent">
-                            <a href="{% url 'chat:conversation_detail' conversation.pk %}" class="btn btn-sm btn-primary">
-                                <i class="bi bi-chat-fill"></i> Ouvrir
+                        <div class="card-footer bg-transparent d-flex gap-2">
+                            <a href="{% url 'chat:conversation_detail' conversation.pk %}" class="btn btn-sm btn-outline-primary flex-fill">
+                                <i class="bi bi-eye"></i> Voir
                             </a>
-                            <a href="{% url 'chat:conversation_delete' conversation.pk %}" class="btn btn-sm btn-danger">
-                                <i class="bi bi-trash"></i> Supprimer
+                            <a href="{% url 'chat:conversation_delete' conversation.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
                             </a>
                         </div>
                     </div>
@@ -49,10 +52,31 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="alert alert-info">
+        <div class="alert alert-info text-center" style="margin-top:2em;">
             <i class="bi bi-info-circle"></i> Vous n'avez pas encore de conversations.
             <a href="{% url 'chat:conversation_create' %}" class="alert-link">Créez-en une maintenant !</a>
         </div>
+    <style>
+    .card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        transition: box-shadow 0.2s;
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .btn {
+        border-radius: 6px;
+    }
+    </style>
     {% endif %}
 </div>
 {% endblock %}
