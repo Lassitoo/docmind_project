@@ -13,7 +13,6 @@ urlpatterns = [
     path('documents/', include('documents.urls')),
     path('chat/', include('chat.urls')),
     path('database/', include('database_manager.urls')),
-    path('landing/', include('core.urls')),  # Keep landing available at /landing/
 ]
 
 # Servir les fichiers media en développement

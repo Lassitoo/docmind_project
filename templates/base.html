@@ -7,6 +7,7 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
@@ -236,26 +237,12 @@
                 <ul class="navbar-nav me-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
-                               href="{% url 'core:home' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link {% if 'documents' in request.path and 'compare' not in request.path %}active{% endif %}" 
                                href="{% url 'documents:list' %}">Documents</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Reports</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Dashboards</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link {% if 'chat' in request.path %}active{% endif %}" 
                                href="{% url 'chat:conversation_list' %}">Conversations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if 'document_actions' in request.resolver_match.url_name %}active{% endif %}" 
-                               href="{% url 'core:document_actions' %}">Document Actions</a>
                         </li>
                     {% endif %}
                 </ul>
