@@ -4,7 +4,8 @@
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from django.db.models import Count, Sum
 from documents.models import Document
@@ -21,9 +22,18 @@ from django.conf import settings
 
 def home(request):
     """Page d'accueil"""
-    if request.user.is_authenticated:
+    return redirect('core:login')  # Always redirect to login page
+
+
+class CustomLoginView(LoginView):
+    """Vue de login personnalisée qui redirige vers le dashboard après connexion"""
+    template_name = 'core/login.html'
+
+    def form_valid(self, form):
+        user = form.get_user()
+        login(self.request, user)
+        messages.success(self.request, 'Connexion réussie!')
         return redirect('core:dashboard')
-    return redirect('core:login')  # Redirect to login for non-authenticated users
 
 
 @login_required
