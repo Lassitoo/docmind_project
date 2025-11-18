@@ -379,7 +379,11 @@
                             </ul>
                         </div>
                     {% else %}
-                        <a href="{% url 'core:login' %}" class="nav-link">Login</a>
+                        {% if request.resolver_match.url_name == 'login' %}
+                            <a href="{% url 'core:register' %}" class="nav-link">Register</a>
+                        {% else %}
+                            <a href="{% url 'core:login' %}" class="nav-link">Login</a>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
