@@ -58,15 +58,24 @@ body {
 
 .logo-icon {
     font-size: 4rem;
-    color: var(--dark-bg);
+    background: linear-gradient(135deg, var(--analyst-color), var(--modeler-color), var(--planner-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 20px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .hero-title {
     font-size: 3.5rem;
-    font-weight: 700;
-    color: var(--dark-bg);
+    font-weight: 800;
+    background: linear-gradient(135deg, #FF6B9D, #FFA502, #4ECDC4, #667EEA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    letter-spacing: -0.5px;
 }
 
 .hero-subtitle {
