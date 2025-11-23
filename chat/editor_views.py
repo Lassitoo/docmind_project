@@ -230,7 +230,7 @@ def extract_document_content(request, document_id):
                 })
         
         else:  # quill format
-            # Check for saved Quill content first
+            # Check for saved Quill content first (modifications from chatbot)
             if pdf_structure and isinstance(pdf_structure, dict):
                 if 'editor_draft' in pdf_structure and pdf_structure['editor_draft'].get('content_type') == 'quill':
                     return JsonResponse({
@@ -243,9 +243,43 @@ def extract_document_content(request, document_id):
                         'content': pdf_structure.get('content', {'ops': []})
                     })
             
-            # Convert text to Quill Delta format
+            # Always return the ORIGINAL full text content from PDF
+            # Never return saved/modified content for text mode
+            
+            # Get the original text content
             text_content = doc_content.raw_text or doc_content.processed_text or ''
             
+            # If no text content, try to extract from pdf_structure
+            if not text_content and pdf_structure and isinstance(pdf_structure, dict):
+                # Try to get text from pages
+                if 'pages' in pdf_structure and isinstance(pdf_structure['pages'], list):
+                    text_parts = []
+                    for page in pdf_structure['pages']:
+                        if isinstance(page, dict):
+                            # Get text from page
+                            page_text = page.get('text', '')
+                            if page_text:
+                                text_parts.append(page_text)
+                            
+                            # Get text from blocks
+                            if 'blocks' in page and isinstance(page['blocks'], list):
+                                for block in page['blocks']:
+                                    if isinstance(block, dict):
+                                        block_text = block.get('text') or block.get('content', '')
+                                        if block_text:
+                                            text_parts.append(block_text)
+                    
+                    text_content = '\n'.join(text_parts)
+                
+                # Try pages_content array
+                elif 'pages_content' in pdf_structure and isinstance(pdf_structure['pages_content'], list):
+                    text_content = '\n'.join(pdf_structure['pages_content'])
+                
+                # Try simple text field
+                elif 'text' in pdf_structure:
+                    text_content = pdf_structure['text']
+            
+            # Convert text to Quill Delta format
             delta_ops = []
             if text_content:
                 lines = text_content.split('\n')
@@ -258,12 +292,8 @@ def extract_document_content(request, document_id):
                 'success': True,
                 'content': {'ops': delta_ops}
             })
-            
-    except Document.DoesNotExist:
-        return JsonResponse({
-            'success': False,
-            'error': 'Document not found'
-        })
+
+        
     except Exception as e:
         print(f"❌ Error extracting document: {e}")
         import traceback

@@ -1448,15 +1448,23 @@ $(document).ready(function() {
         $('#objOpacityInput').on('change', updateObjectOpacity);
     }
 
+    /**
+     * Change le mode d'édition et synchronise les données
+     * @param {String} mode - 'text' ou 'visual'
+     */
     function switchEditorMode(mode) {
+        console.log(`🔀 Basculement vers le mode : ${mode}`);
+        
         $('.mode-btn').removeClass('active');
         $('.mode-btn[data-mode="' + mode + '"]').addClass('active');
 
         if (mode === 'text') {
+            // Passer du mode Visuel au mode Texte
             if (currentMode === 'visual') {
-                convertFabricToQuill();
+                // ✅ Convertir Fabric → Quill
+                convertFabricToQuillProper();
             }
-
+            
             $('#textEditorContainer').show();
             $('#visualEditorContainer').removeClass('active');
             currentMode = 'text';
@@ -1466,7 +1474,16 @@ $(document).ready(function() {
             $('#objectPropertiesSection').hide();
 
             updateStats();
-        } else {
+            showSaveIndicator('Mode texte activé', 'saved');
+            setTimeout(() => hideSaveIndicator(), 1500);
+            
+        } else if (mode === 'visual') {
+            // Passer du mode Texte au mode Visuel
+            if (currentMode === 'text') {
+                // ✅ Convertir Quill → Fabric
+                convertQuillToFabricProper();
+            }
+            
             $('#textEditorContainer').hide();
             $('#visualEditorContainer').addClass('active');
             currentMode = 'visual';
@@ -1474,152 +1491,241 @@ $(document).ready(function() {
             $('#insertionSection').hide();
             $('#visualToolsSection').show();
 
-            loadVisualContent();
+            updateCanvasStats();
+            showSaveIndicator('Mode visuel activé', 'saved');
+            setTimeout(() => hideSaveIndicator(), 1500);
         }
     }
 
-    function convertQuillToFabric() {
-        fabricCanvas.clear();
+    /**
+     * Convertit le contenu Quill (Delta) en Fabric Canvas
+     * @param {Object} quillDelta - Contenu Quill au format Delta
+     * @returns {void} - Modifie fabricCanvas
+     */
+    function convertQuillToFabricProper() {
+    console.log('🔄 Conversion Quill → Fabric...');
 
-        const delta = quillEditor.getContents();
-        const ops = delta.ops || [];
+    fabricCanvas.clear();
 
-        let currentY = 50;
-        let currentX = 50;
-        const pageWidth = 800;
-        const lineHeight = 25;
-        const maxWidth = pageWidth - 100;
+    const delta = quillEditor.getContents();
+    const ops = delta.ops || [];
 
-        ops.forEach((op, index) => {
-            if (typeof op.insert === 'string') {
-                const text = op.insert;
-                const attrs = op.attributes || {};
+    // Configuration de mise en page A4
+    const PAGE_WIDTH = 595; // A4 en pixels
+    const PAGE_HEIGHT = 842;
+    const MARGIN_LEFT = 50;
+    const MARGIN_TOP = 50;
+    const MARGIN_RIGHT = 50;
+    const CONTENT_WIDTH = PAGE_WIDTH - MARGIN_LEFT - MARGIN_RIGHT;
 
-                if (text === '\n') {
-                    currentY += lineHeight;
-                    currentX = 50;
-                    return;
-                }
+    let currentY = MARGIN_TOP;
+    let currentPage = 1;
+    const pages = [];
+    let currentPageObjects = [];
 
-                const lines = text.split('\n');
+    // Configuration des styles
+    const defaultFontSize = 14;
+    const defaultFont = 'Arial';
+    const defaultColor = '#111827';
 
-                lines.forEach((line, lineIndex) => {
-                    if (line.trim()) {
-                        const fontSize = attrs.size ? parseInt(attrs.size.replace('px', '')) : 14;
-                        const fontFamily = attrs.font || 'Arial';
-                        const fontWeight = attrs.bold ? 'bold' : 'normal';
-                        const fontStyle = attrs.italic ? 'italic' : 'normal';
-                        const fill = attrs.color || '#111827';
-                        const backgroundColor = attrs.background || 'transparent';
+    // Fonction pour ajouter un objet à la page actuelle
+    const addToPage = (obj, height) => {
+    if (currentY + height > PAGE_HEIGHT - MARGIN_TOP) {
+    // Nouvelle page
+    pages.push({
+    objects: currentPageObjects,
+    y: MARGIN_TOP
+    });
+    currentPageObjects = [];
+    currentY = MARGIN_TOP;
+    currentPage++;
+    }
+    currentPageObjects.push({ obj, height });
+    currentY += height;
+    return obj;
+    };
 
-                        const fabricText = new fabric.Textbox(line, {
-                            left: currentX,
-                            top: currentY,
-                            width: maxWidth,
-                            fontSize: fontSize,
-                            fontFamily: fontFamily,
-                            fontWeight: fontWeight,
-                            fontStyle: fontStyle,
-                            fill: fill,
-                            backgroundColor: backgroundColor,
-                            textAlign: attrs.align || 'left',
-                            underline: attrs.underline || false,
-                            linethrough: attrs.strike || false,
-                            editable: true,
-                            selectable: true
-                        });
+    // Parcourir les opérations Quill
+    let currentLineText = '';
+    let currentLineAttrs = {};
 
-                        fabricCanvas.add(fabricText);
-                        currentY += fabricText.height + 10;
-                    }
-
-                    if (lineIndex < lines.length - 1) {
-                        currentY += lineHeight;
-                        currentX = 50;
-                    }
-                });
-            } else if (op.insert && op.insert.image) {
-                fabric.Image.fromURL(op.insert.image, function(img) {
-                    img.set({
-                        left: currentX,
-                        top: currentY,
-                        scaleX: 0.5,
-                        scaleY: 0.5
-                    });
-                    fabricCanvas.add(img);
-                    fabricCanvas.renderAll();
-                });
-
-                currentY += 200;
-            }
-        });
-
-        fabricCanvas.renderAll();
-        updateCanvasStats();
+    const flushLine = () => {
+    if (!currentLineText.trim()) {
+    currentY += 15;
+    currentLineText = '';
+    return;
     }
 
-    function convertFabricToQuill() {
-        const objects = fabricCanvas.getObjects();
-        const ops = [];
+    const attrs = currentLineAttrs || {};
 
-        objects.sort((a, b) => {
-            if (Math.abs(a.top - b.top) < 10) {
-                return a.left - b.left;
-            }
-            return a.top - b.top;
-        });
+    // Déterminer la taille de police
+    let fontSize = defaultFontSize;
+    if (attrs.header) {
+    fontSize = attrs.header === 1 ? 32 : attrs.header === 2 ? 28 : attrs.header === 3 ? 24 : 18;
+    } else if (attrs.size) {
+    fontSize = parseInt(attrs.size.replace('px', '')) || defaultFontSize;
+    }
 
-        objects.forEach((obj, index) => {
-            if (obj.type === 'textbox' || obj.type === 'text') {
-                const attributes = {};
+    // Créer le texte Fabric
+    const fabricText = new fabric.Textbox(currentLineText, {
+    left: MARGIN_LEFT,
+    top: currentY,
+    width: CONTENT_WIDTH,
+    fontSize: fontSize,
+    fontFamily: attrs.font || defaultFont,
+    fontWeight: attrs.bold ? 'bold' : 'normal',
+    fontStyle: attrs.italic ? 'italic' : 'normal',
+    fill: attrs.color || defaultColor,
+    backgroundColor: attrs.background || 'transparent',
+    textAlign: attrs.align || 'left',
+    underline: attrs.underline || false,
+    linethrough: attrs.strike || false,
+    editable: true,
+    selectable: true
+    });
 
-                if (obj.fontSize !== 14) {
-                    attributes.size = obj.fontSize + 'px';
-                }
-                if (obj.fontFamily && obj.fontFamily !== 'Arial') {
-                    attributes.font = obj.fontFamily;
-                }
-                if (obj.fontWeight === 'bold') {
-                    attributes.bold = true;
-                }
-                if (obj.fontStyle === 'italic') {
-                    attributes.italic = true;
-                }
-                if (obj.fill !== '#111827') {
-                    attributes.color = obj.fill;
-                }
-                if (obj.backgroundColor && obj.backgroundColor !== 'transparent') {
-                    attributes.background = obj.backgroundColor;
-                }
-                if (obj.textAlign && obj.textAlign !== 'left') {
-                    attributes.align = obj.textAlign;
-                }
-                if (obj.underline) {
-                    attributes.underline = true;
-                }
-                if (obj.linethrough) {
-                    attributes.strike = true;
-                }
+    fabricCanvas.add(fabricText);
+    currentY += fabricText.height + 10;
+    currentLineText = '';
+    currentLineAttrs = {};
+    };
 
-                ops.push({
-                    insert: obj.text,
-                    attributes: Object.keys(attributes).length > 0 ? attributes : undefined
-                });
+    ops.forEach((op, index) => {
+    if (typeof op.insert === 'string') {
+    const text = op.insert;
+    const attrs = op.attributes || {};
 
-                ops.push({ insert: '\n' });
+    if (text === '\n') {
+    flushLine();
+    } else {
+    currentLineText += text;
+    currentLineAttrs = { ...currentLineAttrs, ...attrs };
+    }
+    }
+    else if (op.insert?.image) {
+    flushLine();
 
-            } else if (obj.type === 'image') {
-                ops.push({
-                    insert: { image: obj.getSrc() }
-                });
-                ops.push({ insert: '\n' });
-            }
-        });
+    const imageUrl = op.insert.image;
+    fabric.Image.fromURL(imageUrl, (img) => {
+    img.set({
+    left: MARGIN_LEFT,
+    top: currentY,
+    scaleX: 0.5,
+    scaleY: 0.5,
+    selectable: true
+    });
+    fabricCanvas.add(img);
+    fabricCanvas.renderAll();
+    });
 
-        if (ops.length > 0) {
-            quillEditor.setContents({ ops: ops });
-            updateStats();
-        }
+    currentY += 150;
+    }
+    else if (op.insert?.video) {
+    // Les vidéos ne peuvent pas être affichées sur un canvas
+    console.warn('⚠️ Les vidéos ne sont pas supportées dans le mode visuel');
+    }
+    });
+
+    flushLine();
+
+    // Dimensionner le canvas en fonction du contenu
+    fabricCanvas.setHeight(Math.max(currentY + 50, PAGE_HEIGHT));
+    fabricCanvas.setWidth(PAGE_WIDTH);
+    fabricCanvas.setBackgroundColor('#ffffff', () => fabricCanvas.renderAll());
+
+    fabricCanvas.renderAll();
+    console.log('✅ Conversion complète : Quill → Fabric');
+    }
+
+    /**
+     * Convertit le contenu Fabric Canvas en Quill (Delta)
+     * @returns {void} - Modifie quillEditor
+     */
+    function convertFabricToQuillProper() {
+    console.log('🔄 Conversion Fabric → Quill...');
+
+    const objects = fabricCanvas.getObjects();
+    const ops = [];
+
+    // Trier les objets par position (top, puis left)
+    objects.sort((a, b) => {
+    if (Math.abs(a.top - b.top) < 10) {
+    return a.left - b.left;
+    }
+    return a.top - b.top;
+    });
+
+    objects.forEach((obj) => {
+    if (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'itext') {
+    const attributes = {};
+
+    // Détecter le style de heading basé sur la taille de police
+    if (obj.fontSize > 28) {
+    attributes.header = 1;
+    } else if (obj.fontSize > 20) {
+    attributes.header = 2;
+    } else if (obj.fontSize > 16) {
+    attributes.header = 3;
+    } else if (obj.fontSize !== 14) {
+    attributes.size = obj.fontSize + 'px';
+    }
+
+    if (obj.fontFamily && obj.fontFamily !== 'Arial') {
+    attributes.font = obj.fontFamily;
+    }
+
+    if (obj.fontWeight === 'bold' || obj.fontWeight === 700 || obj.fontWeight === '700') {
+    attributes.bold = true;
+    }
+
+    if (obj.fontStyle === 'italic') {
+    attributes.italic = true;
+    }
+
+    if (obj.fill && obj.fill !== '#111827') {
+    attributes.color = obj.fill;
+    }
+
+    if (obj.backgroundColor && obj.backgroundColor !== 'transparent') {
+    attributes.background = obj.backgroundColor;
+    }
+
+    if (obj.textAlign && obj.textAlign !== 'left') {
+    attributes.align = obj.textAlign;
+    }
+
+    if (obj.underline) {
+    attributes.underline = true;
+    }
+
+    if (obj.linethrough) {
+    attributes.strike = true;
+    }
+
+    // Ajouter le texte avec ses attributs
+    ops.push({
+    insert: obj.text,
+    attributes: Object.keys(attributes).length > 0 ? attributes : undefined
+    });
+
+    ops.push({ insert: '\n' });
+    }
+    else if (obj.type === 'image') {
+    ops.push({
+    insert: { image: obj.getSrc() }
+    });
+    ops.push({ insert: '\n' });
+    }
+    });
+
+    if (ops.length > 0) {
+    quillEditor.setContents({ ops: ops });
+    console.log('✅ Conversion complète : Fabric → Quill');
+    } else {
+    console.warn('⚠️ Aucun objet à convertir');
+    }
+
+    updateStats();
     }
 
     function saveDocument() {
